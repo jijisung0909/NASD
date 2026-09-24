@@ -3,864 +3,915 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>와슈 커뮤니티</title>
-<meta name="description" content="와슈 커뮤니티 - 자유롭게 이야기를 나누는 커뮤니티">
 
 <style>
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+
+:root{
+    --bg:#f5f6f8;
+    --card:#fff;
+    --text:#202124;
+    --sub:#777b85;
+    --line:#e4e6eb;
+    --point:#4f46e5;
+    --point-light:#eef2ff;
+    --danger:#ef4444;
+    --success:#16a34a;
+    --shadow:0 2px 8px rgba(0,0,0,.04);
 }
 
-:root {
-    --bg: #f5f6f8;
-    --card: #ffffff;
-    --text: #202124;
-    --sub: #777b85;
-    --line: #e4e6eb;
-    --point: #4f46e5;
-    --point-light: #eef2ff;
-    --danger: #ef4444;
-    --success: #16a34a;
-    --shadow: 0 2px 8px rgba(0,0,0,.04);
+body.dark{
+    --bg:#101218;
+    --card:#191c23;
+    --text:#f3f4f6;
+    --sub:#a6a9b2;
+    --line:#2d313a;
+    --point-light:#252a4b;
+    --shadow:0 2px 10px rgba(0,0,0,.2);
 }
 
-body.dark {
-    --bg: #101218;
-    --card: #191c23;
-    --text: #f3f4f6;
-    --sub: #a6a9b2;
-    --line: #2d313a;
-    --point-light: #252a4b;
-    --shadow: 0 2px 10px rgba(0,0,0,.2);
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
 }
 
-body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans KR",
-        sans-serif;
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
 }
 
-button,
-input,
-textarea,
-select {
-    font: inherit;
+.header-inner{
+    max-width:1400px;
+    min-height:64px;
+    margin:auto;
+    padding:10px 20px;
+    display:flex;
+    align-items:center;
+    gap:20px;
 }
 
-button {
-    cursor: pointer;
+.logo{
+    color:var(--point);
+    text-decoration:none;
+    font-size:27px;
+    font-weight:900;
 }
 
-.header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--card);
-    border-bottom: 1px solid var(--line);
+.search{
+    flex:1;
+    max-width:620px;
+    margin:auto;
+    display:flex;
 }
 
-.header-inner {
-    max-width: 1400px;
-    min-height: 64px;
-    margin: auto;
-    padding: 10px 20px;
-
-    display: flex;
-    align-items: center;
-    gap: 20px;
+.search input{
+    width:100%;
+    height:42px;
+    border:1px solid var(--line);
+    border-right:0;
+    border-radius:8px 0 0 8px;
+    padding:0 14px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
 }
 
-.logo {
-    color: var(--point);
-    text-decoration: none;
-    font-size: 27px;
-    font-weight: 900;
-    letter-spacing: -1px;
+.search input:focus{border-color:var(--point)}
+
+.search button{
+    width:48px;
+    border:0;
+    border-radius:0 8px 8px 0;
+    background:var(--point);
+    color:white;
 }
 
-.search {
-    flex: 1;
-    max-width: 620px;
-    margin: auto;
-    display: flex;
+.header-buttons{
+    display:flex;
+    gap:7px;
+    flex-shrink:0;
 }
 
-.search input {
-    width: 100%;
-    height: 42px;
-    border: 1px solid var(--line);
-    border-right: 0;
-    border-radius: 8px 0 0 8px;
-    padding: 0 14px;
-    background: var(--bg);
-    color: var(--text);
-    outline: none;
+.header-buttons button{
+    min-width:42px;
+    height:40px;
+    padding:0 11px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
 }
 
-.search input:focus {
-    border-color: var(--point);
+.header-buttons button:hover{
+    background:var(--point-light);
 }
 
-.search button {
-    width: 48px;
-    border: 0;
-    border-radius: 0 8px 8px 0;
-    background: var(--point);
-    color: white;
+.container{
+    max-width:1400px;
+    margin:24px auto;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:220px minmax(0,1fr) 250px;
+    gap:20px;
 }
 
-.header-buttons {
-    display: flex;
-    gap: 7px;
-    flex-shrink: 0;
+.sidebar,.card,.right-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:var(--shadow);
 }
 
-.header-buttons button {
-    min-width: 42px;
-    height: 40px;
-    padding: 0 11px;
-
-    border: 1px solid var(--line);
-    border-radius: 7px;
-
-    background: var(--card);
-    color: var(--text);
+.sidebar{
+    height:fit-content;
+    overflow:hidden;
 }
 
-.header-buttons button:hover {
-    background: var(--point-light);
+.sidebar-title{
+    padding:17px;
+    font-weight:800;
+    border-bottom:1px solid var(--line);
 }
 
-.container {
-    max-width: 1400px;
-    margin: 24px auto;
-    padding: 0 20px;
+.gallery{padding:8px}
 
-    display: grid;
-    grid-template-columns: 220px minmax(0,1fr) 250px;
-    gap: 20px;
-}
-
-.sidebar,
-.card,
-.right-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-}
-
-.sidebar {
-    height: fit-content;
-    overflow: hidden;
-}
-
-.sidebar-title {
-    padding: 17px;
-    font-weight: 800;
-    border-bottom: 1px solid var(--line);
-}
-
-.gallery {
-    padding: 8px;
-}
-
-.gallery button {
-    width: 100%;
-    padding: 12px;
-
-    border: 0;
-    border-radius: 7px;
-
-    background: transparent;
-    color: var(--text);
-
-    text-align: left;
+.gallery button{
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:7px;
+    background:transparent;
+    color:var(--text);
+    text-align:left;
 }
 
 .gallery button:hover,
-.gallery button.active {
-    background: var(--point-light);
-    color: var(--point);
-    font-weight: 700;
+.gallery button.active{
+    background:var(--point-light);
+    color:var(--point);
+    font-weight:700;
 }
 
-.gallery-count {
-    float: right;
-    color: var(--sub);
-    font-size: 12px;
+.gallery-count{
+    float:right;
+    color:var(--sub);
+    font-size:12px;
 }
 
-.page-title {
-    margin-bottom: 14px;
+.page-title{
+    margin-bottom:14px;
 }
 
-.page-title h1 {
-    margin: 0;
-    font-size: 24px;
-    letter-spacing: -.5px;
+.page-title h1{
+    margin:0;
+    font-size:24px;
 }
 
-.page-title p {
-    margin: 6px 0 0;
-    color: var(--sub);
-    font-size: 14px;
+.page-title p{
+    margin:6px 0 0;
+    color:var(--sub);
+    font-size:14px;
 }
 
-.tabs {
-    display: flex;
-    border-bottom: 1px solid var(--line);
+.tabs{
+    display:flex;
+    border-bottom:1px solid var(--line);
 }
 
-.tabs button {
-    flex: 1;
-    padding: 14px;
-
-    border: 0;
-    border-bottom: 2px solid transparent;
-
-    background: transparent;
-    color: var(--sub);
+.tabs button{
+    flex:1;
+    padding:14px;
+    border:0;
+    border-bottom:2px solid transparent;
+    background:transparent;
+    color:var(--sub);
 }
 
-.tabs button.active {
-    color: var(--point);
-    border-bottom-color: var(--point);
-    font-weight: 800;
+.tabs button.active{
+    color:var(--point);
+    border-bottom-color:var(--point);
+    font-weight:800;
 }
 
-.search-info {
-    display: none;
-    padding: 12px 16px;
-    background: var(--point-light);
-    color: var(--point);
-    font-size: 13px;
+.search-info{
+    display:none;
+    padding:12px 16px;
+    background:var(--point-light);
+    color:var(--point);
+    font-size:13px;
 }
 
-.post {
-    position: relative;
-    padding: 16px 18px;
-    border-bottom: 1px solid var(--line);
+.post{
+    padding:16px 18px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
 }
 
-.post:hover {
-    background: var(--bg);
+.post:hover{background:var(--bg)}
+
+.post-title-row{
+    display:flex;
+    align-items:center;
+    gap:7px;
 }
 
-.post-title-row {
-    display: flex;
-    align-items: center;
-    gap: 7px;
+.post-title{
+    font-size:16px;
+    font-weight:700;
+    word-break:break-word;
 }
 
-.post-title {
-    font-size: 16px;
-    font-weight: 700;
-    word-break: break-word;
+.comment-count{
+    color:var(--point);
+    font-size:13px;
 }
 
-.comment-count {
-    color: var(--point);
-    font-size: 13px;
-    font-weight: 700;
+.badge{
+    display:inline-flex;
+    padding:2px 6px;
+    border-radius:4px;
+    font-size:10px;
+    font-weight:900;
 }
 
-.badge {
-    display: inline-flex;
-    align-items: center;
-
-    padding: 2px 6px;
-    border-radius: 4px;
-
-    font-size: 10px;
-    font-weight: 900;
+.badge.hot{
+    background:#fee2e2;
+    color:#dc2626;
 }
 
-.badge.hot {
-    background: #fee2e2;
-    color: #dc2626;
+.badge.new{
+    background:#dcfce7;
+    color:#16a34a;
 }
 
-.badge.new {
-    background: #dcfce7;
-    color: #16a34a;
+.post-preview{
+    margin-top:7px;
+    color:var(--sub);
+    font-size:13px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
-.post-preview {
-    margin-top: 7px;
-
-    color: var(--sub);
-    font-size: 13px;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.post-info{
+    display:flex;
+    flex-wrap:wrap;
+    gap:11px;
+    margin-top:10px;
+    color:var(--sub);
+    font-size:12px;
 }
 
-.post-info {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 11px;
-
-    margin-top: 10px;
-
-    color: var(--sub);
-    font-size: 12px;
+.category{
+    color:var(--point);
+    font-weight:700;
 }
 
-.category {
-    color: var(--point);
-    font-weight: 700;
+mark{
+    background:#fef08a;
+    color:#111;
 }
 
-mark {
-    background: #fef08a;
-    color: #111;
-    padding: 0 2px;
-    border-radius: 2px;
+.empty{
+    padding:65px 20px;
+    text-align:center;
+    color:var(--sub);
 }
 
-body.dark mark {
-    background: #665c16;
-    color: #fff;
+.write-area{padding:14px}
+
+.write-btn{
+    width:100%;
+    height:45px;
+    border:0;
+    border-radius:8px;
+    background:var(--point);
+    color:white;
+    font-weight:800;
 }
 
-.empty {
-    padding: 65px 20px;
-    text-align: center;
-    color: var(--sub);
+.form{
+    display:none;
+    padding:18px;
+    border-top:1px solid var(--line);
 }
 
-.write-area {
-    padding: 14px;
-}
-
-.write-btn {
-    width: 100%;
-    height: 45px;
-
-    border: 0;
-    border-radius: 8px;
-
-    background: var(--point);
-    color: white;
-    font-weight: 800;
-}
-
-.write-btn:hover {
-    filter: brightness(.95);
-}
-
-.form {
-    display: none;
-    padding: 18px;
-    border-top: 1px solid var(--line);
-}
-
-.form.show {
-    display: block;
-}
+.form.show{display:block}
 
 .form input,
 .form textarea,
-.form select {
-    width: 100%;
-    margin-bottom: 10px;
-
-    border: 1px solid var(--line);
-    border-radius: 7px;
-
-    padding: 11px;
-
-    background: var(--bg);
-    color: var(--text);
-    outline: none;
+.form select{
+    width:100%;
+    margin-bottom:10px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:11px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
 }
 
-.form textarea {
-    min-height: 190px;
-    resize: vertical;
+.form textarea{
+    min-height:190px;
+    resize:vertical;
 }
 
-.form-buttons {
-    display: flex;
-    gap: 8px;
+.form-buttons{
+    display:flex;
+    gap:8px;
 }
 
-.form-buttons button {
-    flex: 1;
-    padding: 12px;
-    border: 0;
-    border-radius: 7px;
+.form-buttons button{
+    flex:1;
+    padding:12px;
+    border:0;
+    border-radius:7px;
 }
 
-.cancel {
-    background: var(--bg);
-    color: var(--text);
+.cancel{
+    background:var(--bg);
+    color:var(--text);
 }
 
-.submit {
-    background: var(--point);
-    color: white;
+.submit{
+    background:var(--point);
+    color:#fff;
 }
 
-.right-card {
-    overflow: hidden;
-    margin-bottom: 15px;
+.right-card{
+    overflow:hidden;
+    margin-bottom:15px;
 }
 
-.right-title {
-    padding: 15px;
-    border-bottom: 1px solid var(--line);
-    font-weight: 800;
+.right-title{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+    font-weight:800;
 }
 
-.popular {
-    padding: 13px 15px;
-    border-bottom: 1px solid var(--line);
+.popular{
+    padding:13px 15px;
+    border-bottom:1px solid var(--line);
 }
 
-.popular:last-child {
-    border-bottom: 0;
+.popular:hover{background:var(--bg)}
+
+.popular-title{
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
 }
 
-.popular:hover {
-    background: var(--bg);
+.popular-info{
+    margin-top:5px;
+    color:var(--sub);
+    font-size:11px;
 }
 
-.popular-title {
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
+.stats{
+    padding:15px;
+    color:var(--sub);
+    font-size:13px;
+    line-height:2;
 }
 
-.popular-info {
-    margin-top: 5px;
-    color: var(--sub);
-    font-size: 11px;
+.stats strong{color:var(--text)}
+
+.detail{display:none}
+.detail.show{display:block}
+
+.back-btn{
+    margin-bottom:12px;
+    border:0;
+    background:transparent;
+    color:var(--point);
+    font-weight:800;
 }
 
-.stats {
-    padding: 15px;
-    color: var(--sub);
-    font-size: 13px;
-    line-height: 2;
+.detail-header{
+    padding:22px;
+    border-bottom:1px solid var(--line);
 }
 
-.stats strong {
-    color: var(--text);
+.detail-category{
+    color:var(--point);
+    font-size:13px;
+    font-weight:800;
 }
 
-.detail {
-    display: none;
+.detail-title{
+    margin:10px 0 14px;
+    font-size:24px;
+    font-weight:850;
+    word-break:break-word;
 }
 
-.detail.show {
-    display: block;
+.detail-info{
+    color:var(--sub);
+    font-size:13px;
 }
 
-.back-btn {
-    margin-bottom: 12px;
-
-    border: 0;
-    background: transparent;
-
-    color: var(--point);
-    font-weight: 800;
+.detail-content{
+    min-height:260px;
+    padding:25px 22px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    word-break:break-word;
 }
 
-.detail-header {
-    padding: 22px;
-    border-bottom: 1px solid var(--line);
+.detail-actions{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:15px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
 }
 
-.detail-category {
-    color: var(--point);
-    font-size: 13px;
-    font-weight: 800;
+.detail-actions button{
+    padding:9px 15px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
 }
 
-.detail-title {
-    margin: 10px 0 14px;
+.comments{padding:20px}
 
-    font-size: 24px;
-    font-weight: 850;
-    word-break: break-word;
+.comments-title{
+    margin-bottom:15px;
+    font-weight:800;
 }
 
-.detail-info {
-    color: var(--sub);
-    font-size: 13px;
+.comment{
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
 }
 
-.detail-content {
-    min-height: 260px;
-    padding: 25px 22px;
-
-    line-height: 1.8;
-    white-space: pre-wrap;
-    word-break: break-word;
+.comment-head{
+    display:flex;
+    align-items:center;
+    gap:7px;
 }
 
-.detail-actions {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    padding: 15px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+.comment-author{
+    font-size:13px;
+    font-weight:800;
 }
 
-.detail-actions button {
-    padding: 9px 15px;
-
-    border: 1px solid var(--line);
-    border-radius: 7px;
-
-    background: var(--card);
-    color: var(--text);
+.comment-date{
+    color:var(--sub);
+    font-size:11px;
 }
 
-.detail-actions button:hover {
-    background: var(--point-light);
+.comment-text{
+    margin-top:7px;
+    white-space:pre-wrap;
+    line-height:1.6;
+    word-break:break-word;
 }
 
-.comments {
-    padding: 20px;
+.comment-buttons{
+    display:flex;
+    gap:8px;
+    margin-top:7px;
 }
 
-.comments-title {
-    margin-bottom: 15px;
-    font-weight: 800;
+.comment-buttons button{
+    border:0;
+    background:transparent;
+    color:var(--sub);
+    padding:2px;
+    font-size:11px;
 }
 
-.comment {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--line);
+.reply{
+    margin:10px 0 0 25px;
+    padding:10px 12px;
+    border-left:2px solid var(--point);
+    background:var(--bg);
 }
 
-.comment-head {
-    display: flex;
-    align-items: center;
-    gap: 7px;
+.comment-form{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
 }
 
-.comment-author {
-    font-size: 13px;
-    font-weight: 800;
+.comment-form input{
+    flex:1;
+    min-width:0;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:11px;
+    background:var(--bg);
+    color:var(--text);
 }
 
-.comment-date {
-    color: var(--sub);
-    font-size: 11px;
+.comment-form button{
+    border:0;
+    border-radius:7px;
+    padding:0 18px;
+    background:var(--point);
+    color:white;
 }
 
-.comment-text {
-    margin-top: 7px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    line-height: 1.6;
+.pagination{
+    display:flex;
+    justify-content:center;
+    gap:5px;
+    padding:17px;
 }
 
-.comment-buttons {
-    display: flex;
-    gap: 8px;
-    margin-top: 7px;
+.pagination button{
+    min-width:34px;
+    height:34px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--card);
+    color:var(--text);
 }
 
-.comment-buttons button {
-    border: 0;
-    background: transparent;
-    color: var(--sub);
-    padding: 2px;
-    font-size: 11px;
+.pagination button.active{
+    background:var(--point);
+    color:white;
+    border-color:var(--point);
 }
 
-.reply {
-    margin: 10px 0 0 25px;
-    padding: 10px 12px;
-
-    border-left: 2px solid var(--point);
-    background: var(--bg);
-    border-radius: 0 7px 7px 0;
+.pagination button:disabled{
+    opacity:.4;
 }
 
-.comment-form {
-    display: flex;
-    gap: 8px;
-    margin-top: 18px;
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.55);
 }
 
-.comment-form input {
-    flex: 1;
-    min-width: 0;
+.modal.show{display:flex}
 
-    border: 1px solid var(--line);
-    border-radius: 7px;
-
-    padding: 11px;
-
-    background: var(--bg);
-    color: var(--text);
-    outline: none;
+.modal-box{
+    width:100%;
+    max-width:440px;
+    padding:22px;
+    border-radius:12px;
+    background:var(--card);
+    color:var(--text);
 }
 
-.comment-form button {
-    border: 0;
-    border-radius: 7px;
+.modal-box h2{margin-top:0}
 
-    padding: 0 18px;
-
-    background: var(--point);
-    color: white;
+.modal-box input{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--bg);
+    color:var(--text);
 }
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-
-    padding: 17px;
+.modal-buttons{
+    display:flex;
+    gap:8px;
 }
 
-.pagination button {
-    min-width: 34px;
-    height: 34px;
-
-    border: 1px solid var(--line);
-    border-radius: 6px;
-
-    background: var(--card);
-    color: var(--text);
+.modal-buttons button{
+    flex:1;
+    padding:11px;
+    border:0;
+    border-radius:7px;
 }
 
-.pagination button.active {
-    background: var(--point);
-    color: white;
-    border-color: var(--point);
+.modal-save{
+    background:var(--point);
+    color:white;
 }
 
-.pagination button:disabled {
-    opacity: .4;
-    cursor: default;
+/* 마이페이지 */
+
+.mypage{
+    display:none;
 }
 
-.modal {
-    display: none;
-
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-
-    background: rgba(0,0,0,.55);
+.mypage.show{
+    display:block;
 }
 
-.modal.show {
-    display: flex;
+.profile-card{
+    padding:25px;
+    display:flex;
+    align-items:center;
+    gap:20px;
 }
 
-.modal-box {
-    width: 100%;
-    max-width: 420px;
-
-    padding: 22px;
-
-    border-radius: 12px;
-
-    background: var(--card);
-    color: var(--text);
+.profile-avatar{
+    width:76px;
+    height:76px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--point-light);
+    color:var(--point);
+    font-size:34px;
+    font-weight:900;
 }
 
-.modal-box h2 {
-    margin-top: 0;
+.profile-name{
+    font-size:23px;
+    font-weight:900;
 }
 
-.modal-box input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-
-    border: 1px solid var(--line);
-    border-radius: 7px;
-
-    background: var(--bg);
-    color: var(--text);
+.profile-id{
+    margin-top:5px;
+    color:var(--sub);
+    font-size:12px;
 }
 
-.modal-buttons {
-    display: flex;
-    gap: 8px;
+.profile-date{
+    margin-top:7px;
+    color:var(--sub);
+    font-size:13px;
 }
 
-.modal-buttons button {
-    flex: 1;
-    padding: 11px;
-
-    border: 0;
-    border-radius: 7px;
+.profile-edit{
+    margin-left:auto;
+    padding:9px 13px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
 }
 
-.modal-save {
-    background: var(--point);
-    color: white;
+.my-stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border-top:1px solid var(--line);
 }
 
-footer {
-    padding: 35px 20px;
-
-    text-align: center;
-
-    color: var(--sub);
-    font-size: 12px;
+.my-stat{
+    padding:18px 10px;
+    text-align:center;
+    border-right:1px solid var(--line);
 }
 
-/* TABLET */
+.my-stat:last-child{
+    border-right:0;
+}
 
-@media (max-width: 1000px) {
+.my-stat strong{
+    display:block;
+    font-size:20px;
+}
 
-    .container {
-        grid-template-columns: 190px minmax(0,1fr);
+.my-stat span{
+    color:var(--sub);
+    font-size:12px;
+}
+
+.mypage-section{
+    margin-top:16px;
+}
+
+.mypage-section-title{
+    margin-bottom:10px;
+    font-size:17px;
+    font-weight:850;
+}
+
+.my-post{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+}
+
+.my-post:hover{
+    background:var(--bg);
+}
+
+.my-post-title{
+    font-weight:700;
+}
+
+.my-post-info{
+    margin-top:7px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.my-comment{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+}
+
+.my-comment-post{
+    color:var(--point);
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.my-comment-text{
+    margin-top:6px;
+    font-size:14px;
+    white-space:pre-wrap;
+}
+
+.my-comment-date{
+    margin-top:6px;
+    color:var(--sub);
+    font-size:11px;
+}
+
+.settings{
+    padding:18px;
+}
+
+.setting-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.setting-row:last-child{
+    border-bottom:0;
+}
+
+.setting-label strong{
+    display:block;
+}
+
+.setting-label span{
+    display:block;
+    margin-top:3px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.setting-btn{
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
+}
+
+footer{
+    padding:35px 20px;
+    text-align:center;
+    color:var(--sub);
+    font-size:12px;
+}
+
+@media(max-width:1000px){
+    .container{
+        grid-template-columns:190px minmax(0,1fr);
     }
 
-    .right-column {
-        display: none;
+    .right-column{
+        display:none;
     }
 }
 
-/* MOBILE */
+@media(max-width:700px){
 
-@media (max-width: 700px) {
-
-    .header-inner {
-        min-height: 0;
-        padding: 10px;
-        flex-wrap: wrap;
-        gap: 9px;
+    .header-inner{
+        min-height:0;
+        padding:10px;
+        flex-wrap:wrap;
+        gap:9px;
     }
 
-    .logo {
-        font-size: 23px;
+    .logo{font-size:23px}
+
+    .header-buttons{
+        margin-left:auto;
     }
 
-    .header-buttons {
-        margin-left: auto;
+    .header-buttons button{
+        height:38px;
+        padding:0 9px;
     }
 
-    .header-buttons button {
-        height: 38px;
-        padding: 0 9px;
+    .search{
+        order:3;
+        flex-basis:100%;
     }
 
-    .search {
-        order: 3;
-        flex-basis: 100%;
+    .container{
+        display:block;
+        margin:12px auto;
+        padding:0 9px;
     }
 
-    .container {
-        display: block;
-        margin: 12px auto;
-        padding: 0 9px;
+    .sidebar{
+        margin-bottom:12px;
+        overflow-x:auto;
     }
 
-    .sidebar {
-        margin-bottom: 12px;
-        overflow-x: auto;
+    .sidebar-title{display:none}
+
+    .gallery{
+        display:flex;
+        gap:4px;
+        padding:7px;
+        white-space:nowrap;
     }
 
-    .sidebar-title {
-        display: none;
+    .gallery button{
+        width:auto;
+        padding:9px 12px;
     }
 
-    .gallery {
-        display: flex;
-        gap: 4px;
-        padding: 7px;
-        white-space: nowrap;
+    .gallery-count{display:none}
+
+    .page-title h1{font-size:20px}
+
+    .post{padding:14px}
+
+    .detail-header{padding:18px}
+
+    .detail-title{font-size:20px}
+
+    .detail-content{padding:20px 18px}
+
+    .comments{padding:16px}
+
+    .comment-form{
+        flex-direction:column;
     }
 
-    .gallery button {
-        width: auto;
-        padding: 9px 12px;
+    .comment-form button{
+        height:42px;
     }
 
-    .gallery-count {
-        display: none;
+    .reply{margin-left:15px}
+
+    .profile-card{
+        padding:18px;
+        gap:12px;
     }
 
-    .page-title h1 {
-        font-size: 20px;
+    .profile-avatar{
+        width:60px;
+        height:60px;
+        font-size:27px;
     }
 
-    .post {
-        padding: 14px;
+    .profile-name{
+        font-size:19px;
     }
 
-    .post-info {
-        gap: 7px;
+    .profile-edit{
+        padding:7px 9px;
     }
 
-    .detail-header {
-        padding: 18px;
+    .my-stats{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    .detail-title {
-        font-size: 20px;
+    .my-stat:nth-child(2){
+        border-right:0;
     }
 
-    .detail-content {
-        padding: 20px 18px;
-    }
-
-    .comments {
-        padding: 16px;
-    }
-
-    .comment-form {
-        flex-direction: column;
-    }
-
-    .comment-form button {
-        height: 42px;
-    }
-
-    .reply {
-        margin-left: 15px;
+    .my-stat:nth-child(-n+2){
+        border-bottom:1px solid var(--line);
     }
 }
 
-/* SMALL PHONE */
+@media(max-width:450px){
 
-@media (max-width: 450px) {
-
-    .header-buttons button {
-        min-width: 38px;
-        padding: 0 7px;
+    .header-buttons button{
+        min-width:38px;
+        padding:0 7px;
     }
 
-    .header-buttons button:last-child {
-        max-width: 65px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .profile-card{
+        flex-wrap:wrap;
     }
 
-    .detail-actions button {
-        padding: 8px 11px;
-        font-size: 12px;
+    .profile-edit{
+        margin-left:0;
+        width:100%;
     }
 }
 </style>
@@ -869,184 +920,107 @@ footer {
 <body>
 
 <header class="header">
-
 <div class="header-inner">
 
-<a
-    class="logo"
-    href="#"
-    onclick="goHome();return false;"
->
-    와슈
-</a>
+<a class="logo" href="#" onclick="goHome();return false;">와슈</a>
 
 <div class="search">
-
 <input
     id="searchInput"
     placeholder="게시글 검색"
     onkeydown="if(event.key==='Enter')searchPosts()"
 >
-
-<button onclick="searchPosts()">
-    🔍
-</button>
-
+<button onclick="searchPosts()">🔍</button>
 </div>
 
 <div class="header-buttons">
-
-<button
-    id="darkModeBtn"
-    onclick="toggleDark()"
->
-    🌙
-</button>
-
-<button onclick="openNickname()">
-    닉네임
-</button>
-
+<button id="darkModeBtn" onclick="toggleDark()">🌙</button>
+<button onclick="openMyPage()">👤</button>
 </div>
 
 </div>
-
 </header>
 
 
 <main class="container">
 
-<!-- SIDEBAR -->
-
 <aside class="sidebar">
 
-<div class="sidebar-title">
-    와슈 게시판
-</div>
+<div class="sidebar-title">와슈 게시판</div>
 
 <div class="gallery">
 
-<button
-    class="active"
-    onclick="selectCategory('전체',this)"
->
-    전체
-    <span class="gallery-count" id="count-전체">0</span>
+<button class="active" onclick="selectCategory('전체',this)">
+    전체 <span class="gallery-count" id="count-전체">0</span>
 </button>
 
 <button onclick="selectCategory('자유',this)">
-    💬 자유
-    <span class="gallery-count" id="count-자유">0</span>
+    💬 자유 <span class="gallery-count" id="count-자유">0</span>
 </button>
 
 <button onclick="selectCategory('게임',this)">
-    🎮 게임
-    <span class="gallery-count" id="count-게임">0</span>
+    🎮 게임 <span class="gallery-count" id="count-게임">0</span>
 </button>
 
 <button onclick="selectCategory('음악',this)">
-    🎵 음악
-    <span class="gallery-count" id="count-음악">0</span>
+    🎵 음악 <span class="gallery-count" id="count-음악">0</span>
 </button>
 
 <button onclick="selectCategory('유머',this)">
-    😂 유머
-    <span class="gallery-count" id="count-유머">0</span>
+    😂 유머 <span class="gallery-count" id="count-유머">0</span>
 </button>
 
 <button onclick="selectCategory('스포츠',this)">
-    ⚽ 스포츠
-    <span class="gallery-count" id="count-스포츠">0</span>
+    ⚽ 스포츠 <span class="gallery-count" id="count-스포츠">0</span>
 </button>
 
 <button onclick="selectCategory('IT/컴퓨터',this)">
-    💻 IT/컴퓨터
-    <span class="gallery-count" id="count-IT/컴퓨터">0</span>
+    💻 IT/컴퓨터 <span class="gallery-count" id="count-IT/컴퓨터">0</span>
 </button>
 
 <button onclick="selectCategory('애니/만화',this)">
-    📺 애니/만화
-    <span class="gallery-count" id="count-애니/만화">0</span>
+    📺 애니/만화 <span class="gallery-count" id="count-애니/만화">0</span>
+</button>
+
+<button onclick="openMyPage()">
+    👤 마이페이지
 </button>
 
 </div>
-
 </aside>
 
 
-<!-- CENTER -->
-
 <section>
+
+<!-- LIST -->
 
 <div id="listPage">
 
 <div class="page-title">
-
-<h1 id="pageTitle">
-    와슈 커뮤니티
-</h1>
-
-<p>
-    자유롭게 이야기를 나눠보세요.
-</p>
-
+<h1 id="pageTitle">와슈 커뮤니티</h1>
+<p>자유롭게 이야기를 나눠보세요.</p>
 </div>
-
 
 <div class="card">
 
 <div class="tabs">
-
-<button
-    class="active"
-    onclick="changeTab('latest',this)"
->
-    최신글
-</button>
-
-<button
-    onclick="changeTab('popular',this)"
->
-    인기글
-</button>
-
+<button class="active" onclick="changeTab('latest',this)">최신글</button>
+<button onclick="changeTab('popular',this)">인기글</button>
 </div>
 
-
-<div
-    id="searchInfo"
-    class="search-info"
-></div>
-
+<div id="searchInfo" class="search-info"></div>
 
 <div id="posts"></div>
 
-
-<div
-    id="pagination"
-    class="pagination"
-></div>
-
+<div id="pagination" class="pagination"></div>
 
 <div class="write-area">
-
-<button
-    class="write-btn"
-    onclick="openWriteForm()"
->
-    + 글쓰기
-</button>
-
+<button class="write-btn" onclick="openWriteForm()">+ 글쓰기</button>
 </div>
 
-
-<div
-    class="form"
-    id="writeForm"
->
+<div class="form" id="writeForm">
 
 <select id="category">
-
 <option value="자유">자유</option>
 <option value="게임">게임</option>
 <option value="음악">음악</option>
@@ -1054,128 +1028,58 @@ footer {
 <option value="스포츠">스포츠</option>
 <option value="IT/컴퓨터">IT/컴퓨터</option>
 <option value="애니/만화">애니/만화</option>
-
 </select>
 
+<input id="nickname" maxlength="20" placeholder="닉네임">
 
-<input
-    id="nickname"
-    maxlength="20"
-    placeholder="닉네임"
-/>
+<input id="title" maxlength="100" placeholder="제목">
 
-
-<input
-    id="title"
-    maxlength="100"
-    placeholder="제목"
-/>
-
-
-<textarea
-    id="content"
-    placeholder="내용을 입력하세요."
-></textarea>
-
+<textarea id="content" placeholder="내용을 입력하세요."></textarea>
 
 <div class="form-buttons">
-
-<button
-    class="cancel"
-    onclick="closeWriteForm()"
->
-    취소
-</button>
-
-<button
-    class="submit"
-    onclick="submitPost()"
->
-    게시하기
-</button>
-
+<button class="cancel" onclick="closeWriteForm()">취소</button>
+<button class="submit" onclick="submitPost()">게시하기</button>
 </div>
 
 </div>
-
 </div>
-
 </div>
 
 
 <!-- DETAIL -->
 
-<div
-    id="detailPage"
-    class="detail"
->
+<div id="detailPage" class="detail">
 
-<button
-    class="back-btn"
-    onclick="goHome()"
->
-    ← 목록으로
-</button>
-
+<button class="back-btn" onclick="goHome()">← 목록으로</button>
 
 <div class="card">
 
 <div class="detail-header">
 
-<div
-    id="detailCategory"
-    class="detail-category"
-></div>
-
-<div
-    id="detailTitle"
-    class="detail-title"
-></div>
-
-<div
-    id="detailInfo"
-    class="detail-info"
-></div>
+<div id="detailCategory" class="detail-category"></div>
+<div id="detailTitle" class="detail-title"></div>
+<div id="detailInfo" class="detail-info"></div>
 
 </div>
 
-
-<div
-    id="detailContent"
-    class="detail-content"
-></div>
-
+<div id="detailContent" class="detail-content"></div>
 
 <div class="detail-actions">
 
-<button onclick="likePost()">
-    👍 <span id="likeCount">0</span>
-</button>
-
-<button onclick="dislikePost()">
-    👎 <span id="dislikeCount">0</span>
-</button>
-
-<button onclick="editCurrentPost()">
-    ✏️ 수정
-</button>
-
-<button onclick="deleteCurrentPost()">
-    🗑️ 삭제
-</button>
+<button onclick="likePost()">👍 <span id="likeCount">0</span></button>
+<button onclick="dislikePost()">👎 <span id="dislikeCount">0</span></button>
+<button onclick="editCurrentPost()">✏️ 수정</button>
+<button onclick="deleteCurrentPost()">🗑️ 삭제</button>
 
 </div>
-
 
 <div class="comments">
 
 <div class="comments-title">
-    댓글 <span id="commentCount">0</span>
+댓글 <span id="commentCount">0</span>
 </div>
 
-
 <div id="commentsList"></div>
-
 
 <div class="comment-form">
 
@@ -1184,16 +1088,136 @@ footer {
     maxlength="300"
     placeholder="댓글을 입력하세요."
     onkeydown="if(event.key==='Enter')addComment()"
-/>
+>
 
-<button onclick="addComment()">
-    등록
+<button onclick="addComment()">등록</button>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- MY PAGE -->
+
+<div id="myPage" class="mypage">
+
+<button class="back-btn" onclick="goHome()">← 커뮤니티로</button>
+
+<div class="page-title">
+<h1>마이페이지</h1>
+<p>나의 와슈 활동을 확인하세요.</p>
+</div>
+
+
+<div class="card">
+
+<div class="profile-card">
+
+<div class="profile-avatar" id="profileAvatar">?</div>
+
+<div>
+
+<div class="profile-name" id="profileName">익명</div>
+
+<div class="profile-id" id="profileId"></div>
+
+<div class="profile-date" id="profileDate"></div>
+
+</div>
+
+<button class="profile-edit" onclick="openNickname()">
+닉네임 변경
+</button>
+
+</div>
+
+
+<div class="my-stats">
+
+<div class="my-stat">
+<strong id="myPostCount">0</strong>
+<span>작성글</span>
+</div>
+
+<div class="my-stat">
+<strong id="myCommentCount">0</strong>
+<span>작성댓글</span>
+</div>
+
+<div class="my-stat">
+<strong id="myLikeCount">0</strong>
+<span>받은 추천</span>
+</div>
+
+<div class="my-stat">
+<strong id="myDislikeCount">0</strong>
+<span>받은 비추천</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="mypage-section">
+
+<div class="mypage-section-title">
+📝 내가 쓴 글
+</div>
+
+<div class="card" id="myPosts"></div>
+
+</div>
+
+
+<div class="mypage-section">
+
+<div class="mypage-section-title">
+💬 내가 쓴 댓글
+</div>
+
+<div class="card" id="myComments"></div>
+
+</div>
+
+
+<div class="mypage-section">
+
+<div class="mypage-section-title">
+⚙️ 설정
+</div>
+
+<div class="card settings">
+
+<div class="setting-row">
+
+<div class="setting-label">
+<strong>화면 테마</strong>
+<span>다크모드 / 라이트모드</span>
+</div>
+
+<button class="setting-btn" onclick="toggleDark()">
+테마 변경
+</button>
+
+</div>
+
+<div class="setting-row">
+
+<div class="setting-label">
+<strong>닉네임</strong>
+<span id="settingNickname">익명</span>
+</div>
+
+<button class="setting-btn" onclick="openNickname()">
+변경
 </button>
 
 </div>
 
 </div>
-
 </div>
 
 </div>
@@ -1207,35 +1231,23 @@ footer {
 
 <div class="right-card">
 
-<div class="right-title">
-    🔥 인기글
-</div>
+<div class="right-title">🔥 인기글</div>
 
 <div id="popularPosts"></div>
 
 </div>
 
-
 <div class="right-card">
 
-<div class="right-title">
-    📊 와슈 통계
-</div>
+<div class="right-title">📊 와슈 통계</div>
 
 <div class="stats">
 
-게시글
-<strong id="totalPosts">0</strong>개
-
+게시글 <strong id="totalPosts">0</strong>개
 <br>
-
-댓글
-<strong id="totalComments">0</strong>개
-
+댓글 <strong id="totalComments">0</strong>개
 <br>
-
-추천
-<strong id="totalLikes">0</strong>개
+추천 <strong id="totalLikes">0</strong>개
 
 </div>
 
@@ -1255,44 +1267,70 @@ DB 연결 전 테스트 버전
 
 <!-- NICKNAME MODAL -->
 
-<div
-    class="modal"
-    id="nicknameModal"
->
+<div class="modal" id="nicknameModal">
 
 <div class="modal-box">
 
-<h2>
-    닉네임 설정
-</h2>
+<h2>닉네임 설정</h2>
 
 <input
     id="nicknameSetting"
     maxlength="20"
     placeholder="사용할 닉네임"
-/>
+>
 
 <div class="modal-buttons">
 
-<button onclick="closeNickname()">
-    취소
-</button>
+<button onclick="closeNickname()">취소</button>
 
-<button
-    class="modal-save"
-    onclick="saveNickname()"
->
-    저장
-</button>
+<button class="modal-save" onclick="saveNickname()">저장</button>
 
 </div>
 
 </div>
-
 </div>
 
 
 <script>
+
+/* =========================
+   USER
+========================= */
+
+let userId =
+    localStorage.getItem("washu_user_id");
+
+if(!userId){
+
+    userId =
+        "user_" +
+        Date.now() +
+        "_" +
+        Math.random()
+        .toString(36)
+        .slice(2,8);
+
+    localStorage.setItem(
+        "washu_user_id",
+        userId
+    );
+}
+
+
+let joinDate =
+    localStorage.getItem("washu_join_date");
+
+if(!joinDate){
+
+    joinDate =
+        new Date().toISOString();
+
+    localStorage.setItem(
+        "washu_join_date",
+        joinDate
+    );
+}
+
 
 /* =========================
    DATA
@@ -1303,34 +1341,47 @@ let posts =
         localStorage.getItem("washu_posts")
     ) || [];
 
-let currentCategory = "전체";
-let currentTab = "latest";
-let currentPostId = null;
-let currentPage = 1;
-let searchKeyword = "";
+let currentCategory="전체";
+let currentTab="latest";
+let currentPostId=null;
+let currentPage=1;
+let searchKeyword="";
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE=10;
 
 
 /* =========================
-   DATA NORMALIZATION
+   NORMALIZE
 ========================= */
 
-posts = posts.map(post => ({
+posts=posts.map(post=>({
 
     ...post,
 
-    dislikes: post.dislikes || 0,
+    authorId:
+        post.authorId ||
+        null,
 
-    comments: (post.comments || []).map(comment => ({
+    dislikes:
+        post.dislikes || 0,
 
-        ...comment,
+    comments:
+        (post.comments||[])
+        .map(comment=>({
 
-        likes: comment.likes || 0,
+            ...comment,
 
-        replies: comment.replies || []
+            authorId:
+                comment.authorId ||
+                null,
 
-    }))
+            likes:
+                comment.likes || 0,
+
+            replies:
+                comment.replies || []
+
+        }))
 
 }));
 
@@ -1339,7 +1390,7 @@ posts = posts.map(post => ({
    SAVE
 ========================= */
 
-function savePosts() {
+function savePosts(){
 
     localStorage.setItem(
         "washu_posts",
@@ -1353,44 +1404,14 @@ function savePosts() {
    ESCAPE
 ========================= */
 
-function escapeHTML(value) {
+function escapeHTML(value){
 
     return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
-}
-
-
-/* =========================
-   SEARCH HIGHLIGHT
-========================= */
-
-function highlight(text) {
-
-    const safe =
-        escapeHTML(text);
-
-    if (!searchKeyword)
-        return safe;
-
-    const escaped =
-        searchKeyword
-            .replace(
-                /[.*+?^${}()|[\]\\]/g,
-                "\\$&"
-            );
-
-    return safe.replace(
-        new RegExp(
-            "(" + escaped + ")",
-            "gi"
-        ),
-        "<mark>$1</mark>"
-    );
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
@@ -1399,34 +1420,26 @@ function highlight(text) {
    DATE
 ========================= */
 
-function formatDate(date) {
+function formatDate(date){
 
-    const d =
-        new Date(date);
+    const d=new Date(date);
+    const now=new Date();
 
-    const now =
-        new Date();
-
-    const diff =
+    const diff=
         Math.floor(
             (now-d)/1000
         );
 
-    if(diff<60)
-        return "방금 전";
-
-    if(diff<3600)
-        return Math.floor(diff/60)+"분 전";
-
-    if(diff<86400)
-        return Math.floor(diff/3600)+"시간 전";
+    if(diff<60)return"방금 전";
+    if(diff<3600)return Math.floor(diff/60)+"분 전";
+    if(diff<86400)return Math.floor(diff/3600)+"시간 전";
 
     if(
-        d.getFullYear() ===
+        d.getFullYear()===
         now.getFullYear()
-    ) {
+    ){
 
-        return (
+        return(
             (d.getMonth()+1)+
             "."+
             d.getDate()
@@ -1434,7 +1447,7 @@ function formatDate(date) {
 
     }
 
-    return (
+    return(
         d.getFullYear()+
         "."+
         (d.getMonth()+1)+
@@ -1446,35 +1459,31 @@ function formatDate(date) {
 
 
 /* =========================
-   HOT / NEW
+   SCORE
 ========================= */
 
-function isNew(post) {
+function score(post){
 
-    const diff =
-        Date.now() -
-        new Date(post.date).getTime();
-
-    return diff <
-        24*60*60*1000;
-
-}
-
-
-function score(post) {
-
-    return (
-        post.likes * 3 +
-        post.comments.length * 2 +
+    return(
+        post.likes*3+
+        post.comments.length*2+
         post.views
     );
 
 }
 
+function isHot(post){
+    return score(post)>=10;
+}
 
-function isHot(post) {
+function isNew(post){
 
-    return score(post) >= 10;
+    return(
+        Date.now()-
+        new Date(post.date).getTime()
+        <
+        24*60*60*1000
+    );
 
 }
 
@@ -1483,70 +1492,61 @@ function isHot(post) {
    FILTER
 ========================= */
 
-function getFilteredPosts() {
+function getFilteredPosts(){
 
-    let result =
-        currentCategory === "전체"
-            ? [...posts]
-            : posts.filter(
-                p =>
-                    p.category ===
-                    currentCategory
-            );
+    let result=
+        currentCategory==="전체"
+        ? [...posts]
+        : posts.filter(
+            p=>
+                p.category===
+                currentCategory
+        );
 
 
-    if(searchKeyword) {
+    if(searchKeyword){
 
-        result =
-            result.filter(post =>
+        result=result.filter(post=>
 
-                post.title
-                    .toLowerCase()
-                    .includes(
-                        searchKeyword
-                    )
+            post.title
+            .toLowerCase()
+            .includes(searchKeyword)
 
-                ||
+            ||
 
-                post.content
-                    .toLowerCase()
-                    .includes(
-                        searchKeyword
-                    )
+            post.content
+            .toLowerCase()
+            .includes(searchKeyword)
 
-                ||
+            ||
 
-                post.nickname
-                    .toLowerCase()
-                    .includes(
-                        searchKeyword
-                    )
+            post.nickname
+            .toLowerCase()
+            .includes(searchKeyword)
 
-                ||
+            ||
 
-                post.category
-                    .toLowerCase()
-                    .includes(
-                        searchKeyword
-                    )
+            post.category
+            .toLowerCase()
+            .includes(searchKeyword)
 
-            );
+        );
 
     }
 
 
-    if(currentTab === "latest") {
+    if(currentTab==="latest"){
 
         result.sort(
-            (a,b) =>
-                new Date(b.date) -
+            (a,b)=>
+                new Date(b.date)-
                 new Date(a.date)
         );
 
-    } else {
+    }else{
 
         result.sort(
-            (a,b) =>
+            (a,b)=>
                 score(b)-score(a)
         );
 
@@ -1559,126 +1559,101 @@ function getFilteredPosts() {
 
 
 /* =========================
-   RENDER
+   RENDER POSTS
 ========================= */
 
-function renderPosts() {
+function renderPosts(){
 
-    const container =
-        document.getElementById(
-            "posts"
-        );
+    const box=
+        document.getElementById("posts");
 
-    const all =
+    const all=
         getFilteredPosts();
 
-    const totalPages =
+    const totalPages=
         Math.max(
             1,
             Math.ceil(
-                all.length /
+                all.length/
                 POSTS_PER_PAGE
             )
         );
 
 
-    if(currentPage > totalPages)
-        currentPage = totalPages;
+    if(currentPage>totalPages)
+        currentPage=totalPages;
 
 
-    const start =
-        (currentPage-1) *
+    const start=
+        (currentPage-1)*
         POSTS_PER_PAGE;
 
 
-    const pagePosts =
+    const list=
         all.slice(
             start,
             start+POSTS_PER_PAGE
         );
 
 
-    if(!pagePosts.length) {
+    if(!list.length){
 
-        container.innerHTML = `
+        box.innerHTML=`
             <div class="empty">
                 ${
                     searchKeyword
-                    ? "검색 결과가 없습니다."
-                    : "아직 게시글이 없습니다."
+                    ?"검색 결과가 없습니다."
+                    :"아직 게시글이 없습니다."
                 }
-
                 <br><br>
-
                 ${
                     searchKeyword
-                    ? "다른 검색어를 입력해보세요."
-                    : "첫 번째 글을 작성해보세요!"
+                    ?"다른 검색어를 입력해보세요."
+                    :"첫 번째 글을 작성해보세요!"
                 }
             </div>
         `;
 
-    } else {
+    }else{
 
-        container.innerHTML =
-            pagePosts.map(post => `
+        box.innerHTML=
+        list.map(post=>`
 
-                <div
-                    class="post"
-                    onclick="openPost(${post.id})"
-                >
+            <div
+                class="post"
+                onclick="openPost(${post.id})"
+            >
 
                 <div class="post-title-row">
 
                     ${
                         isHot(post)
-                        ? `<span class="badge hot">
-                            HOT
-                          </span>`
-                        : ""
+                        ?'<span class="badge hot">HOT</span>'
+                        :""
                     }
 
                     ${
                         isNew(post)
-                        ? `<span class="badge new">
-                            NEW
-                          </span>`
-                        : ""
+                        ?'<span class="badge new">NEW</span>'
+                        :""
                     }
 
                     <div class="post-title">
-
-                        ${
-                            searchKeyword
-                            ? highlight(post.title)
-                            : escapeHTML(post.title)
-                        }
-
+                        ${escapeHTML(post.title)}
                         ${
                             post.comments.length
-                            ? `
-                                <span class="comment-count">
-                                    [${post.comments.length}]
-                                </span>
-                            `
-                            : ""
+                            ?` <span class="comment-count">
+                                [${post.comments.length}]
+                               </span>`
+                            :""
                         }
-
                     </div>
 
                 </div>
 
-
                 <div class="post-preview">
-
-                    ${
-                        searchKeyword
-                        ? highlight(post.content)
-                        : escapeHTML(post.content)
-                    }
-
+                    ${escapeHTML(post.content)}
                 </div>
-
 
                 <div class="post-info">
 
@@ -1704,19 +1679,15 @@ function renderPosts() {
 
                 </div>
 
-                </div>
+            </div>
 
-            `).join("");
+        `).join("");
 
     }
 
-
     renderPagination(totalPages);
-
     renderPopular();
-
     updateStats();
-
     updateGalleryCounts();
 
 }
@@ -1726,69 +1697,56 @@ function renderPosts() {
    PAGINATION
 ========================= */
 
-function renderPagination(totalPages) {
+function renderPagination(totalPages){
 
-    const box =
+    const box=
         document.getElementById(
             "pagination"
         );
 
+    if(totalPages<=1){
 
-    if(totalPages <= 1) {
-
-        box.innerHTML = "";
+        box.innerHTML="";
         return;
 
     }
 
 
-    let html = `
+    let html=`
 
         <button
             onclick="changePage(${currentPage-1})"
             ${currentPage===1?"disabled":""}
-        >
-            ‹
-        </button>
+        >‹</button>
 
     `;
 
 
-    let start =
+    const start=
         Math.max(
             1,
             currentPage-2
         );
 
-
-    let end =
+    const end=
         Math.min(
             totalPages,
             start+4
         );
 
 
-    if(end-start < 4)
-        start =
-            Math.max(
-                1,
-                end-4
-            );
-
-
     for(
         let i=start;
         i<=end;
         i++
-    ) {
+    ){
 
-        html += `
+        html+=`
 
             <button
                 class="${
                     i===currentPage
-                    ? "active"
-                    : ""
+                    ?"active":""
                 }"
                 onclick="changePage(${i})"
             >
@@ -1800,7 +1758,7 @@ function renderPagination(totalPages) {
     }
 
 
-    html += `
+    html+=`
 
         <button
             onclick="changePage(${currentPage+1})"
@@ -1808,41 +1766,35 @@ function renderPagination(totalPages) {
                 currentPage===totalPages
                 ?"disabled":""
             }
-        >
-            ›
-        </button>
+        >›</button>
 
     `;
 
 
-    box.innerHTML = html;
+    box.innerHTML=html;
 
 }
 
 
-function changePage(page) {
+function changePage(page){
 
-    const all =
-        getFilteredPosts();
-
-    const totalPages =
+    const totalPages=
         Math.max(
             1,
             Math.ceil(
-                all.length /
+                getFilteredPosts().length/
                 POSTS_PER_PAGE
             )
         );
 
 
     if(
-        page<1 ||
+        page<1||
         page>totalPages
-    )
-        return;
+    )return;
 
 
-    currentPage = page;
+    currentPage=page;
 
     renderPosts();
 
@@ -1858,75 +1810,70 @@ function changePage(page) {
    POPULAR
 ========================= */
 
-function renderPopular() {
+function renderPopular(){
 
-    const box =
+    const box=
         document.getElementById(
             "popularPosts"
         );
 
 
-    const popular =
+    const popular=
         [...posts]
         .sort(
-            (a,b) =>
+            (a,b)=>
                 score(b)-score(a)
         )
         .slice(0,5);
 
 
-    if(!popular.length) {
+    if(!popular.length){
 
-        box.innerHTML = `
-            <div class="stats">
-                인기글이 없습니다.
-            </div>
-        `;
+        box.innerHTML=
+        `<div class="stats">
+            인기글이 없습니다.
+        </div>`;
 
         return;
 
     }
 
 
-    box.innerHTML =
-        popular.map(
-            (post,index) => `
+    box.innerHTML=
+    popular.map(
+        (post,index)=>`
 
-                <div class="popular">
+            <div class="popular">
 
-                    <div
-                        class="popular-title"
-                        onclick="openPost(${post.id})"
-                    >
-
-                        ${index+1}.
-                        ${escapeHTML(post.title)}
-
-                    </div>
-
-                    <div class="popular-info">
-
-                        👍 ${post.likes}
-                        · 💬 ${post.comments.length}
-                        · 👁 ${post.views}
-
-                    </div>
-
+                <div
+                    class="popular-title"
+                    onclick="openPost(${post.id})"
+                >
+                    ${index+1}.
+                    ${escapeHTML(post.title)}
                 </div>
 
-            `
-        ).join("");
+                <div class="popular-info">
+                    👍 ${post.likes}
+                    · 💬 ${post.comments.length}
+                    · 👁 ${post.views}
+                </div>
+
+            </div>
+
+        `
+    ).join("");
 
 }
 
 
 /* =========================
-   GALLERY COUNTS
+   COUNTS
 ========================= */
 
-function updateGalleryCounts() {
+function updateGalleryCounts(){
 
-    const categories = [
+    const categories=[
         "전체",
         "자유",
         "게임",
@@ -1938,26 +1885,24 @@ function updateGalleryCounts() {
     ];
 
 
-    categories.forEach(category => {
+    categories.forEach(category=>{
 
-        const count =
-            category === "전체"
-            ? posts.length
-            : posts.filter(
-                p =>
-                    p.category === category
+        const count=
+            category==="전체"
+            ?posts.length
+            :posts.filter(
+                p=>p.category===category
             ).length;
 
 
-        const element =
+        const element=
             document.getElementById(
                 "count-"+category
             );
 
 
         if(element)
-            element.textContent =
-                count;
+            element.textContent=count;
 
     });
 
@@ -1968,79 +1913,70 @@ function updateGalleryCounts() {
    WRITE
 ========================= */
 
-function openWriteForm() {
+function openWriteForm(){
 
     document
-        .getElementById("writeForm")
-        .classList.add("show");
+    .getElementById("writeForm")
+    .classList.add("show");
 
 
-    document
-        .getElementById("nickname")
-        .value =
+    document.getElementById(
+        "nickname"
+    ).value=
         localStorage.getItem(
             "washu_nickname"
-        ) || "";
+        )||"";
 
 }
 
 
-function closeWriteForm() {
+function closeWriteForm(){
 
     document
-        .getElementById("writeForm")
-        .classList.remove("show");
+    .getElementById("writeForm")
+    .classList.remove("show");
 
 }
 
 
-function submitPost() {
+function submitPost(){
 
-    const category =
+    const category=
         document.getElementById(
             "category"
         ).value;
 
-
-    let nickname =
+    let nickname=
         document.getElementById(
             "nickname"
         ).value.trim();
 
-
-    const title =
+    const title=
         document.getElementById(
             "title"
         ).value.trim();
 
-
-    const content =
+    const content=
         document.getElementById(
             "content"
         ).value.trim();
 
 
     if(!nickname)
-        nickname =
+        nickname=
             localStorage.getItem(
                 "washu_nickname"
-            ) ||
-            "익명";
+            )||"익명";
 
 
-    if(!title) {
-
+    if(!title){
         alert("제목을 입력하세요.");
         return;
-
     }
 
-
-    if(!content) {
-
+    if(!content){
         alert("내용을 입력하세요.");
         return;
-
     }
 
 
@@ -2052,7 +1988,9 @@ function submitPost() {
 
     posts.unshift({
 
-        id: Date.now(),
+        id:Date.now(),
+
+        authorId:userId,
 
         category,
 
@@ -2070,8 +2008,7 @@ function submitPost() {
 
         comments:[],
 
-        date:
-            new Date().toISOString()
+        date:new Date().toISOString()
 
     });
 
@@ -2079,19 +2016,12 @@ function submitPost() {
     savePosts();
 
 
-    document.getElementById(
-        "title"
-    ).value = "";
-
-
-    document.getElementById(
-        "content"
-    ).value = "";
-
+    document.getElementById("title").value="";
+    document.getElementById("content").value="";
 
     closeWriteForm();
 
-    currentPage = 1;
+    currentPage=1;
 
     renderPosts();
 
@@ -2101,31 +2031,35 @@ function submitPost() {
 
 
 /* =========================
-   OPEN POST
+   DETAIL
 ========================= */
 
-function openPost(id) {
+function openPost(id){
 
-    const post =
+    const post=
         posts.find(
-            p => p.id === id
+            p=>p.id===id
         );
 
 
-    if(!post) return;
+    if(!post)return;
 
 
     post.views++;
 
     savePosts();
 
-    currentPostId = id;
+    currentPostId=id;
 
 
     document.getElementById(
         "listPage"
-    ).style.display =
-        "none";
+    ).style.display="none";
+
+
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
 
 
     document.getElementById(
@@ -2135,39 +2069,29 @@ function openPost(id) {
 
     document.getElementById(
         "detailCategory"
-    ).textContent =
+    ).textContent=
         post.category;
 
 
     document.getElementById(
         "detailTitle"
-    ).textContent =
+    ).textContent=
         post.title;
 
 
     document.getElementById(
         "detailInfo"
-    ).textContent =
+    ).textContent=
         `${post.nickname} · ${formatDate(post.date)} · 조회 ${post.views}`;
 
 
     document.getElementById(
         "detailContent"
-    ).textContent =
+    ).textContent=
         post.content;
 
 
-    document.getElementById(
-        "likeCount"
-    ).textContent =
-        post.likes;
-
-
-    document.getElementById(
-        "dislikeCount"
-    ).textContent =
-        post.dislikes;
-
+    updateDetailCounts();
 
     renderComments();
 
@@ -2180,21 +2104,21 @@ function openPost(id) {
 
 
 /* =========================
-   COMMENT RENDER
+   COMMENTS
 ========================= */
 
-function renderComments() {
+function renderComments(){
 
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
 
-    if(!post) return;
+    if(!post)return;
 
 
-    const box =
+    const box=
         document.getElementById(
             "commentsList"
         );
@@ -2202,155 +2126,128 @@ function renderComments() {
 
     document.getElementById(
         "commentCount"
-    ).textContent =
+    ).textContent=
         post.comments.length;
 
 
-    if(!post.comments.length) {
+    if(!post.comments.length){
 
-        box.innerHTML = `
-            <div style="color:var(--sub);">
-                아직 댓글이 없습니다.
-            </div>
-        `;
+        box.innerHTML=
+        `<div style="color:var(--sub)">
+            아직 댓글이 없습니다.
+        </div>`;
 
         return;
 
     }
 
 
-    box.innerHTML =
-        post.comments.map(
-            comment => `
+    box.innerHTML=
+    post.comments.map(
+        comment=>`
 
-                <div class="comment">
+            <div class="comment">
 
-                    <div class="comment-head">
+                <div class="comment-head">
 
-                        <span class="comment-author">
-                            ${escapeHTML(
-                                comment.nickname
-                            )}
-                        </span>
+                    <span class="comment-author">
+                        ${escapeHTML(comment.nickname)}
+                    </span>
 
-                        <span class="comment-date">
-                            ${formatDate(
-                                comment.date
-                            )}
-                        </span>
+                    <span class="comment-date">
+                        ${formatDate(comment.date)}
+                    </span>
 
-                    </div>
+                </div>
 
+                <div class="comment-text">
+                    ${escapeHTML(comment.text)}
+                </div>
 
-                    <div class="comment-text">
-                        ${escapeHTML(
-                            comment.text
-                        )}
-                    </div>
+                <div class="comment-buttons">
 
+                    <button onclick="
+                        likeComment(${comment.id});
+                        event.stopPropagation();
+                    ">
+                        👍 ${comment.likes||0}
+                    </button>
 
-                    <div class="comment-buttons">
-
-                        <button
-                            onclick="
-                                likeComment(${comment.id});
-                                event.stopPropagation();
-                            "
-                        >
-                            👍 ${comment.likes || 0}
-                        </button>
-
-                        <button
-                            onclick="
-                                replyComment(${comment.id});
-                                event.stopPropagation();
-                            "
-                        >
-                            답글
-                        </button>
-
-                        <button
-                            onclick="
-                                editComment(${comment.id});
-                                event.stopPropagation();
-                            "
-                        >
-                            수정
-                        </button>
-
-                        <button
-                            onclick="
-                                deleteComment(${comment.id});
-                                event.stopPropagation();
-                            "
-                        >
-                            삭제
-                        </button>
-
-                    </div>
-
+                    <button onclick="
+                        replyComment(${comment.id});
+                        event.stopPropagation();
+                    ">
+                        답글
+                    </button>
 
                     ${
-                        (comment.replies || [])
-                        .map(
-                            reply => `
+                        comment.authorId===userId
+                        ?`
+                        <button onclick="
+                            editComment(${comment.id});
+                            event.stopPropagation();
+                        ">수정</button>
 
-                                <div class="reply">
-
-                                    <div class="comment-head">
-
-                                        <span class="comment-author">
-                                            ↳
-                                            ${escapeHTML(
-                                                reply.nickname
-                                            )}
-                                        </span>
-
-                                        <span class="comment-date">
-                                            ${formatDate(
-                                                reply.date
-                                            )}
-                                        </span>
-
-                                    </div>
-
-                                    <div class="comment-text">
-                                        ${escapeHTML(
-                                            reply.text
-                                        )}
-                                    </div>
-
-                                </div>
-
-                            `
-                        ).join("")
+                        <button onclick="
+                            deleteComment(${comment.id});
+                            event.stopPropagation();
+                        ">삭제</button>
+                        `
+                        :""
                     }
 
                 </div>
 
-            `
-        ).join("");
+
+                ${
+                    (comment.replies||[])
+                    .map(
+                        reply=>`
+
+                            <div class="reply">
+
+                                <div class="comment-head">
+
+                                    <span class="comment-author">
+                                        ↳ ${escapeHTML(reply.nickname)}
+                                    </span>
+
+                                    <span class="comment-date">
+                                        ${formatDate(reply.date)}
+                                    </span>
+
+                                </div>
+
+                                <div class="comment-text">
+                                    ${escapeHTML(reply.text)}
+                                </div>
+
+                            </div>
+
+                        `
+                    ).join("")
+                }
+
+            </div>
+
+        `
+    ).join("");
 
 }
 
 
-/* =========================
-   ADD COMMENT
-========================= */
+function addComment(){
 
-function addComment() {
-
-    const input =
+    const input=
         document.getElementById(
             "commentInput"
         );
 
-
-    const text =
+    const text=
         input.value.trim();
 
 
-    if(!text) {
+    if(!text){
 
         alert("댓글을 입력하세요.");
         return;
@@ -2358,27 +2255,25 @@ function addComment() {
     }
 
 
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
 
-    if(!post) return;
-
-
-    const nickname =
-        localStorage.getItem(
-            "washu_nickname"
-        ) ||
-        "익명";
+    if(!post)return;
 
 
     post.comments.push({
 
         id:Date.now(),
 
-        nickname,
+        authorId:userId,
+
+        nickname:
+            localStorage.getItem(
+                "washu_nickname"
+            )||"익명",
 
         text,
 
@@ -2386,13 +2281,12 @@ function addComment() {
 
         replies:[],
 
-        date:
-            new Date().toISOString()
+        date:new Date().toISOString()
 
     });
 
 
-    input.value = "";
+    input.value="";
 
     savePosts();
 
@@ -2400,97 +2294,84 @@ function addComment() {
 
     renderPosts();
 
+    renderMyPage();
+
 }
 
 
-/* =========================
-   COMMENT LIKE
-========================= */
+function likeComment(id){
 
-function likeComment(id) {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
+    if(!post)return;
 
-    if(!post) return;
 
-
-    const comment =
+    const comment=
         post.comments.find(
-            c => c.id === id
+            c=>c.id===id
         );
 
+    if(!comment)return;
 
-    if(!comment) return;
 
-
-    comment.likes =
-        (comment.likes || 0)+1;
-
+    comment.likes=
+        (comment.likes||0)+1;
 
     savePosts();
 
     renderComments();
 
+    renderMyPage();
+
 }
 
 
-/* =========================
-   REPLY
-========================= */
+function replyComment(id){
 
-function replyComment(id) {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
+    if(!post)return;
 
-    if(!post) return;
 
-
-    const comment =
+    const comment=
         post.comments.find(
-            c => c.id === id
+            c=>c.id===id
         );
 
+    if(!comment)return;
 
-    if(!comment) return;
 
-
-    const text =
+    const text=
         prompt("답글을 입력하세요.");
 
-
-    if(!text || !text.trim())
+    if(!text||!text.trim())
         return;
 
 
-    const nickname =
-        localStorage.getItem(
-            "washu_nickname"
-        ) ||
-        "익명";
-
-
     if(!comment.replies)
-        comment.replies = [];
+        comment.replies=[];
 
 
     comment.replies.push({
 
         id:Date.now(),
 
-        nickname,
+        authorId:userId,
+
+        nickname:
+            localStorage.getItem(
+                "washu_nickname"
+            )||"익명",
 
         text:text.trim(),
 
-        date:
-            new Date().toISOString()
+        date:new Date().toISOString()
 
     });
 
@@ -2502,31 +2383,29 @@ function replyComment(id) {
 }
 
 
-/* =========================
-   EDIT COMMENT
-========================= */
+function editComment(id){
 
-function editComment(id) {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
+    if(!post)return;
 
-    if(!post) return;
 
-
-    const comment =
+    const comment=
         post.comments.find(
-            c => c.id === id
+            c=>c.id===id
         );
 
 
-    if(!comment) return;
+    if(
+        !comment||
+        comment.authorId!==userId
+    )return;
 
 
-    const newText =
+    const text=
         prompt(
             "댓글 수정",
             comment.text
@@ -2534,49 +2413,54 @@ function editComment(id) {
 
 
     if(
-        newText === null ||
-        !newText.trim()
-    )
-        return;
+        text===null||
+        !text.trim()
+    )return;
 
 
-    comment.text =
-        newText.trim();
-
+    comment.text=text.trim();
 
     savePosts();
 
     renderComments();
 
+    renderMyPage();
+
 }
 
 
-/* =========================
-   DELETE COMMENT
-========================= */
+function deleteComment(id){
 
-function deleteComment(id) {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    const comment=
+        post.comments.find(
+            c=>c.id===id
         );
 
 
-    if(!post) return;
+    if(
+        !comment||
+        comment.authorId!==userId
+    )return;
 
 
     if(
         !confirm(
             "이 댓글을 삭제하시겠습니까?"
         )
-    )
-        return;
+    )return;
 
 
-    post.comments =
+    post.comments=
         post.comments.filter(
-            c => c.id !== id
+            c=>c.id!==id
         );
 
 
@@ -2586,131 +2470,126 @@ function deleteComment(id) {
 
     renderPosts();
 
+    renderMyPage();
+
 }
 
 
 /* =========================
-   LIKE POST
+   POST LIKE
 ========================= */
 
-function likePost() {
+function likePost(){
 
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
-
-    if(!post) return;
-
+    if(!post)return;
 
     post.likes++;
 
     savePosts();
 
     updateDetailCounts();
-
     renderPosts();
-
     renderPopular();
+    renderMyPage();
 
 }
 
 
-/* =========================
-   DISLIKE POST
-========================= */
+function dislikePost(){
 
-function dislikePost() {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
-
-    if(!post) return;
-
+    if(!post)return;
 
     post.dislikes++;
 
     savePosts();
 
     updateDetailCounts();
+    renderMyPage();
 
 }
 
 
-/* =========================
-   DETAIL COUNTS
-========================= */
+function updateDetailCounts(){
 
-function updateDetailCounts() {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
-
-    if(!post) return;
+    if(!post)return;
 
 
     document.getElementById(
         "likeCount"
-    ).textContent =
+    ).textContent=
         post.likes;
 
 
     document.getElementById(
         "dislikeCount"
-    ).textContent =
+    ).textContent=
         post.dislikes;
 
 }
 
 
 /* =========================
-   EDIT POST
+   POST EDIT / DELETE
 ========================= */
 
-function editCurrentPost() {
+function editCurrentPost(){
 
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
 
-    if(!post) return;
+    if(
+        !post||
+        post.authorId!==userId
+    ){
+
+        alert("내가 작성한 게시글만 수정할 수 있습니다.");
+        return;
+
+    }
 
 
-    const title =
+    const title=
         prompt(
             "제목 수정",
             post.title
         );
 
 
-    if(title === null)
-        return;
+    if(title===null)return;
 
 
-    const content =
+    const content=
         prompt(
             "내용 수정",
             post.content
         );
 
 
-    if(content === null)
-        return;
+    if(content===null)return;
 
 
     if(
-        !title.trim() ||
+        !title.trim()||
         !content.trim()
-    ) {
+    ){
 
         alert(
             "제목과 내용을 비워둘 수 없습니다."
@@ -2721,60 +2600,47 @@ function editCurrentPost() {
     }
 
 
-    post.title =
-        title.trim();
-
-
-    post.content =
-        content.trim();
-
+    post.title=title.trim();
+    post.content=content.trim();
 
     savePosts();
 
+    openPost(post.id);
 
-    document.getElementById(
-        "detailTitle"
-    ).textContent =
-        post.title;
-
-
-    document.getElementById(
-        "detailContent"
-    ).textContent =
-        post.content;
-
-
-    renderPosts();
+    renderMyPage();
 
 }
 
 
-/* =========================
-   DELETE POST
-========================= */
+function deleteCurrentPost(){
 
-function deleteCurrentPost() {
-
-    const post =
+    const post=
         posts.find(
-            p => p.id === currentPostId
+            p=>p.id===currentPostId
         );
 
 
-    if(!post) return;
+    if(
+        !post||
+        post.authorId!==userId
+    ){
+
+        alert("내가 작성한 게시글만 삭제할 수 있습니다.");
+        return;
+
+    }
 
 
     if(
         !confirm(
             "정말 이 게시글을 삭제하시겠습니까?"
         )
-    )
-        return;
+    )return;
 
 
-    posts =
+    posts=
         posts.filter(
-            p => p.id !== currentPostId
+            p=>p.id!==currentPostId
         );
 
 
@@ -2786,83 +2652,47 @@ function deleteCurrentPost() {
 
 
 /* =========================
-   HOME
-========================= */
-
-function goHome() {
-
-    currentPostId = null;
-
-
-    document.getElementById(
-        "detailPage"
-    ).classList.remove("show");
-
-
-    document.getElementById(
-        "listPage"
-    ).style.display =
-        "block";
-
-
-    renderPosts();
-
-}
-
-
-/* =========================
    CATEGORY
 ========================= */
 
-function selectCategory(
-    category,
-    button
-) {
+function selectCategory(category,button){
 
-    currentCategory =
-        category;
-
-
-    currentPage = 1;
-
-    searchKeyword = "";
+    currentCategory=category;
+    currentPage=1;
+    searchKeyword="";
 
 
     document.getElementById(
         "searchInput"
-    ).value = "";
+    ).value="";
 
 
     document
-        .querySelectorAll(
-            ".gallery button"
-        )
-        .forEach(
-            b =>
-                b.classList.remove(
-                    "active"
-                )
-        );
-
-
-    button.classList.add(
-        "active"
+    .querySelectorAll(
+        ".gallery button"
+    )
+    .forEach(
+        b=>b.classList.remove("active")
     );
+
+
+    button.classList.add("active");
 
 
     document.getElementById(
         "pageTitle"
-    ).textContent =
-        category === "전체"
-        ? "와슈 커뮤니티"
-        : category+" 게시판";
+    ).textContent=
+        category==="전체"
+        ?"와슈 커뮤니티"
+        :category+" 게시판";
 
 
     document.getElementById(
         "searchInfo"
-    ).style.display =
-        "none";
+    ).style.display="none";
 
+
+    showList();
 
     renderPosts();
 
@@ -2870,36 +2700,23 @@ function selectCategory(
 
 
 /* =========================
-   TABS
+   TAB
 ========================= */
 
-function changeTab(
-    tab,
-    button
-) {
+function changeTab(tab,button){
 
-    currentTab =
-        tab;
-
-    currentPage = 1;
+    currentTab=tab;
+    currentPage=1;
 
 
     document
-        .querySelectorAll(
-            ".tabs button"
-        )
-        .forEach(
-            b =>
-                b.classList.remove(
-                    "active"
-                )
-        );
-
-
-    button.classList.add(
-        "active"
+    .querySelectorAll(".tabs button")
+    .forEach(
+        b=>b.classList.remove("active")
     );
 
+
+    button.classList.add("active");
 
     renderPosts();
 
@@ -2910,9 +2727,9 @@ function changeTab(
    SEARCH
 ========================= */
 
-function searchPosts() {
+function searchPosts(){
 
-    const keyword =
+    searchKeyword=
         document.getElementById(
             "searchInput"
         ).value
@@ -2920,47 +2737,375 @@ function searchPosts() {
         .toLowerCase();
 
 
-    searchKeyword =
-        keyword;
+    currentPage=1;
 
 
-    currentPage = 1;
-
-
-    if(keyword) {
-
+    const info=
         document.getElementById(
             "searchInfo"
-        ).style.display =
-            "block";
+        );
 
-    } else {
 
-        document.getElementById(
-            "searchInfo"
-        ).style.display =
-            "none";
+    if(searchKeyword){
+
+        info.style.display="block";
+
+        info.innerHTML=
+        `"<strong>${escapeHTML(searchKeyword)}</strong>"
+        검색 결과
+        <strong>${getFilteredPosts().length}</strong>개`;
+
+    }else{
+
+        info.style.display="none";
 
     }
 
 
-    const count =
-        getFilteredPosts().length;
+    showList();
+
+    renderPosts();
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome(){
+
+    currentPostId=null;
+
+    showList();
+
+    renderPosts();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function showList(){
+
+    document.getElementById(
+        "listPage"
+    ).style.display="block";
 
 
     document.getElementById(
-        "searchInfo"
-    ).innerHTML =
-        keyword
-        ? `
-            "<strong>${escapeHTML(keyword)}</strong>"
-            검색 결과
-            <strong>${count}</strong>개
-        `
-        : "";
+        "detailPage"
+    ).classList.remove("show");
 
 
-    renderPosts();
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
+
+}
+
+
+/* =========================
+   MY PAGE
+========================= */
+
+function openMyPage(){
+
+    document.getElementById(
+        "listPage"
+    ).style.display="none";
+
+
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
+
+
+    document.getElementById(
+        "myPage"
+    ).classList.add("show");
+
+
+    renderMyPage();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function renderMyPage(){
+
+    const nickname=
+        localStorage.getItem(
+            "washu_nickname"
+        )||"익명";
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent=
+        nickname;
+
+
+    document.getElementById(
+        "profileAvatar"
+    ).textContent=
+        nickname.charAt(0);
+
+
+    document.getElementById(
+        "profileId"
+    ).textContent=
+        "회원 ID: "+userId;
+
+
+    document.getElementById(
+        "profileDate"
+    ).textContent=
+        "가입일: "+
+        new Date(joinDate)
+        .toLocaleDateString("ko-KR");
+
+
+    document.getElementById(
+        "settingNickname"
+    ).textContent=
+        nickname;
+
+
+    /*
+       현재 브라우저에서 작성한 글
+    */
+
+    const myPosts=
+        posts.filter(
+            p=>p.authorId===userId
+        );
+
+
+    /*
+       기존 글 중 authorId가 없는
+       글은 닉네임 기준으로도 표시
+       (기존 데이터 호환용)
+    */
+
+    const legacyPosts=
+        posts.filter(
+            p=>
+                !p.authorId&&
+                p.nickname===nickname
+        );
+
+
+    const combinedPosts=[
+        ...myPosts,
+        ...legacyPosts
+            .filter(
+                p=>
+                    !myPosts.some(
+                        x=>x.id===p.id
+                    )
+            )
+    ]
+    .sort(
+        (a,b)=>
+            new Date(b.date)-
+            new Date(a.date)
+    );
+
+
+    document.getElementById(
+        "myPostCount"
+    ).textContent=
+        combinedPosts.length;
+
+
+    const postBox=
+        document.getElementById(
+            "myPosts"
+        );
+
+
+    if(!combinedPosts.length){
+
+        postBox.innerHTML=
+        `<div class="empty">
+            아직 작성한 글이 없습니다.
+        </div>`;
+
+    }else{
+
+        postBox.innerHTML=
+        combinedPosts
+        .slice(0,10)
+        .map(
+            post=>`
+
+                <div
+                    class="my-post"
+                    onclick="openPost(${post.id})"
+                >
+
+                    <div class="my-post-title">
+                        ${escapeHTML(post.title)}
+                    </div>
+
+                    <div class="my-post-info">
+                        ${escapeHTML(post.category)}
+                        · ${formatDate(post.date)}
+                        · 👁 ${post.views}
+                        · 👍 ${post.likes}
+                        · 💬 ${post.comments.length}
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+    }
+
+
+    /*
+       내 댓글
+    */
+
+    const myComments=[];
+
+
+    posts.forEach(post=>{
+
+        post.comments.forEach(comment=>{
+
+            if(
+                comment.authorId===userId
+                ||
+                (
+                    !comment.authorId&&
+                    comment.nickname===nickname
+                )
+            ){
+
+                myComments.push({
+
+                    postId:post.id,
+
+                    postTitle:post.title,
+
+                    ...comment
+
+                });
+
+            }
+
+        });
+
+    });
+
+
+    myComments.sort(
+        (a,b)=>
+            new Date(b.date)-
+            new Date(a.date)
+    );
+
+
+    document.getElementById(
+        "myCommentCount"
+    ).textContent=
+        myComments.length;
+
+
+    const commentBox=
+        document.getElementById(
+            "myComments"
+        );
+
+
+    if(!myComments.length){
+
+        commentBox.innerHTML=
+        `<div class="empty">
+            아직 작성한 댓글이 없습니다.
+        </div>`;
+
+    }else{
+
+        commentBox.innerHTML=
+        myComments
+        .slice(0,10)
+        .map(
+            comment=>`
+
+                <div class="my-comment">
+
+                    <div
+                        class="my-comment-post"
+                        onclick="openPost(${comment.postId})"
+                    >
+                        ${escapeHTML(comment.postTitle)}
+                    </div>
+
+                    <div class="my-comment-text">
+                        ${escapeHTML(comment.text)}
+                    </div>
+
+                    <div class="my-comment-date">
+                        ${formatDate(comment.date)}
+                        · 👍 ${comment.likes||0}
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+    }
+
+
+    /*
+       받은 추천
+    */
+
+    let likes=0;
+    let dislikes=0;
+
+
+    posts.forEach(post=>{
+
+        const isMine=
+            post.authorId===userId
+            ||
+            (
+                !post.authorId&&
+                post.nickname===nickname
+            );
+
+
+        if(isMine){
+
+            likes+=post.likes||0;
+            dislikes+=post.dislikes||0;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "myLikeCount"
+    ).textContent=likes;
+
+
+    document.getElementById(
+        "myDislikeCount"
+    ).textContent=dislikes;
 
 }
 
@@ -2969,48 +3114,45 @@ function searchPosts() {
    NICKNAME
 ========================= */
 
-function openNickname() {
+function openNickname(){
 
     document
-        .getElementById(
-            "nicknameModal"
-        )
-        .classList.add(
-            "show"
-        );
+    .getElementById(
+        "nicknameModal"
+    )
+    .classList.add("show");
 
 
     document.getElementById(
         "nicknameSetting"
-    ).value =
+    ).value=
         localStorage.getItem(
             "washu_nickname"
-        ) || "";
+        )||"";
 
 }
 
 
-function closeNickname() {
+function closeNickname(){
 
     document
-        .getElementById(
-            "nicknameModal"
-        ).classList.remove(
-            "show"
-        );
+    .getElementById(
+        "nicknameModal"
+    )
+    .classList.remove("show");
 
 }
 
 
-function saveNickname() {
+function saveNickname(){
 
-    const nickname =
+    const nickname=
         document.getElementById(
             "nicknameSetting"
         ).value.trim();
 
 
-    if(!nickname) {
+    if(!nickname){
 
         alert("닉네임을 입력하세요.");
         return;
@@ -3026,6 +3168,8 @@ function saveNickname() {
 
     closeNickname();
 
+    renderMyPage();
+
     alert("닉네임이 저장되었습니다.");
 
 }
@@ -3035,45 +3179,43 @@ function saveNickname() {
    DARK MODE
 ========================= */
 
-function updateDarkModeButton() {
+function updateDarkModeButton(){
 
-    const button =
+    const button=
         document.getElementById(
             "darkModeBtn"
         );
 
 
-    if(!button) return;
+    if(!button)return;
 
 
-    const dark =
+    const dark=
         document.body.classList.contains(
             "dark"
         );
 
 
-    button.textContent =
-        dark
-        ? "☀️"
-        : "🌙";
+    button.textContent=
+        dark?"☀️":"🌙";
 
 
-    button.title =
+    button.title=
         dark
-        ? "라이트모드"
-        : "다크모드";
+        ?"라이트모드"
+        :"다크모드";
 
 }
 
 
-function toggleDark() {
+function toggleDark(){
 
     document.body.classList.toggle(
         "dark"
     );
 
 
-    const dark =
+    const dark=
         document.body.classList.contains(
             "dark"
         );
@@ -3094,41 +3236,39 @@ function toggleDark() {
    STATS
 ========================= */
 
-function updateStats() {
+function updateStats(){
 
     document.getElementById(
         "totalPosts"
-    ).textContent =
+    ).textContent=
         posts.length;
 
 
-    const comments =
+    const comments=
         posts.reduce(
-            (total,post) =>
-                total +
-                post.comments.length,
+            (sum,p)=>
+                sum+p.comments.length,
             0
         );
 
 
-    const likes =
+    const likes=
         posts.reduce(
-            (total,post) =>
-                total +
-                post.likes,
+            (sum,p)=>
+                sum+p.likes,
             0
         );
 
 
     document.getElementById(
         "totalComments"
-    ).textContent =
+    ).textContent=
         comments;
 
 
     document.getElementById(
         "totalLikes"
-    ).textContent =
+    ).textContent=
         likes;
 
 }
@@ -3141,21 +3281,17 @@ function updateStats() {
 if(
     localStorage.getItem(
         "washu_dark"
-    ) === "true"
-) {
+    )==="true"
+){
 
-    document.body.classList.add(
-        "dark"
-    );
+    document.body.classList.add("dark");
 
 }
 
-
 updateDarkModeButton();
-
 renderPosts();
 
 </script>
 
 </body>
-    </html>
+</html>
