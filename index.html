@@ -13,22 +13,26 @@
 }
 
 :root {
-    --bg: #f4f5f7;
+    --bg: #f5f6f8;
     --card: #ffffff;
     --text: #202124;
-    --sub: #777;
-    --line: #e5e7eb;
+    --sub: #777b85;
+    --line: #e4e6eb;
     --point: #4f46e5;
     --point-light: #eef2ff;
+    --danger: #ef4444;
+    --success: #16a34a;
+    --shadow: 0 2px 8px rgba(0,0,0,.04);
 }
 
 body.dark {
-    --bg: #111318;
-    --card: #1b1e25;
-    --text: #f1f3f5;
-    --sub: #a5a8b0;
-    --line: #30343d;
-    --point-light: #252a4a;
+    --bg: #101218;
+    --card: #191c23;
+    --text: #f3f4f6;
+    --sub: #a6a9b2;
+    --line: #2d313a;
+    --point-light: #252a4b;
+    --shadow: 0 2px 10px rgba(0,0,0,.2);
 }
 
 body {
@@ -43,9 +47,16 @@ body {
         sans-serif;
 }
 
-/* =========================
-   HEADER
-========================= */
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
 
 .header {
     position: sticky;
@@ -69,90 +80,86 @@ body {
 .logo {
     color: var(--point);
     text-decoration: none;
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 900;
-    white-space: nowrap;
+    letter-spacing: -1px;
 }
 
 .search {
     flex: 1;
-    max-width: 600px;
+    max-width: 620px;
     margin: auto;
-
     display: flex;
 }
 
 .search input {
     width: 100%;
     height: 42px;
-
     border: 1px solid var(--line);
     border-right: 0;
     border-radius: 8px 0 0 8px;
-
     padding: 0 14px;
     background: var(--bg);
     color: var(--text);
     outline: none;
 }
 
+.search input:focus {
+    border-color: var(--point);
+}
+
 .search button {
     width: 48px;
     border: 0;
     border-radius: 0 8px 8px 0;
-
     background: var(--point);
     color: white;
-    cursor: pointer;
 }
 
 .header-buttons {
     display: flex;
-    gap: 8px;
+    gap: 7px;
     flex-shrink: 0;
 }
 
 .header-buttons button {
     min-width: 42px;
     height: 40px;
+    padding: 0 11px;
 
     border: 1px solid var(--line);
+    border-radius: 7px;
+
     background: var(--card);
     color: var(--text);
-
-    padding: 0 12px;
-    border-radius: 7px;
-    cursor: pointer;
 }
 
 .header-buttons button:hover {
     background: var(--point-light);
 }
 
-/* =========================
-   MAIN
-========================= */
-
 .container {
     max-width: 1400px;
-    margin: 25px auto;
+    margin: 24px auto;
     padding: 0 20px;
 
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr) 250px;
+    grid-template-columns: 220px minmax(0,1fr) 250px;
     gap: 20px;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar {
+.sidebar,
+.card,
+.right-card {
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: 10px;
-    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.sidebar {
     height: fit-content;
+    overflow: hidden;
 }
 
 .sidebar-title {
@@ -167,14 +174,15 @@ body {
 
 .gallery button {
     width: 100%;
+    padding: 12px;
+
     border: 0;
+    border-radius: 7px;
+
     background: transparent;
     color: var(--text);
 
-    padding: 12px;
     text-align: left;
-    border-radius: 7px;
-    cursor: pointer;
 }
 
 .gallery button:hover,
@@ -184,35 +192,27 @@ body {
     font-weight: 700;
 }
 
-/* =========================
-   CENTER
-========================= */
+.gallery-count {
+    float: right;
+    color: var(--sub);
+    font-size: 12px;
+}
 
 .page-title {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .page-title h1 {
     margin: 0;
     font-size: 24px;
+    letter-spacing: -.5px;
 }
 
 .page-title p {
-    color: var(--sub);
     margin: 6px 0 0;
+    color: var(--sub);
     font-size: 14px;
 }
-
-.card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-/* =========================
-   TABS
-========================= */
 
 .tabs {
     display: flex;
@@ -222,56 +222,93 @@ body {
 .tabs button {
     flex: 1;
     padding: 14px;
+
     border: 0;
+    border-bottom: 2px solid transparent;
+
     background: transparent;
     color: var(--sub);
-    cursor: pointer;
 }
 
 .tabs button.active {
     color: var(--point);
+    border-bottom-color: var(--point);
     font-weight: 800;
-    border-bottom: 2px solid var(--point);
 }
 
-/* =========================
-   POST LIST
-========================= */
+.search-info {
+    display: none;
+    padding: 12px 16px;
+    background: var(--point-light);
+    color: var(--point);
+    font-size: 13px;
+}
 
 .post {
+    position: relative;
     padding: 16px 18px;
     border-bottom: 1px solid var(--line);
-    cursor: pointer;
 }
 
 .post:hover {
     background: var(--bg);
 }
 
+.post-title-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
 .post-title {
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 8px;
+    word-break: break-word;
 }
 
-.post-title .comment-count {
+.comment-count {
     color: var(--point);
     font-size: 13px;
-    margin-left: 5px;
+    font-weight: 700;
 }
 
-.post-content-preview {
+.badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 2px 6px;
+    border-radius: 4px;
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.badge.hot {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge.new {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.post-preview {
+    margin-top: 7px;
+
     color: var(--sub);
     font-size: 13px;
 
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .post-info {
     display: flex;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 11px;
+
     margin-top: 10px;
 
     color: var(--sub);
@@ -283,15 +320,23 @@ body {
     font-weight: 700;
 }
 
+mark {
+    background: #fef08a;
+    color: #111;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+body.dark mark {
+    background: #665c16;
+    color: #fff;
+}
+
 .empty {
-    padding: 60px 20px;
+    padding: 65px 20px;
     text-align: center;
     color: var(--sub);
 }
-
-/* =========================
-   WRITE
-========================= */
 
 .write-area {
     padding: 14px;
@@ -306,10 +351,11 @@ body {
 
     background: var(--point);
     color: white;
-    font-size: 15px;
-    font-weight: 700;
+    font-weight: 800;
+}
 
-    cursor: pointer;
+.write-btn:hover {
+    filter: brightness(.95);
 }
 
 .form {
@@ -323,23 +369,23 @@ body {
 }
 
 .form input,
-.form select,
-.form textarea {
+.form textarea,
+.form select {
     width: 100%;
     margin-bottom: 10px;
 
     border: 1px solid var(--line);
     border-radius: 7px;
 
+    padding: 11px;
+
     background: var(--bg);
     color: var(--text);
-
-    padding: 11px;
     outline: none;
 }
 
 .form textarea {
-    min-height: 180px;
+    min-height: 190px;
     resize: vertical;
 }
 
@@ -353,7 +399,6 @@ body {
     padding: 12px;
     border: 0;
     border-radius: 7px;
-    cursor: pointer;
 }
 
 .cancel {
@@ -366,48 +411,52 @@ body {
     color: white;
 }
 
-/* =========================
-   RIGHT
-========================= */
-
 .right-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    margin-bottom: 15px;
     overflow: hidden;
+    margin-bottom: 15px;
 }
 
 .right-title {
     padding: 15px;
-    font-weight: 800;
     border-bottom: 1px solid var(--line);
+    font-weight: 800;
 }
 
 .popular {
-    padding: 12px 15px;
+    padding: 13px 15px;
     border-bottom: 1px solid var(--line);
-    cursor: pointer;
 }
 
 .popular:last-child {
     border-bottom: 0;
 }
 
+.popular:hover {
+    background: var(--bg);
+}
+
 .popular-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .popular-info {
+    margin-top: 5px;
     color: var(--sub);
     font-size: 11px;
-    margin-top: 5px;
 }
 
-/* =========================
-   DETAIL
-========================= */
+.stats {
+    padding: 15px;
+    color: var(--sub);
+    font-size: 13px;
+    line-height: 2;
+}
+
+.stats strong {
+    color: var(--text);
+}
 
 .detail {
     display: none;
@@ -415,6 +464,16 @@ body {
 
 .detail.show {
     display: block;
+}
+
+.back-btn {
+    margin-bottom: 12px;
+
+    border: 0;
+    background: transparent;
+
+    color: var(--point);
+    font-weight: 800;
 }
 
 .detail-header {
@@ -429,9 +488,10 @@ body {
 }
 
 .detail-title {
+    margin: 10px 0 14px;
+
     font-size: 24px;
-    font-weight: 800;
-    margin: 10px 0 15px;
+    font-weight: 850;
     word-break: break-word;
 }
 
@@ -441,19 +501,19 @@ body {
 }
 
 .detail-content {
+    min-height: 260px;
     padding: 25px 22px;
-    min-height: 250px;
 
+    line-height: 1.8;
     white-space: pre-wrap;
     word-break: break-word;
-    line-height: 1.7;
 }
 
 .detail-actions {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 
     padding: 15px;
     border-top: 1px solid var(--line);
@@ -461,44 +521,37 @@ body {
 }
 
 .detail-actions button {
+    padding: 9px 15px;
+
     border: 1px solid var(--line);
+    border-radius: 7px;
+
     background: var(--card);
     color: var(--text);
-
-    padding: 10px 18px;
-    border-radius: 7px;
-    cursor: pointer;
 }
 
 .detail-actions button:hover {
     background: var(--point-light);
 }
 
-.back-btn {
-    margin-bottom: 12px;
-    border: 0;
-    background: transparent;
-    color: var(--point);
-    cursor: pointer;
-    font-weight: 700;
-}
-
-/* =========================
-   COMMENTS
-========================= */
-
 .comments {
     padding: 20px;
 }
 
 .comments-title {
-    font-weight: 800;
     margin-bottom: 15px;
+    font-weight: 800;
 }
 
 .comment {
     padding: 14px 0;
     border-bottom: 1px solid var(--line);
+}
+
+.comment-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 }
 
 .comment-author {
@@ -509,13 +562,36 @@ body {
 .comment-date {
     color: var(--sub);
     font-size: 11px;
-    margin-left: 7px;
 }
 
 .comment-text {
     margin-top: 7px;
     white-space: pre-wrap;
     word-break: break-word;
+    line-height: 1.6;
+}
+
+.comment-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 7px;
+}
+
+.comment-buttons button {
+    border: 0;
+    background: transparent;
+    color: var(--sub);
+    padding: 2px;
+    font-size: 11px;
+}
+
+.reply {
+    margin: 10px 0 0 25px;
+    padding: 10px 12px;
+
+    border-left: 2px solid var(--point);
+    background: var(--bg);
+    border-radius: 0 7px 7px 0;
 }
 
 .comment-form {
@@ -529,26 +605,54 @@ body {
     min-width: 0;
 
     border: 1px solid var(--line);
-    background: var(--bg);
-    color: var(--text);
+    border-radius: 7px;
 
     padding: 11px;
-    border-radius: 7px;
+
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
 }
 
 .comment-form button {
     border: 0;
-    background: var(--point);
-    color: white;
+    border-radius: 7px;
 
     padding: 0 18px;
-    border-radius: 7px;
-    cursor: pointer;
+
+    background: var(--point);
+    color: white;
 }
 
-/* =========================
-   MODAL
-========================= */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+
+    padding: 17px;
+}
+
+.pagination button {
+    min-width: 34px;
+    height: 34px;
+
+    border: 1px solid var(--line);
+    border-radius: 6px;
+
+    background: var(--card);
+    color: var(--text);
+}
+
+.pagination button.active {
+    background: var(--point);
+    color: white;
+    border-color: var(--point);
+}
+
+.pagination button:disabled {
+    opacity: .4;
+    cursor: default;
+}
 
 .modal {
     display: none;
@@ -557,12 +661,12 @@ body {
     inset: 0;
     z-index: 1000;
 
-    background: rgba(0,0,0,.55);
-
     align-items: center;
     justify-content: center;
 
     padding: 20px;
+
+    background: rgba(0,0,0,.55);
 }
 
 .modal.show {
@@ -573,11 +677,12 @@ body {
     width: 100%;
     max-width: 420px;
 
-    background: var(--card);
-    color: var(--text);
+    padding: 22px;
 
     border-radius: 12px;
-    padding: 22px;
+
+    background: var(--card);
+    color: var(--text);
 }
 
 .modal-box h2 {
@@ -590,10 +695,10 @@ body {
     margin-bottom: 10px;
 
     border: 1px solid var(--line);
+    border-radius: 7px;
+
     background: var(--bg);
     color: var(--text);
-
-    border-radius: 7px;
 }
 
 .modal-buttons {
@@ -604,9 +709,9 @@ body {
 .modal-buttons button {
     flex: 1;
     padding: 11px;
+
     border: 0;
     border-radius: 7px;
-    cursor: pointer;
 }
 
 .modal-save {
@@ -614,36 +719,29 @@ body {
     color: white;
 }
 
-/* =========================
-   FOOTER
-========================= */
-
 footer {
-    text-align: center;
-    color: var(--sub);
     padding: 35px 20px;
+
+    text-align: center;
+
+    color: var(--sub);
     font-size: 12px;
 }
 
-/* =========================
-   TABLET
-========================= */
+/* TABLET */
 
 @media (max-width: 1000px) {
 
     .container {
-        grid-template-columns: 190px minmax(0, 1fr);
+        grid-template-columns: 190px minmax(0,1fr);
     }
 
     .right-column {
         display: none;
     }
-
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media (max-width: 700px) {
 
@@ -651,7 +749,7 @@ footer {
         min-height: 0;
         padding: 10px;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 9px;
     }
 
     .logo {
@@ -664,7 +762,7 @@ footer {
 
     .header-buttons button {
         height: 38px;
-        padding: 0 10px;
+        padding: 0 9px;
     }
 
     .search {
@@ -675,7 +773,7 @@ footer {
     .container {
         display: block;
         margin: 12px auto;
-        padding: 0 10px;
+        padding: 0 9px;
     }
 
     .sidebar {
@@ -689,27 +787,46 @@ footer {
 
     .gallery {
         display: flex;
+        gap: 4px;
         padding: 7px;
-        gap: 5px;
         white-space: nowrap;
     }
 
     .gallery button {
         width: auto;
-        padding: 9px 13px;
+        padding: 9px 12px;
+    }
+
+    .gallery-count {
+        display: none;
     }
 
     .page-title h1 {
         font-size: 20px;
     }
 
+    .post {
+        padding: 14px;
+    }
+
+    .post-info {
+        gap: 7px;
+    }
+
+    .detail-header {
+        padding: 18px;
+    }
+
     .detail-title {
         font-size: 20px;
     }
 
-    .detail-header,
     .detail-content {
-        padding: 18px;
+        padding: 20px 18px;
+    }
+
+    .comments {
+        padding: 16px;
     }
 
     .comment-form {
@@ -720,35 +837,31 @@ footer {
         height: 42px;
     }
 
+    .reply {
+        margin-left: 15px;
+    }
 }
 
-/* =========================
-   SMALL PHONE
-========================= */
+/* SMALL PHONE */
 
 @media (max-width: 450px) {
 
     .header-buttons button {
         min-width: 38px;
-        padding: 0 8px;
+        padding: 0 7px;
     }
 
     .header-buttons button:last-child {
-        max-width: 70px;
+        max-width: 65px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    .post {
-        padding: 14px;
+    .detail-actions button {
+        padding: 8px 11px;
+        font-size: 12px;
     }
-
-    .post-info {
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
 }
 </style>
 </head>
@@ -757,474 +870,424 @@ footer {
 
 <header class="header">
 
-    <div class="header-inner">
+<div class="header-inner">
 
-        <a
-            class="logo"
-            href="#"
-            onclick="goHome(); return false;"
-        >
-            와슈
-        </a>
+<a
+    class="logo"
+    href="#"
+    onclick="goHome();return false;"
+>
+    와슈
+</a>
 
-        <div class="search">
+<div class="search">
 
-            <input
-                id="searchInput"
-                type="text"
-                placeholder="게시글 검색"
-                onkeydown="if(event.key==='Enter') searchPosts()"
-            >
+<input
+    id="searchInput"
+    placeholder="게시글 검색"
+    onkeydown="if(event.key==='Enter')searchPosts()"
+>
 
-            <button onclick="searchPosts()">
-                🔍
-            </button>
+<button onclick="searchPosts()">
+    🔍
+</button>
 
-        </div>
+</div>
 
-        <div class="header-buttons">
+<div class="header-buttons">
 
-            <!-- PC / 모바일 모두 표시 -->
-            <button
-                id="darkModeBtn"
-                onclick="toggleDark()"
-                title="다크모드"
-            >
-                🌙
-            </button>
+<button
+    id="darkModeBtn"
+    onclick="toggleDark()"
+>
+    🌙
+</button>
 
-            <button onclick="openNickname()">
-                닉네임
-            </button>
+<button onclick="openNickname()">
+    닉네임
+</button>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </header>
 
 
 <main class="container">
 
-    <!-- =========================
-         LEFT SIDEBAR
-    ========================== -->
+<!-- SIDEBAR -->
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <div class="sidebar-title">
-            와슈 게시판
-        </div>
+<div class="sidebar-title">
+    와슈 게시판
+</div>
 
-        <div class="gallery">
+<div class="gallery">
 
-            <button
-                class="active"
-                onclick="selectCategory('전체', this)"
-            >
-                전체
-            </button>
+<button
+    class="active"
+    onclick="selectCategory('전체',this)"
+>
+    전체
+    <span class="gallery-count" id="count-전체">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('자유', this)"
-            >
-                💬 자유
-            </button>
+<button onclick="selectCategory('자유',this)">
+    💬 자유
+    <span class="gallery-count" id="count-자유">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('게임', this)"
-            >
-                🎮 게임
-            </button>
+<button onclick="selectCategory('게임',this)">
+    🎮 게임
+    <span class="gallery-count" id="count-게임">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('음악', this)"
-            >
-                🎵 음악
-            </button>
+<button onclick="selectCategory('음악',this)">
+    🎵 음악
+    <span class="gallery-count" id="count-음악">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('유머', this)"
-            >
-                😂 유머
-            </button>
+<button onclick="selectCategory('유머',this)">
+    😂 유머
+    <span class="gallery-count" id="count-유머">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('스포츠', this)"
-            >
-                ⚽ 스포츠
-            </button>
+<button onclick="selectCategory('스포츠',this)">
+    ⚽ 스포츠
+    <span class="gallery-count" id="count-스포츠">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('IT/컴퓨터', this)"
-            >
-                💻 IT/컴퓨터
-            </button>
+<button onclick="selectCategory('IT/컴퓨터',this)">
+    💻 IT/컴퓨터
+    <span class="gallery-count" id="count-IT/컴퓨터">0</span>
+</button>
 
-            <button
-                onclick="selectCategory('애니/만화', this)"
-            >
-                📺 애니/만화
-            </button>
+<button onclick="selectCategory('애니/만화',this)">
+    📺 애니/만화
+    <span class="gallery-count" id="count-애니/만화">0</span>
+</button>
 
-        </div>
+</div>
 
-    </aside>
+</aside>
 
 
-    <!-- =========================
-         CENTER
-    ========================== -->
+<!-- CENTER -->
 
-    <section>
+<section>
 
-        <!-- LIST PAGE -->
+<div id="listPage">
 
-        <div id="listPage">
+<div class="page-title">
 
-            <div class="page-title">
+<h1 id="pageTitle">
+    와슈 커뮤니티
+</h1>
 
-                <h1 id="pageTitle">
-                    와슈 커뮤니티
-                </h1>
+<p>
+    자유롭게 이야기를 나눠보세요.
+</p>
 
-                <p>
-                    자유롭게 이야기를 나눠보세요.
-                </p>
+</div>
 
-            </div>
 
+<div class="card">
 
-            <div class="card">
+<div class="tabs">
 
-                <div class="tabs">
+<button
+    class="active"
+    onclick="changeTab('latest',this)"
+>
+    최신글
+</button>
 
-                    <button
-                        class="active"
-                        onclick="changeTab('latest', this)"
-                    >
-                        최신글
-                    </button>
+<button
+    onclick="changeTab('popular',this)"
+>
+    인기글
+</button>
 
-                    <button
-                        onclick="changeTab('popular', this)"
-                    >
-                        인기글
-                    </button>
+</div>
 
-                </div>
 
+<div
+    id="searchInfo"
+    class="search-info"
+></div>
 
-                <div id="posts"></div>
 
+<div id="posts"></div>
 
-                <div class="write-area">
 
-                    <button
-                        class="write-btn"
-                        onclick="openWriteForm()"
-                    >
-                        + 글쓰기
-                    </button>
+<div
+    id="pagination"
+    class="pagination"
+></div>
 
-                </div>
 
+<div class="write-area">
 
-                <div
-                    class="form"
-                    id="writeForm"
-                >
+<button
+    class="write-btn"
+    onclick="openWriteForm()"
+>
+    + 글쓰기
+</button>
 
-                    <select id="category">
+</div>
 
-                        <option value="자유">
-                            자유
-                        </option>
 
-                        <option value="게임">
-                            게임
-                        </option>
+<div
+    class="form"
+    id="writeForm"
+>
 
-                        <option value="음악">
-                            음악
-                        </option>
+<select id="category">
 
-                        <option value="유머">
-                            유머
-                        </option>
+<option value="자유">자유</option>
+<option value="게임">게임</option>
+<option value="음악">음악</option>
+<option value="유머">유머</option>
+<option value="스포츠">스포츠</option>
+<option value="IT/컴퓨터">IT/컴퓨터</option>
+<option value="애니/만화">애니/만화</option>
 
-                        <option value="스포츠">
-                            스포츠
-                        </option>
+</select>
 
-                        <option value="IT/컴퓨터">
-                            IT/컴퓨터
-                        </option>
 
-                        <option value="애니/만화">
-                            애니/만화
-                        </option>
+<input
+    id="nickname"
+    maxlength="20"
+    placeholder="닉네임"
+/>
 
-                    </select>
 
+<input
+    id="title"
+    maxlength="100"
+    placeholder="제목"
+/>
 
-                    <input
-                        id="nickname"
-                        maxlength="20"
-                        placeholder="닉네임"
-                    >
 
+<textarea
+    id="content"
+    placeholder="내용을 입력하세요."
+></textarea>
 
-                    <input
-                        id="title"
-                        maxlength="100"
-                        placeholder="제목"
-                    >
 
+<div class="form-buttons">
 
-                    <textarea
-                        id="content"
-                        placeholder="내용을 입력하세요."
-                    ></textarea>
+<button
+    class="cancel"
+    onclick="closeWriteForm()"
+>
+    취소
+</button>
 
+<button
+    class="submit"
+    onclick="submitPost()"
+>
+    게시하기
+</button>
 
-                    <div class="form-buttons">
+</div>
 
-                        <button
-                            class="cancel"
-                            onclick="closeWriteForm()"
-                        >
-                            취소
-                        </button>
+</div>
 
-                        <button
-                            class="submit"
-                            onclick="submitPost()"
-                        >
-                            게시하기
-                        </button>
+</div>
 
-                    </div>
+</div>
 
-                </div>
 
-            </div>
+<!-- DETAIL -->
 
-        </div>
+<div
+    id="detailPage"
+    class="detail"
+>
 
+<button
+    class="back-btn"
+    onclick="goHome()"
+>
+    ← 목록으로
+</button>
 
-        <!-- DETAIL PAGE -->
 
-        <div
-            id="detailPage"
-            class="detail"
-        >
+<div class="card">
 
-            <button
-                class="back-btn"
-                onclick="goHome()"
-            >
-                ← 목록으로
-            </button>
+<div class="detail-header">
 
+<div
+    id="detailCategory"
+    class="detail-category"
+></div>
 
-            <div class="card">
+<div
+    id="detailTitle"
+    class="detail-title"
+></div>
 
-                <div class="detail-header">
+<div
+    id="detailInfo"
+    class="detail-info"
+></div>
 
-                    <div
-                        id="detailCategory"
-                        class="detail-category"
-                    ></div>
+</div>
 
-                    <div
-                        id="detailTitle"
-                        class="detail-title"
-                    ></div>
 
-                    <div
-                        id="detailInfo"
-                        class="detail-info"
-                    ></div>
+<div
+    id="detailContent"
+    class="detail-content"
+></div>
 
-                </div>
 
+<div class="detail-actions">
 
-                <div
-                    id="detailContent"
-                    class="detail-content"
-                ></div>
+<button onclick="likePost()">
+    👍 <span id="likeCount">0</span>
+</button>
 
+<button onclick="dislikePost()">
+    👎 <span id="dislikeCount">0</span>
+</button>
 
-                <div class="detail-actions">
+<button onclick="editCurrentPost()">
+    ✏️ 수정
+</button>
 
-                    <button onclick="likePost()">
-                        👍
-                        <span id="likeCount">
-                            0
-                        </span>
-                    </button>
+<button onclick="deleteCurrentPost()">
+    🗑️ 삭제
+</button>
 
-                    <button onclick="dislikePost()">
-                        👎
-                        <span id="dislikeCount">
-                            0
-                        </span>
-                    </button>
+</div>
 
-                    <button onclick="editCurrentPost()">
-                        ✏️ 수정
-                    </button>
 
-                    <button onclick="deleteCurrentPost()">
-                        🗑️ 삭제
-                    </button>
+<div class="comments">
 
-                </div>
+<div class="comments-title">
+    댓글 <span id="commentCount">0</span>
+</div>
 
 
-                <div class="comments">
+<div id="commentsList"></div>
 
-                    <div class="comments-title">
-                        댓글
-                        <span id="commentCount">
-                            0
-                        </span>
-                    </div>
 
+<div class="comment-form">
 
-                    <div id="commentsList"></div>
+<input
+    id="commentInput"
+    maxlength="300"
+    placeholder="댓글을 입력하세요."
+    onkeydown="if(event.key==='Enter')addComment()"
+/>
 
+<button onclick="addComment()">
+    등록
+</button>
 
-                    <div class="comment-form">
+</div>
 
-                        <input
-                            id="commentInput"
-                            maxlength="300"
-                            placeholder="댓글을 입력하세요."
-                            onkeydown="if(event.key==='Enter') addComment()"
-                        >
+</div>
 
-                        <button onclick="addComment()">
-                            등록
-                        </button>
+</div>
 
-                    </div>
+</div>
 
-                </div>
+</section>
 
-            </div>
 
-        </div>
+<!-- RIGHT -->
 
-    </section>
+<aside class="right-column">
 
+<div class="right-card">
 
-    <!-- =========================
-         RIGHT
-    ========================== -->
+<div class="right-title">
+    🔥 인기글
+</div>
 
-    <aside class="right-column">
+<div id="popularPosts"></div>
 
-        <div class="right-card">
+</div>
 
-            <div class="right-title">
-                🔥 인기글
-            </div>
 
-            <div id="popularPosts"></div>
+<div class="right-card">
 
-        </div>
+<div class="right-title">
+    📊 와슈 통계
+</div>
 
+<div class="stats">
 
-        <div class="right-card">
+게시글
+<strong id="totalPosts">0</strong>개
 
-            <div class="right-title">
-                📊 와슈 정보
-            </div>
+<br>
 
-            <div
-                style="
-                    padding:15px;
-                    font-size:13px;
-                    color:var(--sub);
-                    line-height:1.8;
-                "
-            >
+댓글
+<strong id="totalComments">0</strong>개
 
-                현재 저장된 게시글
-                <strong id="totalPosts">
-                    0
-                </strong>개
+<br>
 
-                <br>
+추천
+<strong id="totalLikes">0</strong>개
 
-                현재 댓글
-                <strong id="totalComments">
-                    0
-                </strong>개
+</div>
 
-            </div>
+</div>
 
-        </div>
-
-    </aside>
+</aside>
 
 </main>
 
 
 <footer>
-
-    와슈 커뮤니티
-
-    <br><br>
-
-    DB 연결 전 테스트 버전
-
+와슈 커뮤니티
+<br><br>
+DB 연결 전 테스트 버전
 </footer>
 
 
-<!-- =========================
-     NICKNAME MODAL
-========================= -->
+<!-- NICKNAME MODAL -->
 
 <div
     class="modal"
     id="nicknameModal"
 >
 
-    <div class="modal-box">
+<div class="modal-box">
 
-        <h2>
-            닉네임 설정
-        </h2>
+<h2>
+    닉네임 설정
+</h2>
 
+<input
+    id="nicknameSetting"
+    maxlength="20"
+    placeholder="사용할 닉네임"
+/>
 
-        <input
-            id="nicknameSetting"
-            maxlength="20"
-            placeholder="사용할 닉네임"
-        >
+<div class="modal-buttons">
 
+<button onclick="closeNickname()">
+    취소
+</button>
 
-        <div class="modal-buttons">
+<button
+    class="modal-save"
+    onclick="saveNickname()"
+>
+    저장
+</button>
 
-            <button
-                onclick="closeNickname()"
-            >
-                취소
-            </button>
+</div>
 
-            <button
-                class="modal-save"
-                onclick="saveNickname()"
-            >
-                저장
-            </button>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 
@@ -1241,10 +1304,35 @@ let posts =
     ) || [];
 
 let currentCategory = "전체";
-
 let currentTab = "latest";
-
 let currentPostId = null;
+let currentPage = 1;
+let searchKeyword = "";
+
+const POSTS_PER_PAGE = 10;
+
+
+/* =========================
+   DATA NORMALIZATION
+========================= */
+
+posts = posts.map(post => ({
+
+    ...post,
+
+    dislikes: post.dislikes || 0,
+
+    comments: (post.comments || []).map(comment => ({
+
+        ...comment,
+
+        likes: comment.likes || 0,
+
+        replies: comment.replies || []
+
+    }))
+
+}));
 
 
 /* =========================
@@ -1262,17 +1350,47 @@ function savePosts() {
 
 
 /* =========================
-   ESCAPE HTML
+   ESCAPE
 ========================= */
 
 function escapeHTML(value) {
 
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   SEARCH HIGHLIGHT
+========================= */
+
+function highlight(text) {
+
+    const safe =
+        escapeHTML(text);
+
+    if (!searchKeyword)
+        return safe;
+
+    const escaped =
+        searchKeyword
+            .replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+
+    return safe.replace(
+        new RegExp(
+            "(" + escaped + ")",
+            "gi"
+        ),
+        "<mark>$1</mark>"
+    );
 
 }
 
@@ -1283,53 +1401,44 @@ function escapeHTML(value) {
 
 function formatDate(date) {
 
-    const d = new Date(date);
+    const d =
+        new Date(date);
 
-    const now = new Date();
+    const now =
+        new Date();
 
     const diff =
         Math.floor(
-            (now - d) / 1000
+            (now-d)/1000
         );
 
-
-    if (diff < 60)
+    if(diff<60)
         return "방금 전";
 
+    if(diff<3600)
+        return Math.floor(diff/60)+"분 전";
 
-    if (diff < 3600)
-        return (
-            Math.floor(diff / 60) +
-            "분 전"
-        );
+    if(diff<86400)
+        return Math.floor(diff/3600)+"시간 전";
 
-
-    if (diff < 86400)
-        return (
-            Math.floor(diff / 3600) +
-            "시간 전"
-        );
-
-
-    if (
+    if(
         d.getFullYear() ===
         now.getFullYear()
     ) {
 
         return (
-            (d.getMonth() + 1) +
-            "." +
+            (d.getMonth()+1)+
+            "."+
             d.getDate()
         );
 
     }
 
-
     return (
-        d.getFullYear() +
-        "." +
-        (d.getMonth() + 1) +
-        "." +
+        d.getFullYear()+
+        "."+
+        (d.getMonth()+1)+
+        "."+
         d.getDate()
     );
 
@@ -1337,16 +1446,46 @@ function formatDate(date) {
 
 
 /* =========================
-   RENDER POSTS
+   HOT / NEW
 ========================= */
 
-function renderPosts() {
+function isNew(post) {
 
-    const container =
-        document.getElementById("posts");
+    const diff =
+        Date.now() -
+        new Date(post.date).getTime();
+
+    return diff <
+        24*60*60*1000;
+
+}
 
 
-    let filtered =
+function score(post) {
+
+    return (
+        post.likes * 3 +
+        post.comments.length * 2 +
+        post.views
+    );
+
+}
+
+
+function isHot(post) {
+
+    return score(post) >= 10;
+
+}
+
+
+/* =========================
+   FILTER
+========================= */
+
+function getFilteredPosts() {
+
+    let result =
         currentCategory === "전체"
             ? [...posts]
             : posts.filter(
@@ -1356,79 +1495,188 @@ function renderPosts() {
             );
 
 
-    if (currentTab === "latest") {
+    if(searchKeyword) {
 
-        filtered.sort(
-            (a, b) =>
+        result =
+            result.filter(post =>
+
+                post.title
+                    .toLowerCase()
+                    .includes(
+                        searchKeyword
+                    )
+
+                ||
+
+                post.content
+                    .toLowerCase()
+                    .includes(
+                        searchKeyword
+                    )
+
+                ||
+
+                post.nickname
+                    .toLowerCase()
+                    .includes(
+                        searchKeyword
+                    )
+
+                ||
+
+                post.category
+                    .toLowerCase()
+                    .includes(
+                        searchKeyword
+                    )
+
+            );
+
+    }
+
+
+    if(currentTab === "latest") {
+
+        result.sort(
+            (a,b) =>
                 new Date(b.date) -
                 new Date(a.date)
         );
 
     } else {
 
-        filtered.sort(
-            (a, b) =>
-                (
-                    b.likes * 3 +
-                    b.comments.length * 2 +
-                    b.views
-                )
-                -
-                (
-                    a.likes * 3 +
-                    a.comments.length * 2 +
-                    a.views
-                )
+        result.sort(
+            (a,b) =>
+                score(b)-score(a)
         );
 
     }
 
 
-    if (!filtered.length) {
+    return result;
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderPosts() {
+
+    const container =
+        document.getElementById(
+            "posts"
+        );
+
+    const all =
+        getFilteredPosts();
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                all.length /
+                POSTS_PER_PAGE
+            )
+        );
+
+
+    if(currentPage > totalPages)
+        currentPage = totalPages;
+
+
+    const start =
+        (currentPage-1) *
+        POSTS_PER_PAGE;
+
+
+    const pagePosts =
+        all.slice(
+            start,
+            start+POSTS_PER_PAGE
+        );
+
+
+    if(!pagePosts.length) {
 
         container.innerHTML = `
             <div class="empty">
-                아직 게시글이 없습니다.
+                ${
+                    searchKeyword
+                    ? "검색 결과가 없습니다."
+                    : "아직 게시글이 없습니다."
+                }
+
                 <br><br>
-                첫 번째 글을 작성해보세요!
+
+                ${
+                    searchKeyword
+                    ? "다른 검색어를 입력해보세요."
+                    : "첫 번째 글을 작성해보세요!"
+                }
             </div>
         `;
 
-        updateStats();
-        renderPopular();
+    } else {
 
-        return;
+        container.innerHTML =
+            pagePosts.map(post => `
 
-    }
+                <div
+                    class="post"
+                    onclick="openPost(${post.id})"
+                >
 
-
-    container.innerHTML =
-        filtered.map(post => `
-
-            <div
-                class="post"
-                onclick="openPost(${post.id})"
-            >
-
-                <div class="post-title">
-
-                    ${escapeHTML(post.title)}
+                <div class="post-title-row">
 
                     ${
-                        post.comments.length
-                        ? `
-                            <span class="comment-count">
-                                [${post.comments.length}]
-                            </span>
-                        `
+                        isHot(post)
+                        ? `<span class="badge hot">
+                            HOT
+                          </span>`
                         : ""
                     }
+
+                    ${
+                        isNew(post)
+                        ? `<span class="badge new">
+                            NEW
+                          </span>`
+                        : ""
+                    }
+
+                    <div class="post-title">
+
+                        ${
+                            searchKeyword
+                            ? highlight(post.title)
+                            : escapeHTML(post.title)
+                        }
+
+                        ${
+                            post.comments.length
+                            ? `
+                                <span class="comment-count">
+                                    [${post.comments.length}]
+                                </span>
+                            `
+                            : ""
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <div class="post-content-preview">
-                    ${escapeHTML(post.content)}
+                <div class="post-preview">
+
+                    ${
+                        searchKeyword
+                        ? highlight(post.content)
+                        : escapeHTML(post.content)
+                    }
+
                 </div>
 
 
@@ -1447,23 +1695,161 @@ function renderPosts() {
                     </span>
 
                     <span>
-                        조회 ${post.views}
+                        👁 ${post.views}
                     </span>
 
                     <span>
-                        추천 ${post.likes}
+                        👍 ${post.likes}
                     </span>
 
                 </div>
 
-            </div>
+                </div>
 
-        `).join("");
+            `).join("");
 
+    }
+
+
+    renderPagination(totalPages);
+
+    renderPopular();
 
     updateStats();
 
-    renderPopular();
+    updateGalleryCounts();
+
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+function renderPagination(totalPages) {
+
+    const box =
+        document.getElementById(
+            "pagination"
+        );
+
+
+    if(totalPages <= 1) {
+
+        box.innerHTML = "";
+        return;
+
+    }
+
+
+    let html = `
+
+        <button
+            onclick="changePage(${currentPage-1})"
+            ${currentPage===1?"disabled":""}
+        >
+            ‹
+        </button>
+
+    `;
+
+
+    let start =
+        Math.max(
+            1,
+            currentPage-2
+        );
+
+
+    let end =
+        Math.min(
+            totalPages,
+            start+4
+        );
+
+
+    if(end-start < 4)
+        start =
+            Math.max(
+                1,
+                end-4
+            );
+
+
+    for(
+        let i=start;
+        i<=end;
+        i++
+    ) {
+
+        html += `
+
+            <button
+                class="${
+                    i===currentPage
+                    ? "active"
+                    : ""
+                }"
+                onclick="changePage(${i})"
+            >
+                ${i}
+            </button>
+
+        `;
+
+    }
+
+
+    html += `
+
+        <button
+            onclick="changePage(${currentPage+1})"
+            ${
+                currentPage===totalPages
+                ?"disabled":""
+            }
+        >
+            ›
+        </button>
+
+    `;
+
+
+    box.innerHTML = html;
+
+}
+
+
+function changePage(page) {
+
+    const all =
+        getFilteredPosts();
+
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(
+                all.length /
+                POSTS_PER_PAGE
+            )
+        );
+
+
+    if(
+        page<1 ||
+        page>totalPages
+    )
+        return;
+
+
+    currentPage = page;
+
+    renderPosts();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
 
 }
 
@@ -1483,31 +1869,16 @@ function renderPopular() {
     const popular =
         [...posts]
         .sort(
-            (a, b) =>
-                (
-                    b.likes * 3 +
-                    b.comments.length * 2 +
-                    b.views
-                )
-                -
-                (
-                    a.likes * 3 +
-                    a.comments.length * 2 +
-                    a.views
-                )
+            (a,b) =>
+                score(b)-score(a)
         )
-        .slice(0, 5);
+        .slice(0,5);
 
 
-    if (!popular.length) {
+    if(!popular.length) {
 
         box.innerHTML = `
-            <div
-                style="
-                    padding:15px;
-                    color:var(--sub);
-                "
-            >
+            <div class="stats">
                 인기글이 없습니다.
             </div>
         `;
@@ -1519,28 +1890,76 @@ function renderPopular() {
 
     box.innerHTML =
         popular.map(
-            (post, index) => `
+            (post,index) => `
 
-                <div
-                    class="popular"
-                    onclick="openPost(${post.id})"
-                >
+                <div class="popular">
 
-                    <div class="popular-title">
-                        ${index + 1}.
+                    <div
+                        class="popular-title"
+                        onclick="openPost(${post.id})"
+                    >
+
+                        ${index+1}.
                         ${escapeHTML(post.title)}
+
                     </div>
 
                     <div class="popular-info">
+
                         👍 ${post.likes}
                         · 💬 ${post.comments.length}
-                        · 👁️ ${post.views}
+                        · 👁 ${post.views}
+
                     </div>
 
                 </div>
 
             `
         ).join("");
+
+}
+
+
+/* =========================
+   GALLERY COUNTS
+========================= */
+
+function updateGalleryCounts() {
+
+    const categories = [
+        "전체",
+        "자유",
+        "게임",
+        "음악",
+        "유머",
+        "스포츠",
+        "IT/컴퓨터",
+        "애니/만화"
+    ];
+
+
+    categories.forEach(category => {
+
+        const count =
+            category === "전체"
+            ? posts.length
+            : posts.filter(
+                p =>
+                    p.category === category
+            ).length;
+
+
+        const element =
+            document.getElementById(
+                "count-"+category
+            );
+
+
+        if(element)
+            element.textContent =
+                count;
+
+    });
 
 }
 
@@ -1601,18 +2020,15 @@ function submitPost() {
         ).value.trim();
 
 
-    if (!nickname) {
-
+    if(!nickname)
         nickname =
             localStorage.getItem(
                 "washu_nickname"
             ) ||
             "익명";
 
-    }
 
-
-    if (!title) {
+    if(!title) {
 
         alert("제목을 입력하세요.");
         return;
@@ -1620,7 +2036,7 @@ function submitPost() {
     }
 
 
-    if (!content) {
+    if(!content) {
 
         alert("내용을 입력하세요.");
         return;
@@ -1634,7 +2050,7 @@ function submitPost() {
     );
 
 
-    const post = {
+    posts.unshift({
 
         id: Date.now(),
 
@@ -1646,21 +2062,19 @@ function submitPost() {
 
         content,
 
-        views: 0,
+        views:0,
 
-        likes: 0,
+        likes:0,
 
-        dislikes: 0,
+        dislikes:0,
 
-        comments: [],
+        comments:[],
 
         date:
             new Date().toISOString()
 
-    };
+    });
 
-
-    posts.unshift(post);
 
     savePosts();
 
@@ -1676,6 +2090,8 @@ function submitPost() {
 
 
     closeWriteForm();
+
+    currentPage = 1;
 
     renderPosts();
 
@@ -1696,7 +2112,7 @@ function openPost(id) {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
     post.views++;
@@ -1708,7 +2124,8 @@ function openPost(id) {
 
     document.getElementById(
         "listPage"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     document.getElementById(
@@ -1754,11 +2171,16 @@ function openPost(id) {
 
     renderComments();
 
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
 }
 
 
 /* =========================
-   COMMENTS
+   COMMENT RENDER
 ========================= */
 
 function renderComments() {
@@ -1769,7 +2191,7 @@ function renderComments() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
     const box =
@@ -1784,7 +2206,7 @@ function renderComments() {
         post.comments.length;
 
 
-    if (!post.comments.length) {
+    if(!post.comments.length) {
 
         box.innerHTML = `
             <div style="color:var(--sub);">
@@ -1803,23 +2225,106 @@ function renderComments() {
 
                 <div class="comment">
 
-                    <span class="comment-author">
-                        ${escapeHTML(
-                            comment.nickname
-                        )}
-                    </span>
+                    <div class="comment-head">
 
-                    <span class="comment-date">
-                        ${formatDate(
-                            comment.date
-                        )}
-                    </span>
+                        <span class="comment-author">
+                            ${escapeHTML(
+                                comment.nickname
+                            )}
+                        </span>
+
+                        <span class="comment-date">
+                            ${formatDate(
+                                comment.date
+                            )}
+                        </span>
+
+                    </div>
+
 
                     <div class="comment-text">
                         ${escapeHTML(
                             comment.text
                         )}
                     </div>
+
+
+                    <div class="comment-buttons">
+
+                        <button
+                            onclick="
+                                likeComment(${comment.id});
+                                event.stopPropagation();
+                            "
+                        >
+                            👍 ${comment.likes || 0}
+                        </button>
+
+                        <button
+                            onclick="
+                                replyComment(${comment.id});
+                                event.stopPropagation();
+                            "
+                        >
+                            답글
+                        </button>
+
+                        <button
+                            onclick="
+                                editComment(${comment.id});
+                                event.stopPropagation();
+                            "
+                        >
+                            수정
+                        </button>
+
+                        <button
+                            onclick="
+                                deleteComment(${comment.id});
+                                event.stopPropagation();
+                            "
+                        >
+                            삭제
+                        </button>
+
+                    </div>
+
+
+                    ${
+                        (comment.replies || [])
+                        .map(
+                            reply => `
+
+                                <div class="reply">
+
+                                    <div class="comment-head">
+
+                                        <span class="comment-author">
+                                            ↳
+                                            ${escapeHTML(
+                                                reply.nickname
+                                            )}
+                                        </span>
+
+                                        <span class="comment-date">
+                                            ${formatDate(
+                                                reply.date
+                                            )}
+                                        </span>
+
+                                    </div>
+
+                                    <div class="comment-text">
+                                        ${escapeHTML(
+                                            reply.text
+                                        )}
+                                    </div>
+
+                                </div>
+
+                            `
+                        ).join("")
+                    }
 
                 </div>
 
@@ -1828,6 +2333,10 @@ function renderComments() {
 
 }
 
+
+/* =========================
+   ADD COMMENT
+========================= */
 
 function addComment() {
 
@@ -1841,7 +2350,7 @@ function addComment() {
         input.value.trim();
 
 
-    if (!text) {
+    if(!text) {
 
         alert("댓글을 입력하세요.");
         return;
@@ -1855,7 +2364,7 @@ function addComment() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
     const nickname =
@@ -1867,11 +2376,15 @@ function addComment() {
 
     post.comments.push({
 
-        id: Date.now(),
+        id:Date.now(),
 
         nickname,
 
         text,
+
+        likes:0,
+
+        replies:[],
 
         date:
             new Date().toISOString()
@@ -1891,7 +2404,193 @@ function addComment() {
 
 
 /* =========================
-   LIKE
+   COMMENT LIKE
+========================= */
+
+function likeComment(id) {
+
+    const post =
+        posts.find(
+            p => p.id === currentPostId
+        );
+
+
+    if(!post) return;
+
+
+    const comment =
+        post.comments.find(
+            c => c.id === id
+        );
+
+
+    if(!comment) return;
+
+
+    comment.likes =
+        (comment.likes || 0)+1;
+
+
+    savePosts();
+
+    renderComments();
+
+}
+
+
+/* =========================
+   REPLY
+========================= */
+
+function replyComment(id) {
+
+    const post =
+        posts.find(
+            p => p.id === currentPostId
+        );
+
+
+    if(!post) return;
+
+
+    const comment =
+        post.comments.find(
+            c => c.id === id
+        );
+
+
+    if(!comment) return;
+
+
+    const text =
+        prompt("답글을 입력하세요.");
+
+
+    if(!text || !text.trim())
+        return;
+
+
+    const nickname =
+        localStorage.getItem(
+            "washu_nickname"
+        ) ||
+        "익명";
+
+
+    if(!comment.replies)
+        comment.replies = [];
+
+
+    comment.replies.push({
+
+        id:Date.now(),
+
+        nickname,
+
+        text:text.trim(),
+
+        date:
+            new Date().toISOString()
+
+    });
+
+
+    savePosts();
+
+    renderComments();
+
+}
+
+
+/* =========================
+   EDIT COMMENT
+========================= */
+
+function editComment(id) {
+
+    const post =
+        posts.find(
+            p => p.id === currentPostId
+        );
+
+
+    if(!post) return;
+
+
+    const comment =
+        post.comments.find(
+            c => c.id === id
+        );
+
+
+    if(!comment) return;
+
+
+    const newText =
+        prompt(
+            "댓글 수정",
+            comment.text
+        );
+
+
+    if(
+        newText === null ||
+        !newText.trim()
+    )
+        return;
+
+
+    comment.text =
+        newText.trim();
+
+
+    savePosts();
+
+    renderComments();
+
+}
+
+
+/* =========================
+   DELETE COMMENT
+========================= */
+
+function deleteComment(id) {
+
+    const post =
+        posts.find(
+            p => p.id === currentPostId
+        );
+
+
+    if(!post) return;
+
+
+    if(
+        !confirm(
+            "이 댓글을 삭제하시겠습니까?"
+        )
+    )
+        return;
+
+
+    post.comments =
+        post.comments.filter(
+            c => c.id !== id
+        );
+
+
+    savePosts();
+
+    renderComments();
+
+    renderPosts();
+
+}
+
+
+/* =========================
+   LIKE POST
 ========================= */
 
 function likePost() {
@@ -1902,20 +2601,24 @@ function likePost() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
     post.likes++;
 
     savePosts();
 
-    openPostWithoutView();
+    updateDetailCounts();
+
+    renderPosts();
+
+    renderPopular();
 
 }
 
 
 /* =========================
-   DISLIKE
+   DISLIKE POST
 ========================= */
 
 function dislikePost() {
@@ -1926,23 +2629,23 @@ function dislikePost() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
     post.dislikes++;
 
     savePosts();
 
-    openPostWithoutView();
+    updateDetailCounts();
 
 }
 
 
 /* =========================
-   REFRESH DETAIL
+   DETAIL COUNTS
 ========================= */
 
-function openPostWithoutView() {
+function updateDetailCounts() {
 
     const post =
         posts.find(
@@ -1950,7 +2653,7 @@ function openPostWithoutView() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
     document.getElementById(
@@ -1964,16 +2667,11 @@ function openPostWithoutView() {
     ).textContent =
         post.dislikes;
 
-
-    renderPosts();
-
-    renderPopular();
-
 }
 
 
 /* =========================
-   EDIT
+   EDIT POST
 ========================= */
 
 function editCurrentPost() {
@@ -1984,34 +2682,34 @@ function editCurrentPost() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
-    const newTitle =
+    const title =
         prompt(
             "제목 수정",
             post.title
         );
 
 
-    if (newTitle === null)
+    if(title === null)
         return;
 
 
-    const newContent =
+    const content =
         prompt(
             "내용 수정",
             post.content
         );
 
 
-    if (newContent === null)
+    if(content === null)
         return;
 
 
-    if (
-        !newTitle.trim() ||
-        !newContent.trim()
+    if(
+        !title.trim() ||
+        !content.trim()
     ) {
 
         alert(
@@ -2024,16 +2722,14 @@ function editCurrentPost() {
 
 
     post.title =
-        newTitle.trim();
+        title.trim();
 
 
     post.content =
-        newContent.trim();
+        content.trim();
 
 
     savePosts();
-
-    openPostWithoutView();
 
 
     document.getElementById(
@@ -2047,11 +2743,14 @@ function editCurrentPost() {
     ).textContent =
         post.content;
 
+
+    renderPosts();
+
 }
 
 
 /* =========================
-   DELETE
+   DELETE POST
 ========================= */
 
 function deleteCurrentPost() {
@@ -2062,14 +2761,15 @@ function deleteCurrentPost() {
         );
 
 
-    if (!post) return;
+    if(!post) return;
 
 
-    if (
+    if(
         !confirm(
             "정말 이 게시글을 삭제하시겠습니까?"
         )
-    ) return;
+    )
+        return;
 
 
     posts =
@@ -2094,14 +2794,15 @@ function goHome() {
     currentPostId = null;
 
 
-    document
-        .getElementById("detailPage")
-        .classList.remove("show");
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
 
 
-    document
-        .getElementById("listPage")
-        .style.display = "block";
+    document.getElementById(
+        "listPage"
+    ).style.display =
+        "block";
 
 
     renderPosts();
@@ -2118,7 +2819,18 @@ function selectCategory(
     button
 ) {
 
-    currentCategory = category;
+    currentCategory =
+        category;
+
+
+    currentPage = 1;
+
+    searchKeyword = "";
+
+
+    document.getElementById(
+        "searchInput"
+    ).value = "";
 
 
     document
@@ -2133,15 +2845,23 @@ function selectCategory(
         );
 
 
-    button.classList.add("active");
+    button.classList.add(
+        "active"
+    );
 
 
     document.getElementById(
         "pageTitle"
     ).textContent =
         category === "전체"
-            ? "와슈 커뮤니티"
-            : category + " 게시판";
+        ? "와슈 커뮤니티"
+        : category+" 게시판";
+
+
+    document.getElementById(
+        "searchInfo"
+    ).style.display =
+        "none";
 
 
     renderPosts();
@@ -2150,7 +2870,7 @@ function selectCategory(
 
 
 /* =========================
-   TAB
+   TABS
 ========================= */
 
 function changeTab(
@@ -2158,7 +2878,10 @@ function changeTab(
     button
 ) {
 
-    currentTab = tab;
+    currentTab =
+        tab;
+
+    currentPage = 1;
 
 
     document
@@ -2173,7 +2896,10 @@ function changeTab(
         );
 
 
-    button.classList.add("active");
+    button.classList.add(
+        "active"
+    );
+
 
     renderPosts();
 
@@ -2189,131 +2915,52 @@ function searchPosts() {
     const keyword =
         document.getElementById(
             "searchInput"
-        ).value.trim().toLowerCase();
+        ).value
+        .trim()
+        .toLowerCase();
 
 
-    if (!keyword) {
-
-        renderPosts();
-        return;
-
-    }
+    searchKeyword =
+        keyword;
 
 
-    const result =
-        posts.filter(
-            post =>
-
-                post.title
-                    .toLowerCase()
-                    .includes(keyword)
-
-                ||
-
-                post.content
-                    .toLowerCase()
-                    .includes(keyword)
-
-                ||
-
-                post.nickname
-                    .toLowerCase()
-                    .includes(keyword)
-
-                ||
-
-                post.category
-                    .toLowerCase()
-                    .includes(keyword)
-
-        );
+    currentPage = 1;
 
 
-    const container =
+    if(keyword) {
+
         document.getElementById(
-            "posts"
-        );
+            "searchInfo"
+        ).style.display =
+            "block";
 
+    } else {
 
-    if (!result.length) {
-
-        container.innerHTML = `
-            <div class="empty">
-                "${escapeHTML(keyword)}"
-                검색 결과가 없습니다.
-            </div>
-        `;
-
-        return;
+        document.getElementById(
+            "searchInfo"
+        ).style.display =
+            "none";
 
     }
 
 
-    container.innerHTML =
-        result.map(
-            post => `
-
-                <div
-                    class="post"
-                    onclick="openPost(${post.id})"
-                >
-
-                    <div class="post-title">
-
-                        ${escapeHTML(
-                            post.title
-                        )}
-
-                        ${
-                            post.comments.length
-                            ? `
-                                <span class="comment-count">
-                                    [${post.comments.length}]
-                                </span>
-                            `
-                            : ""
-                        }
-
-                    </div>
+    const count =
+        getFilteredPosts().length;
 
 
-                    <div class="post-content-preview">
-                        ${escapeHTML(
-                            post.content
-                        )}
-                    </div>
+    document.getElementById(
+        "searchInfo"
+    ).innerHTML =
+        keyword
+        ? `
+            "<strong>${escapeHTML(keyword)}</strong>"
+            검색 결과
+            <strong>${count}</strong>개
+        `
+        : "";
 
 
-                    <div class="post-info">
-
-                        <span class="category">
-                            ${escapeHTML(
-                                post.category
-                            )}
-                        </span>
-
-                        <span>
-                            ${escapeHTML(
-                                post.nickname
-                            )}
-                        </span>
-
-                        <span>
-                            ${formatDate(
-                                post.date
-                            )}
-                        </span>
-
-                        <span>
-                            조회 ${post.views}
-                        </span>
-
-                    </div>
-
-                </div>
-
-            `
-        ).join("");
+    renderPosts();
 
 }
 
@@ -2328,14 +2975,14 @@ function openNickname() {
         .getElementById(
             "nicknameModal"
         )
-        .classList.add("show");
+        .classList.add(
+            "show"
+        );
 
 
-    document
-        .getElementById(
-            "nicknameSetting"
-        )
-        .value =
+    document.getElementById(
+        "nicknameSetting"
+    ).value =
         localStorage.getItem(
             "washu_nickname"
         ) || "";
@@ -2348,8 +2995,9 @@ function closeNickname() {
     document
         .getElementById(
             "nicknameModal"
-        )
-        .classList.remove("show");
+        ).classList.remove(
+            "show"
+        );
 
 }
 
@@ -2357,15 +3005,12 @@ function closeNickname() {
 function saveNickname() {
 
     const nickname =
-        document
-            .getElementById(
-                "nicknameSetting"
-            )
-            .value
-            .trim();
+        document.getElementById(
+            "nicknameSetting"
+        ).value.trim();
 
 
-    if (!nickname) {
+    if(!nickname) {
 
         alert("닉네임을 입력하세요.");
         return;
@@ -2398,23 +3043,25 @@ function updateDarkModeButton() {
         );
 
 
-    if (!button) return;
+    if(!button) return;
 
 
-    const isDark =
+    const dark =
         document.body.classList.contains(
             "dark"
         );
 
 
     button.textContent =
-        isDark ? "☀️" : "🌙";
+        dark
+        ? "☀️"
+        : "🌙";
 
 
     button.title =
-        isDark
-            ? "라이트모드"
-            : "다크모드";
+        dark
+        ? "라이트모드"
+        : "다크모드";
 
 }
 
@@ -2426,7 +3073,7 @@ function toggleDark() {
     );
 
 
-    const isDark =
+    const dark =
         document.body.classList.contains(
             "dark"
         );
@@ -2434,7 +3081,7 @@ function toggleDark() {
 
     localStorage.setItem(
         "washu_dark",
-        isDark
+        dark
     );
 
 
@@ -2457,9 +3104,18 @@ function updateStats() {
 
     const comments =
         posts.reduce(
-            (total, post) =>
+            (total,post) =>
                 total +
                 post.comments.length,
+            0
+        );
+
+
+    const likes =
+        posts.reduce(
+            (total,post) =>
+                total +
+                post.likes,
             0
         );
 
@@ -2469,14 +3125,20 @@ function updateStats() {
     ).textContent =
         comments;
 
+
+    document.getElementById(
+        "totalLikes"
+    ).textContent =
+        likes;
+
 }
 
 
 /* =========================
-   INITIALIZE
+   INIT
 ========================= */
 
-if (
+if(
     localStorage.getItem(
         "washu_dark"
     ) === "true"
@@ -2496,4 +3158,4 @@ renderPosts();
 </script>
 
 </body>
-</html>
+    </html>
