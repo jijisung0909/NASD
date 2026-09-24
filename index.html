@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GALL — 커뮤니티</title>
+<title>와슈 커뮤니티</title>
 
 <style>
 * {
@@ -24,10 +24,11 @@ a {
 }
 
 button,
-input {
+input,
+textarea,
+select {
     font-family: inherit;
 }
-
 
 /* =========================
    HEADER
@@ -53,7 +54,7 @@ input {
 }
 
 .logo {
-    font-size: 25px;
+    font-size: 24px;
     font-weight: 900;
     color: #2463eb;
     white-space: nowrap;
@@ -92,7 +93,6 @@ input {
 
     border: 0;
     background: transparent;
-
     cursor: pointer;
 }
 
@@ -109,14 +109,12 @@ input {
     white-space: nowrap;
 }
 
-
 /* =========================
    MAIN
 ========================= */
 
 .container {
     width: min(1180px, calc(100% - 32px));
-
     margin: 25px auto;
 
     display: grid;
@@ -129,28 +127,22 @@ input {
     gap: 18px;
 }
 
-
 /* =========================
    CARD
 ========================= */
 
 .card {
     background: white;
-
     border: 1px solid #e1e4e8;
     border-radius: 9px;
-
     overflow: hidden;
 }
 
 .card-title {
     padding: 16px;
-
     font-weight: 700;
-
     border-bottom: 1px solid #eee;
 }
-
 
 /* =========================
    GALLERY
@@ -158,9 +150,7 @@ input {
 
 .gallery-list a {
     display: block;
-
     padding: 10px 16px;
-
     font-size: 14px;
 }
 
@@ -171,63 +161,62 @@ input {
 
 .gallery-list .active {
     color: #2463eb;
-
     font-weight: 700;
-
     background: #f2f6ff;
 }
 
-
 /* =========================
-   POSTS
+   TITLE
 ========================= */
 
 .main-title {
     font-size: 22px;
-
     font-weight: 800;
-
     margin-bottom: 18px;
 }
 
+/* =========================
+   TABS
+========================= */
+
 .tabs {
     display: flex;
-
     border-bottom: 1px solid #ddd;
 }
 
 .tabs button {
     border: 0;
-
     background: white;
-
     padding: 13px 18px;
 
     cursor: pointer;
 
     font-weight: 600;
-
     color: #777;
 }
 
 .tabs button.active {
     color: #2463eb;
-
     border-bottom: 2px solid #2463eb;
 }
 
+/* =========================
+   POST
+========================= */
+
 .post {
     display: flex;
-
     align-items: center;
 
-    min-height: 48px;
+    min-height: 50px;
 
     padding: 0 15px;
 
     border-bottom: 1px solid #f0f0f0;
 
     font-size: 14px;
+
+    cursor: pointer;
 }
 
 .post:hover {
@@ -265,7 +254,7 @@ input {
 }
 
 .post-info {
-    width: 70px;
+    width: 100px;
 
     color: #999;
 
@@ -276,6 +265,19 @@ input {
     flex-shrink: 0;
 }
 
+/* =========================
+   EMPTY
+========================= */
+
+.empty {
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: #999;
+
+    font-size: 14px;
+}
 
 /* =========================
    WRITE
@@ -298,14 +300,101 @@ input {
 
     border-radius: 6px;
 
-    padding: 9px 14px;
+    padding: 9px 16px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+.write button:hover {
+    background: #1954d1;
+}
+
+/* =========================
+   WRITE FORM
+========================= */
+
+.write-form {
+    display: none;
+
+    padding: 18px;
+
+    border-top: 1px solid #eee;
+}
+
+.write-form.show {
+    display: block;
+}
+
+.write-form input,
+.write-form textarea,
+.write-form select {
+    width: 100%;
+
+    border: 1px solid #d8dce3;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.write-form input,
+.write-form select {
+    height: 42px;
+
+    padding: 0 12px;
+
+    margin-bottom: 10px;
+}
+
+.write-form textarea {
+    min-height: 150px;
+
+    padding: 12px;
+
+    resize: vertical;
+
+    margin-bottom: 10px;
+}
+
+.write-form input:focus,
+.write-form textarea:focus,
+.write-form select:focus {
+    border-color: #2463eb;
+}
+
+.form-buttons {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+}
+
+.form-buttons button {
+    border: 0;
+
+    border-radius: 6px;
+
+    padding: 9px 15px;
 
     cursor: pointer;
 }
 
+.cancel-button {
+    background: #eee;
+}
+
+.submit-button {
+    background: #2463eb;
+    color: white;
+}
 
 /* =========================
-   RIGHT SIDE
+   RIGHT
 ========================= */
 
 .ad {
@@ -346,7 +435,6 @@ input {
     flex: 1;
 }
 
-
 /* =========================
    FOOTER
 ========================= */
@@ -365,7 +453,6 @@ input {
     padding-top: 20px;
 }
 
-
 /* =========================
    TABLET
 ========================= */
@@ -383,7 +470,6 @@ input {
     }
 }
 
-
 /* =========================
    MOBILE
 ========================= */
@@ -393,9 +479,6 @@ input {
     body {
         background: white;
     }
-
-
-    /* HEADER */
 
     .header {
         height: auto;
@@ -417,7 +500,7 @@ input {
     }
 
     .logo {
-        font-size: 21px;
+        font-size: 20px;
     }
 
     .search {
@@ -426,18 +509,13 @@ input {
 
     .search input {
         height: 36px;
-
         font-size: 13px;
     }
 
     .login {
         padding: 8px 10px;
-
         font-size: 12px;
     }
-
-
-    /* MAIN */
 
     .container {
         width: 100%;
@@ -447,9 +525,6 @@ input {
         display: block;
     }
 
-
-    /* GALLERY */
-
     .left {
         display: block;
 
@@ -458,7 +533,6 @@ input {
 
     .left .card {
         border: 0;
-
         border-radius: 0;
     }
 
@@ -488,28 +562,17 @@ input {
         font-size: 13px;
     }
 
-
-    /* TITLE */
-
     .main-title {
         margin: 18px 14px 12px;
 
         font-size: 19px;
     }
 
-
-    /* CARD */
-
     .card {
         border-left: 0;
-
         border-right: 0;
-
         border-radius: 0;
     }
-
-
-    /* POST */
 
     .post {
         min-height: 50px;
@@ -526,7 +589,7 @@ input {
     }
 
     .post-info {
-        width: 45px;
+        width: 50px;
 
         font-size: 11px;
     }
@@ -534,9 +597,6 @@ input {
     .comment {
         font-size: 11px;
     }
-
-
-    /* WRITE */
 
     .write {
         padding: 10px 12px;
@@ -548,8 +608,13 @@ input {
         height: 40px;
     }
 
+    .write-form {
+        padding: 14px;
+    }
 
-    /* FOOTER */
+    .write-form textarea {
+        min-height: 130px;
+    }
 
     .footer {
         width: 100%;
@@ -560,9 +625,8 @@ input {
     }
 }
 
-
 /* =========================
-   VERY SMALL PHONE
+   SMALL PHONE
 ========================= */
 
 @media (max-width: 380px) {
@@ -585,7 +649,6 @@ input {
         display: none;
     }
 }
-
 </style>
 </head>
 
@@ -602,9 +665,8 @@ input {
     <div class="header-inner">
 
         <a class="logo" href="#">
-            GALL
+            와슈
         </a>
-
 
         <div class="search">
 
@@ -619,7 +681,6 @@ input {
             </button>
 
         </div>
-
 
         <button
             class="login"
@@ -651,14 +712,13 @@ input {
                 갤러리
             </div>
 
-
             <div class="gallery-list">
 
                 <a
                     href="#"
                     class="active"
                 >
-                    전체 갤러리
+                    전체
                 </a>
 
                 <a href="#">
@@ -670,11 +730,7 @@ input {
                 </a>
 
                 <a href="#">
-                    학교/공부
-                </a>
-
-                <a href="#">
-                    스포츠
+                    자유
                 </a>
 
                 <a href="#">
@@ -682,7 +738,7 @@ input {
                 </a>
 
                 <a href="#">
-                    자유
+                    스포츠
                 </a>
 
                 <a href="#">
@@ -706,7 +762,7 @@ input {
     <section>
 
         <div class="main-title">
-            실시간 인기글
+            와슈 커뮤니티
         </div>
 
 
@@ -717,12 +773,17 @@ input {
 
             <div class="tabs">
 
-                <button class="active">
-                    인기글
+                <button
+                    class="active"
+                    onclick="changeTab(this)"
+                >
+                    최신글
                 </button>
 
-                <button>
-                    최신글
+                <button
+                    onclick="changeTab(this)"
+                >
+                    인기글
                 </button>
 
             </div>
@@ -733,137 +794,103 @@ input {
 
             <div id="posts">
 
-
-                <div class="post">
-
-                    <div class="post-number">
-                        1
-                    </div>
-
-                    <div class="post-title">
-
-                        오늘 학교에서 있었던 일
-
-                        <span class="comment">
-                            [32]
-                        </span>
-
-                    </div>
-
-                    <div class="post-info">
-                        1,284
-                    </div>
-
+                <div class="empty" id="emptyMessage">
+                    아직 게시글이 없습니다.<br>
+                    첫 번째 글을 작성해보세요!
                 </div>
-
-
-
-                <div class="post">
-
-                    <div class="post-number">
-                        2
-                    </div>
-
-                    <div class="post-title">
-
-                        이 게임 진짜 재밌네
-
-                        <span class="comment">
-                            [18]
-                        </span>
-
-                    </div>
-
-                    <div class="post-info">
-                        932
-                    </div>
-
-                </div>
-
-
-
-                <div class="post">
-
-                    <div class="post-number">
-                        3
-                    </div>
-
-                    <div class="post-title">
-
-                        시험 끝난 사람?
-
-                        <span class="comment">
-                            [41]
-                        </span>
-
-                    </div>
-
-                    <div class="post-info">
-                        876
-                    </div>
-
-                </div>
-
-
-
-                <div class="post">
-
-                    <div class="post-number">
-                        4
-                    </div>
-
-                    <div class="post-title">
-
-                        오늘 급식 뭐였음
-
-                        <span class="comment">
-                            [27]
-                        </span>
-
-                    </div>
-
-                    <div class="post-info">
-                        741
-                    </div>
-
-                </div>
-
-
-
-                <div class="post">
-
-                    <div class="post-number">
-                        5
-                    </div>
-
-                    <div class="post-title">
-
-                        컴퓨터 견적 질문
-
-                        <span class="comment">
-                            [12]
-                        </span>
-
-                    </div>
-
-                    <div class="post-info">
-                        633
-                    </div>
-
-                </div>
-
 
             </div>
 
 
 
-            <!-- WRITE -->
+            <!-- WRITE BUTTON -->
 
             <div class="write">
 
-                <button onclick="writePost()">
-                    글쓰기
+                <button onclick="openWriteForm()">
+                    + 글쓰기
                 </button>
+
+            </div>
+
+
+
+            <!-- WRITE FORM -->
+
+            <div
+                class="write-form"
+                id="writeForm"
+            >
+
+                <select id="category">
+
+                    <option value="자유">
+                        자유
+                    </option>
+
+                    <option value="게임">
+                        게임
+                    </option>
+
+                    <option value="음악">
+                        음악
+                    </option>
+
+                    <option value="유머">
+                        유머
+                    </option>
+
+                    <option value="스포츠">
+                        스포츠
+                    </option>
+
+                    <option value="IT/컴퓨터">
+                        IT/컴퓨터
+                    </option>
+
+                </select>
+
+
+                <input
+                    id="nickname"
+                    type="text"
+                    maxlength="20"
+                    placeholder="닉네임"
+                >
+
+
+                <input
+                    id="title"
+                    type="text"
+                    maxlength="100"
+                    placeholder="제목"
+                >
+
+
+                <textarea
+                    id="content"
+                    maxlength="5000"
+                    placeholder="내용을 입력하세요."
+                ></textarea>
+
+
+                <div class="form-buttons">
+
+                    <button
+                        class="cancel-button"
+                        onclick="closeWriteForm()"
+                    >
+                        취소
+                    </button>
+
+                    <button
+                        class="submit-button"
+                        onclick="submitPost()"
+                    >
+                        게시하기
+                    </button>
+
+                </div>
 
             </div>
 
@@ -878,20 +905,12 @@ input {
     <aside class="right">
 
 
-        <!-- AD -->
-
         <div class="card ad">
-
             광고 영역
-
         </div>
 
 
-
-        <!-- RANKING -->
-
         <div class="card">
-
 
             <div class="card-title">
                 인기 갤러리
@@ -905,7 +924,7 @@ input {
                 </div>
 
                 <div class="rank-title">
-                    게임 갤러리
+                    게임
                 </div>
 
             </div>
@@ -918,7 +937,7 @@ input {
                 </div>
 
                 <div class="rank-title">
-                    자유 갤러리
+                    자유
                 </div>
 
             </div>
@@ -931,7 +950,7 @@ input {
                 </div>
 
                 <div class="rank-title">
-                    음악 갤러리
+                    음악
                 </div>
 
             </div>
@@ -944,11 +963,10 @@ input {
                 </div>
 
                 <div class="rank-title">
-                    유머 갤러리
+                    유머
                 </div>
 
             </div>
-
 
         </div>
 
@@ -958,13 +976,9 @@ input {
 
 
 
-<!-- =========================
-     FOOTER
-========================= -->
-
 <footer class="footer">
 
-    GALL Community
+    와슈 커뮤니티
     · 이용약관
     · 개인정보처리방침
 
@@ -972,44 +986,214 @@ input {
 
 
 
-<!-- =========================
-     JAVASCRIPT
-========================= -->
-
 <script>
 
-function login() {
+/* =========================
+   게시글 데이터
+========================= */
 
-    alert(
-        "로그인 기능은 다음 단계에서 연결합니다."
-    );
+let posts =
+    JSON.parse(
+        localStorage.getItem("washu_posts")
+    ) || [];
+
+
+/* =========================
+   게시글 화면 출력
+========================= */
+
+function renderPosts() {
+
+    const postsContainer =
+        document.getElementById("posts");
+
+    postsContainer.innerHTML = "";
+
+
+    if (posts.length === 0) {
+
+        postsContainer.innerHTML = `
+            <div class="empty">
+                아직 게시글이 없습니다.<br>
+                첫 번째 글을 작성해보세요!
+            </div>
+        `;
+
+        return;
+    }
+
+
+    posts.forEach((post, index) => {
+
+        const postElement =
+            document.createElement("div");
+
+        postElement.className = "post";
+
+
+        postElement.innerHTML = `
+
+            <div class="post-number">
+                ${posts.length - index}
+            </div>
+
+            <div class="post-title">
+
+                [${escapeHTML(post.category)}]
+
+                ${escapeHTML(post.title)}
+
+            </div>
+
+            <div class="post-info">
+
+                ${escapeHTML(post.nickname)}
+
+            </div>
+
+        `;
+
+
+        postsContainer.appendChild(
+            postElement
+        );
+
+    });
 
 }
 
 
-function writePost() {
+/* =========================
+   글쓰기 창
+========================= */
 
-    alert(
-        "게시글 작성 기능은 다음 단계에서 연결합니다."
-    );
+function openWriteForm() {
+
+    const form =
+        document.getElementById("writeForm");
+
+    form.classList.add("show");
+
+    document
+        .getElementById("nickname")
+        .focus();
 
 }
 
+
+function closeWriteForm() {
+
+    document
+        .getElementById("writeForm")
+        .classList.remove("show");
+
+}
+
+
+/* =========================
+   게시글 작성
+========================= */
+
+function submitPost() {
+
+    const category =
+        document.getElementById("category").value;
+
+    const nickname =
+        document.getElementById("nickname").value.trim();
+
+    const title =
+        document.getElementById("title").value.trim();
+
+    const content =
+        document.getElementById("content").value.trim();
+
+
+    if (!nickname) {
+
+        alert("닉네임을 입력해주세요.");
+
+        return;
+    }
+
+
+    if (!title) {
+
+        alert("제목을 입력해주세요.");
+
+        return;
+    }
+
+
+    if (!content) {
+
+        alert("내용을 입력해주세요.");
+
+        return;
+    }
+
+
+    const newPost = {
+
+        id: Date.now(),
+
+        category: category,
+
+        nickname: nickname,
+
+        title: title,
+
+        content: content,
+
+        views: 0,
+
+        likes: 0,
+
+        date: new Date().toISOString()
+
+    };
+
+
+    posts.unshift(newPost);
+
+
+    localStorage.setItem(
+        "washu_posts",
+        JSON.stringify(posts)
+    );
+
+
+    document.getElementById("nickname").value = "";
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+
+
+    closeWriteForm();
+
+    renderPosts();
+
+
+    alert("게시글이 등록되었습니다.");
+
+}
+
+
+/* =========================
+   검색
+========================= */
 
 function search() {
 
     const keyword =
         document
-        .getElementById("searchInput")
-        .value
-        .trim();
+            .getElementById("searchInput")
+            .value
+            .trim();
 
 
     if (!keyword) {
 
-        alert(
-            "검색어를 입력해주세요."
-        );
+        alert("검색어를 입력해주세요.");
 
         return;
     }
@@ -1023,8 +1207,67 @@ function search() {
 
 }
 
-</script>
 
+/* =========================
+   로그인
+========================= */
+
+function login() {
+
+    alert(
+        "로그인 기능은 다음 단계에서 연결합니다."
+    );
+
+}
+
+
+/* =========================
+   탭
+========================= */
+
+function changeTab(button) {
+
+    document
+        .querySelectorAll(".tabs button")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+}
+
+
+/* =========================
+   HTML 특수문자 방지
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================
+   시작
+========================= */
+
+renderPosts();
+
+</script>
 
 </body>
 </html>
