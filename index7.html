@@ -1,0 +1,5882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>와슈 커뮤니티</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+    --bg:#f5f6f8;
+    --card:#fff;
+    --text:#202124;
+    --sub:#777b85;
+    --line:#e4e6eb;
+    --point:#4f46e5;
+    --point-light:#eef2ff;
+    --danger:#ef4444;
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+body.dark{
+    --bg:#101218;
+    --card:#191c23;
+    --text:#f3f4f6;
+    --sub:#a6a9b2;
+    --line:#2d313a;
+    --point-light:#252a4b;
+    --shadow:0 2px 10px rgba(0,0,0,.2);
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+}
+
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+}
+
+.header-inner{
+    max-width:1400px;
+    min-height:64px;
+    margin:auto;
+    padding:10px 20px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    color:var(--point);
+    text-decoration:none;
+    font-size:27px;
+    font-weight:900;
+}
+
+.search{
+    flex:1;
+    max-width:620px;
+    margin:auto;
+    display:flex;
+}
+
+.search input{
+    width:100%;
+    height:42px;
+    border:1px solid var(--line);
+    border-right:0;
+    border-radius:8px 0 0 8px;
+    padding:0 14px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+}
+
+.search input:focus{border-color:var(--point)}
+
+.search button{
+    width:48px;
+    border:0;
+    border-radius:0 8px 8px 0;
+    background:var(--point);
+    color:white;
+}
+
+.header-buttons{
+    display:flex;
+    gap:7px;
+    flex-shrink:0;
+}
+
+.header-buttons button{
+    min-width:42px;
+    height:40px;
+    padding:0 11px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
+    position:relative;
+}
+
+.header-buttons button:hover{
+    background:var(--point-light);
+}
+
+.notification-dot{
+    position:absolute;
+    top:4px;
+    right:5px;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    border-radius:99px;
+    background:var(--danger);
+    color:white;
+    font-size:9px;
+    line-height:16px;
+    font-weight:900;
+}
+
+.container{
+    max-width:1400px;
+    margin:24px auto;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:220px minmax(0,1fr) 250px;
+    gap:20px;
+}
+
+.sidebar,.card,.right-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+}
+
+.sidebar{
+    height:fit-content;
+    overflow:hidden;
+}
+
+.sidebar-title{
+    padding:17px;
+    font-weight:800;
+    border-bottom:1px solid var(--line);
+}
+
+.gallery{padding:8px}
+
+.gallery button{
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:7px;
+    background:transparent;
+    color:var(--text);
+    text-align:left;
+}
+
+.gallery button:hover,
+.gallery button.active{
+    background:var(--point-light);
+    color:var(--point);
+    font-weight:700;
+}
+
+.gallery-count{
+    float:right;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.page-title{
+    margin-bottom:14px;
+}
+
+.page-title h1{
+    margin:0;
+    font-size:24px;
+}
+
+.page-title p{
+    margin:6px 0 0;
+    color:var(--sub);
+    font-size:14px;
+}
+
+.tabs{
+    display:flex;
+    border-bottom:1px solid var(--line);
+}
+
+.tabs button{
+    flex:1;
+    padding:14px;
+    border:0;
+    border-bottom:2px solid transparent;
+    background:transparent;
+    color:var(--sub);
+}
+
+.tabs button.active{
+    color:var(--point);
+    border-bottom-color:var(--point);
+    font-weight:800;
+}
+
+.search-info{
+    display:none;
+    padding:12px 16px;
+    background:var(--point-light);
+    color:var(--point);
+    font-size:13px;
+}
+
+.post{
+    padding:16px 18px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+}
+
+.post:hover{background:var(--bg)}
+
+.post-title-row{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.post-title{
+    font-size:16px;
+    font-weight:700;
+    word-break:break-word;
+}
+
+.comment-count{
+    color:var(--point);
+    font-size:13px;
+}
+
+.badge{
+    display:inline-flex;
+    padding:2px 6px;
+    border-radius:4px;
+    font-size:10px;
+    font-weight:900;
+}
+
+.badge.hot{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.badge.new{
+    background:#dcfce7;
+    color:#16a34a;
+}
+
+.badge.save{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.post-preview{
+    margin-top:7px;
+    color:var(--sub);
+    font-size:13px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.post-info{
+    display:flex;
+    flex-wrap:wrap;
+    gap:11px;
+    margin-top:10px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.category{
+    color:var(--point);
+    font-weight:700;
+}
+
+mark{
+    background:#fef08a;
+    color:#111;
+}
+
+.empty{
+    padding:65px 20px;
+    text-align:center;
+    color:var(--sub);
+}
+
+.write-area{padding:14px}
+
+.write-btn{
+    width:100%;
+    height:45px;
+    border:0;
+    border-radius:8px;
+    background:var(--point);
+    color:white;
+    font-weight:800;
+}
+
+.form{
+    display:none;
+    padding:18px;
+    border-top:1px solid var(--line);
+}
+
+.form.show{display:block}
+
+.form input,
+.form textarea,
+.form select{
+    width:100%;
+    margin-bottom:10px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:11px;
+    background:var(--bg);
+    color:var(--text);
+    outline:none;
+}
+
+.form textarea{
+    min-height:190px;
+    resize:vertical;
+}
+
+.form-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.form-buttons button{
+    flex:1;
+    padding:12px;
+    border:0;
+    border-radius:7px;
+}
+
+.cancel{
+    background:var(--bg);
+    color:var(--text);
+}
+
+.submit{
+    background:var(--point);
+    color:#fff;
+}
+
+.right-card{
+    overflow:hidden;
+    margin-bottom:15px;
+}
+
+.right-title{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+    font-weight:800;
+}
+
+.popular{
+    padding:13px 15px;
+    border-bottom:1px solid var(--line);
+}
+
+.popular:hover{background:var(--bg)}
+
+.popular-title{
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.popular-info{
+    margin-top:5px;
+    color:var(--sub);
+    font-size:11px;
+}
+
+.stats{
+    padding:15px;
+    color:var(--sub);
+    font-size:13px;
+    line-height:2;
+}
+
+.stats strong{color:var(--text)}
+
+.detail{display:none}
+.detail.show{display:block}
+
+.back-btn{
+    margin-bottom:12px;
+    border:0;
+    background:transparent;
+    color:var(--point);
+    font-weight:800;
+}
+
+.detail-header{
+    padding:22px;
+    border-bottom:1px solid var(--line);
+}
+
+.detail-category{
+    color:var(--point);
+    font-size:13px;
+    font-weight:800;
+}
+
+.detail-title{
+    margin:10px 0 14px;
+    font-size:24px;
+    font-weight:850;
+    word-break:break-word;
+}
+
+.detail-info{
+    color:var(--sub);
+    font-size:13px;
+}
+
+.detail-content{
+    min-height:260px;
+    padding:25px 22px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    word-break:break-word;
+}
+
+.detail-actions{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:15px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+}
+
+.detail-actions button{
+    padding:9px 15px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
+}
+
+.detail-actions button:hover{
+    background:var(--point-light);
+}
+
+.comments{padding:20px}
+
+.comments-title{
+    margin-bottom:15px;
+    font-weight:800;
+}
+
+.comment{
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.comment-head{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.comment-author{
+    font-size:13px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.comment-author:hover{
+    color:var(--point);
+}
+
+.comment-date{
+    color:var(--sub);
+    font-size:11px;
+}
+
+.comment-text{
+    margin-top:7px;
+    white-space:pre-wrap;
+    line-height:1.6;
+    word-break:break-word;
+}
+
+.comment-buttons{
+    display:flex;
+    gap:8px;
+    margin-top:7px;
+}
+
+.comment-buttons button{
+    border:0;
+    background:transparent;
+    color:var(--sub);
+    padding:2px;
+    font-size:11px;
+}
+
+.reply{
+    margin:10px 0 0 25px;
+    padding:10px 12px;
+    border-left:2px solid var(--point);
+    background:var(--bg);
+}
+
+.comment-form{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+}
+
+.comment-form input{
+    flex:1;
+    min-width:0;
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:11px;
+    background:var(--bg);
+    color:var(--text);
+}
+
+.comment-form button{
+    border:0;
+    border-radius:7px;
+    padding:0 18px;
+    background:var(--point);
+    color:white;
+}
+
+.pagination{
+    display:flex;
+    justify-content:center;
+    gap:5px;
+    padding:17px;
+}
+
+.pagination button{
+    min-width:34px;
+    height:34px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--card);
+    color:var(--text);
+}
+
+.pagination button.active{
+    background:var(--point);
+    color:white;
+    border-color:var(--point);
+}
+
+.pagination button:disabled{
+    opacity:.4;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.55);
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+    width:100%;
+    max-width:440px;
+    max-height:90vh;
+    overflow:auto;
+    padding:22px;
+    border-radius:12px;
+    background:var(--card);
+    color:var(--text);
+}
+
+.modal-box h2{margin-top:0}
+
+.modal-box input,
+.modal-box textarea,
+.modal-box select{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--bg);
+    color:var(--text);
+}
+
+.modal-box textarea{
+    min-height:160px;
+    resize:vertical;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:8px;
+}
+
+.modal-buttons button{
+    flex:1;
+    padding:11px;
+    border:0;
+    border-radius:7px;
+}
+
+.modal-save{
+    background:var(--point);
+    color:white;
+}
+
+/* PROFILE */
+
+.profile-card{
+    padding:25px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.profile-avatar{
+    width:76px;
+    height:76px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--point-light);
+    color:var(--point);
+    font-size:34px;
+    font-weight:900;
+    overflow:hidden;
+}
+
+.profile-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-name{
+    font-size:23px;
+    font-weight:900;
+}
+
+.profile-id{
+    margin-top:5px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.profile-bio{
+    margin-top:6px;
+    color:var(--text);
+    font-size:13px;
+    line-height:1.5;
+    word-break:break-word;
+}
+
+.avatar-upload-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:14px;
+}
+
+.avatar-upload-preview{
+    width:64px;
+    height:64px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--point-light);
+    color:var(--point);
+    font-size:28px;
+    font-weight:900;
+    overflow:hidden;
+}
+
+.avatar-upload-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.avatar-upload-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.avatar-upload-label{
+    text-align:center;
+    display:inline-block;
+}
+
+.profile-date{
+    margin-top:7px;
+    color:var(--sub);
+    font-size:13px;
+}
+
+.profile-edit{
+    margin-left:auto;
+    padding:9px 13px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
+}
+
+.follow-stats{
+    display:flex;
+    gap:24px;
+    margin-top:12px;
+}
+
+.follow-stat{
+    border:0;
+    background:transparent;
+    color:var(--text);
+    padding:0;
+}
+
+.follow-stat strong{
+    font-size:15px;
+}
+
+.follow-stat span{
+    margin-left:4px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.follow-btn{
+    margin-left:auto;
+    min-width:90px;
+    padding:10px 15px;
+    border:0;
+    border-radius:7px;
+    background:var(--point);
+    color:white;
+    font-weight:800;
+}
+
+.follow-btn.following{
+    background:var(--bg);
+    color:var(--text);
+    border:1px solid var(--line);
+}
+
+.my-stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border-top:1px solid var(--line);
+}
+
+.my-stat{
+    padding:18px 10px;
+    text-align:center;
+    border-right:1px solid var(--line);
+}
+
+.my-stat:last-child{
+    border-right:0;
+}
+
+.my-stat strong{
+    display:block;
+    font-size:20px;
+}
+
+.my-stat span{
+    color:var(--sub);
+    font-size:12px;
+}
+
+.profile-tabs{
+    display:flex;
+    margin-top:16px;
+}
+
+.profile-tabs button{
+    flex:1;
+    padding:13px;
+    border:0;
+    border-bottom:2px solid transparent;
+    background:var(--card);
+    color:var(--sub);
+}
+
+.profile-tabs button.active{
+    color:var(--point);
+    border-bottom-color:var(--point);
+    font-weight:800;
+}
+
+.mypage-section{
+    margin-top:16px;
+}
+
+.mypage-section-title{
+    margin-bottom:10px;
+    font-size:17px;
+    font-weight:850;
+}
+
+.my-post{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+}
+
+.my-post:hover{
+    background:var(--bg);
+}
+
+.my-post-title{
+    font-weight:700;
+}
+
+.my-post-info{
+    margin-top:7px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.my-comment{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+}
+
+.my-comment-post{
+    color:var(--point);
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.my-comment-text{
+    margin-top:6px;
+    font-size:14px;
+    white-space:pre-wrap;
+}
+
+.my-comment-date{
+    margin-top:6px;
+    color:var(--sub);
+    font-size:11px;
+}
+
+.settings{
+    padding:18px;
+}
+
+.setting-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.setting-row:last-child{
+    border-bottom:0;
+}
+
+.setting-label strong{
+    display:block;
+}
+
+.setting-label span{
+    display:block;
+    margin-top:3px;
+    color:var(--sub);
+    font-size:12px;
+}
+
+.setting-btn{
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--text);
+}
+
+/* USER LIST */
+
+.user-list{
+    padding:0;
+}
+
+.user-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border-bottom:1px solid var(--line);
+}
+
+.user-avatar{
+    width:42px;
+    height:42px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:var(--point-light);
+    color:var(--point);
+    font-weight:900;
+}
+
+.user-info{
+    min-width:0;
+    flex:1;
+}
+
+.user-name{
+    font-weight:800;
+    cursor:pointer;
+}
+
+.user-id{
+    margin-top:3px;
+    color:var(--sub);
+    font-size:11px;
+}
+
+.user-follow{
+    padding:7px 10px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--card);
+    color:var(--text);
+}
+
+.user-follow.on{
+    background:var(--point);
+    color:white;
+    border-color:var(--point);
+}
+
+/* NOTIFICATIONS */
+
+.notification-item{
+    padding:15px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+}
+
+.notification-item:hover{
+    background:var(--bg);
+}
+
+.notification-item.unread{
+    background:var(--point-light);
+}
+
+.notification-text{
+    font-size:14px;
+    line-height:1.5;
+}
+
+.notification-date{
+    margin-top:5px;
+    color:var(--sub);
+    font-size:11px;
+}
+
+/* BOOKMARK */
+
+.bookmark-btn.saved{
+    color:#b45309;
+    border-color:#f59e0b;
+}
+
+/* RECENT */
+
+.recent-item{
+    padding:13px 15px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+}
+
+.recent-item:hover{
+    background:var(--bg);
+}
+
+/* PROFILE VISIT */
+
+.other-profile{
+    display:none;
+}
+
+.other-profile.show{
+    display:block;
+}
+
+.report-reason{
+    display:block;
+    margin:10px 0;
+}
+
+.report-reason input{
+    margin-right:7px;
+}
+
+/* DRAFT */
+
+.draft-status{
+    color:var(--success);
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+footer{
+    padding:35px 20px;
+    text-align:center;
+    color:var(--sub);
+    font-size:12px;
+}
+
+@media(max-width:1000px){
+    .container{
+        grid-template-columns:190px minmax(0,1fr);
+    }
+
+    .right-column{
+        display:none;
+    }
+}
+
+@media(max-width:700px){
+
+    .header-inner{
+        min-height:0;
+        padding:10px;
+        flex-wrap:wrap;
+        gap:9px;
+    }
+
+    .logo{font-size:23px}
+
+    .header-buttons{
+        margin-left:auto;
+    }
+
+    .header-buttons button{
+        height:38px;
+        padding:0 9px;
+    }
+
+    .search{
+        order:3;
+        flex-basis:100%;
+    }
+
+    .container{
+        display:block;
+        margin:12px auto;
+        padding:0 9px;
+    }
+
+    .sidebar{
+        margin-bottom:12px;
+        overflow-x:auto;
+    }
+
+    .sidebar-title{display:none}
+
+    .gallery{
+        display:flex;
+        gap:4px;
+        padding:7px;
+        white-space:nowrap;
+    }
+
+    .gallery button{
+        width:auto;
+        padding:9px 12px;
+    }
+
+    .gallery-count{display:none}
+
+    .page-title h1{font-size:20px}
+
+    .post{padding:14px}
+
+    .detail-header{padding:18px}
+
+    .detail-title{font-size:20px}
+
+    .detail-content{padding:20px 18px}
+
+    .comments{padding:16px}
+
+    .comment-form{
+        flex-direction:column;
+    }
+
+    .comment-form button{
+        height:42px;
+    }
+
+    .reply{margin-left:15px}
+
+    .profile-card{
+        padding:18px;
+        gap:12px;
+        flex-wrap:wrap;
+    }
+
+    .profile-avatar{
+        width:60px;
+        height:60px;
+        font-size:27px;
+    }
+
+    .profile-name{
+        font-size:19px;
+    }
+
+    .profile-edit{
+        margin-left:0;
+        width:100%;
+    }
+
+    .follow-btn{
+        margin-left:0;
+        width:100%;
+    }
+
+    .follow-stats{
+        gap:15px;
+    }
+
+    .my-stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .my-stat:nth-child(2){
+        border-right:0;
+    }
+
+    .my-stat:nth-child(-n+2){
+        border-bottom:1px solid var(--line);
+    }
+}
+
+@media(max-width:450px){
+
+    .header-buttons button{
+        min-width:38px;
+        padding:0 7px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+<div class="header-inner">
+
+<a class="logo" href="#" onclick="goHome();return false;">와슈</a>
+
+<div class="search">
+<input id="searchInput"
+       placeholder="게시글 검색"
+       onkeydown="if(event.key==='Enter')searchPosts()">
+<button onclick="searchPosts()">🔍</button>
+</div>
+
+<div class="header-buttons">
+
+<button id="notificationBtn" onclick="openNotifications()">
+🔔
+<span id="notificationDot" class="notification-dot" style="display:none">0</span>
+</button>
+
+<button id="darkModeBtn" onclick="toggleDark()">🌙</button>
+
+<button onclick="openMyPage()">👤</button>
+
+</div>
+</div>
+</header>
+
+
+<main class="container">
+
+<aside class="sidebar">
+
+<div class="sidebar-title">와슈 게시판</div>
+
+<div class="gallery">
+
+<button class="active" onclick="selectCategory('전체',this)">
+전체 <span class="gallery-count" id="count-전체">0</span>
+</button>
+
+<button onclick="selectCategory('자유',this)">
+💬 자유 <span class="gallery-count" id="count-자유">0</span>
+</button>
+
+<button onclick="selectCategory('게임',this)">
+🎮 게임 <span class="gallery-count" id="count-게임">0</span>
+</button>
+
+<button onclick="selectCategory('음악',this)">
+🎵 음악 <span class="gallery-count" id="count-음악">0</span>
+</button>
+
+<button onclick="selectCategory('유머',this)">
+😂 유머 <span class="gallery-count" id="count-유머">0</span>
+</button>
+
+<button onclick="selectCategory('스포츠',this)">
+⚽ 스포츠 <span class="gallery-count" id="count-스포츠">0</span>
+</button>
+
+<button onclick="selectCategory('IT/컴퓨터',this)">
+💻 IT/컴퓨터 <span class="gallery-count" id="count-IT/컴퓨터">0</span>
+</button>
+
+<button onclick="selectCategory('애니/만화',this)">
+📺 애니/만화 <span class="gallery-count" id="count-애니/만화">0</span>
+</button>
+
+<button onclick="openMyPage()">
+👤 마이페이지
+</button>
+
+<button onclick="openNotifications()">
+🔔 알림
+</button>
+
+</div>
+</aside>
+
+
+<section>
+
+<!-- LIST -->
+
+<div id="listPage">
+
+<div class="page-title">
+<h1 id="pageTitle">와슈 커뮤니티</h1>
+<p>자유롭게 이야기를 나눠보세요.</p>
+</div>
+
+<div class="card">
+
+<div class="tabs">
+<button class="active" onclick="changeTab('latest',this)">최신글</button>
+<button onclick="changeTab('popular',this)">인기글</button>
+</div>
+
+<div id="searchInfo" class="search-info"></div>
+
+<div id="posts"></div>
+
+<div id="pagination" class="pagination"></div>
+
+<div class="write-area">
+<button class="write-btn" onclick="openWriteForm()">+ 글쓰기</button>
+</div>
+
+<div class="form" id="writeForm">
+
+<div id="draftStatus" class="draft-status"></div>
+
+<select id="category">
+<option value="자유">자유</option>
+<option value="게임">게임</option>
+<option value="음악">음악</option>
+<option value="유머">유머</option>
+<option value="스포츠">스포츠</option>
+<option value="IT/컴퓨터">IT/컴퓨터</option>
+<option value="애니/만화">애니/만화</option>
+</select>
+
+<input id="nickname" maxlength="20" placeholder="닉네임">
+
+<input id="title" maxlength="100" placeholder="제목">
+
+<textarea id="content" placeholder="내용을 입력하세요."></textarea>
+
+<div class="form-buttons">
+<button class="cancel" onclick="saveDraftAndClose()">임시저장</button>
+<button class="submit" onclick="submitPost()">게시하기</button>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- DETAIL -->
+
+<div id="detailPage" class="detail">
+
+<button class="back-btn" onclick="goHome()">← 목록으로</button>
+
+<div class="card">
+
+<div class="detail-header">
+
+<div id="detailCategory" class="detail-category"></div>
+<div id="detailTitle" class="detail-title"></div>
+<div id="detailInfo" class="detail-info"></div>
+
+</div>
+
+<div id="detailContent" class="detail-content"></div>
+
+<div class="detail-actions">
+
+<button onclick="likePost()">👍 <span id="likeCount">0</span></button>
+<button onclick="dislikePost()">👎 <span id="dislikeCount">0</span></button>
+
+<button id="bookmarkButton" onclick="toggleBookmark()">
+🔖 저장
+</button>
+
+<button onclick="editCurrentPost()">✏️ 수정</button>
+<button onclick="deleteCurrentPost()">🗑️ 삭제</button>
+<button onclick="openReport()">🚨 신고</button>
+
+</div>
+
+<div class="comments">
+
+<div class="comments-title">
+댓글 <span id="commentCount">0</span>
+</div>
+
+<div id="commentsList"></div>
+
+<div class="comment-form">
+
+<input id="commentInput"
+       maxlength="300"
+       placeholder="댓글을 입력하세요."
+       onkeydown="if(event.key==='Enter')addComment()">
+
+<button onclick="addComment()">등록</button>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- MY PAGE -->
+
+<div id="myPage" class="mypage">
+
+<button class="back-btn" onclick="goHome()">← 커뮤니티로</button>
+
+<div class="page-title">
+<h1>마이페이지</h1>
+<p>나의 와슈 활동을 확인하세요.</p>
+</div>
+
+<div class="card">
+
+<div class="profile-card">
+
+<div class="profile-avatar" id="profileAvatar">?</div>
+
+<div>
+
+<div class="profile-name" id="profileName">익명</div>
+
+<div class="profile-id" id="profileId"></div>
+
+<div class="profile-bio" id="profileBio" style="display:none"></div>
+
+<div class="profile-date" id="profileDate"></div>
+
+<div class="follow-stats">
+
+<button class="follow-stat" onclick="openFollowList('followers',userId)">
+<strong id="myFollowerCount">0</strong>
+<span>팔로워</span>
+</button>
+
+<button class="follow-stat" onclick="openFollowList('following',userId)">
+<strong id="myFollowingCount">0</strong>
+<span>팔로잉</span>
+</button>
+
+</div>
+
+</div>
+
+<button class="profile-edit" onclick="openNickname()">
+✏️ 프로필 편집
+</button>
+
+</div>
+
+
+<div class="my-stats">
+
+<div class="my-stat">
+<strong id="myPostCount">0</strong>
+<span>작성글</span>
+</div>
+
+<div class="my-stat">
+<strong id="myCommentCount">0</strong>
+<span>작성댓글</span>
+</div>
+
+<div class="my-stat">
+<strong id="myLikeCount">0</strong>
+<span>받은 추천</span>
+</div>
+
+<div class="my-stat">
+<strong id="myDislikeCount">0</strong>
+<span>받은 비추천</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="profile-tabs">
+
+<button class="active" onclick="showMyTab('posts',this)">
+📝 게시글
+</button>
+
+<button onclick="showMyTab('comments',this)">
+💬 댓글
+</button>
+
+<button onclick="showMyTab('bookmarks',this)">
+🔖 저장
+</button>
+
+</div>
+
+
+<div id="myPostsSection" class="mypage-section">
+
+<div class="mypage-section-title">
+📝 내가 쓴 글
+</div>
+
+<div class="card" id="myPosts"></div>
+
+</div>
+
+
+<div id="myCommentsSection" class="mypage-section" style="display:none">
+
+<div class="mypage-section-title">
+💬 내가 쓴 댓글
+</div>
+
+<div class="card" id="myComments"></div>
+
+</div>
+
+
+<div id="myBookmarksSection" class="mypage-section" style="display:none">
+
+<div class="mypage-section-title">
+🔖 저장한 글
+</div>
+
+<div class="card" id="myBookmarks"></div>
+
+</div>
+
+
+<div class="mypage-section">
+
+<div class="mypage-section-title">
+⚙️ 설정
+</div>
+
+<div class="card settings">
+
+<div class="setting-row">
+
+<div class="setting-label">
+<strong>화면 테마</strong>
+<span>다크모드 / 라이트모드</span>
+</div>
+
+<button class="setting-btn" onclick="toggleDark()">
+테마 변경
+</button>
+
+</div>
+
+<div class="setting-row">
+
+<div class="setting-label">
+<strong>닉네임</strong>
+<span id="settingNickname">익명</span>
+</div>
+
+<button class="setting-btn" onclick="openNickname()">
+변경
+</button>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- OTHER PROFILE -->
+
+<div id="otherProfile" class="other-profile">
+
+<button class="back-btn" onclick="goHome()">← 커뮤니티로</button>
+
+<div class="page-title">
+<h1>프로필</h1>
+<p>와슈 회원 프로필</p>
+</div>
+
+<div class="card">
+
+<div class="profile-card">
+
+<div class="profile-avatar" id="otherAvatar">?</div>
+
+<div>
+
+<div class="profile-name" id="otherName">익명</div>
+
+<div class="profile-id" id="otherId"></div>
+
+<div class="profile-bio" id="otherBio" style="display:none"></div>
+
+<div class="follow-stats">
+
+<button class="follow-stat" onclick="openFollowList('followers',currentProfileUserId)">
+<strong id="otherFollowerCount">0</strong>
+<span>팔로워</span>
+</button>
+
+<button class="follow-stat" onclick="openFollowList('following',currentProfileUserId)">
+<strong id="otherFollowingCount">0</strong>
+<span>팔로잉</span>
+</button>
+
+</div>
+
+</div>
+
+<button id="otherFollowButton"
+        class="follow-btn"
+        onclick="toggleFollowCurrentProfile()">
+팔로우
+</button>
+
+</div>
+
+<div class="my-stats">
+
+<div class="my-stat">
+<strong id="otherPostCount">0</strong>
+<span>작성글</span>
+</div>
+
+<div class="my-stat">
+<strong id="otherLikeCount">0</strong>
+<span>받은 추천</span>
+</div>
+
+<div class="my-stat">
+<strong id="otherCommentCount">0</strong>
+<span>댓글</span>
+</div>
+
+<div class="my-stat">
+<strong id="otherJoinDate">-</strong>
+<span>가입</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="mypage-section">
+
+<div class="mypage-section-title">
+📝 작성한 글
+</div>
+
+<div class="card" id="otherPosts"></div>
+
+</div>
+
+</div>
+
+
+<!-- FOLLOW LIST -->
+
+<div id="followListPage" class="other-profile">
+
+<button class="back-btn" onclick="goHome()">← 커뮤니티로</button>
+
+<div class="page-title">
+<h1 id="followListTitle">팔로워</h1>
+<p>팔로우 관계를 확인하세요.</p>
+</div>
+
+<div class="card user-list" id="followUsers"></div>
+
+</div>
+
+
+<!-- NOTIFICATIONS -->
+
+<div id="notificationPage" class="other-profile">
+
+<button class="back-btn" onclick="goHome()">← 커뮤니티로</button>
+
+<div class="page-title">
+<h1>🔔 알림</h1>
+<p>나에게 온 알림입니다.</p>
+</div>
+
+<div class="card" id="notificationList"></div>
+
+</div>
+
+</section>
+
+
+<!-- RIGHT -->
+
+<aside class="right-column">
+
+<div class="right-card">
+
+<div class="right-title">🔥 인기글</div>
+
+<div id="popularPosts"></div>
+
+</div>
+
+<div class="right-card">
+
+<div class="right-title">🕘 최근 본 글</div>
+
+<div id="recentPosts"></div>
+
+</div>
+
+<div class="right-card">
+
+<div class="right-title">📊 와슈 통계</div>
+
+<div class="stats">
+
+게시글 <strong id="totalPosts">0</strong>개
+<br>
+댓글 <strong id="totalComments">0</strong>개
+<br>
+추천 <strong id="totalLikes">0</strong>개
+<br>
+회원 <strong id="totalUsers">0</strong>명
+
+</div>
+
+</div>
+
+</aside>
+
+</main>
+
+
+<footer>
+와슈 커뮤니티
+<br><br>
+DB 연결 전 테스트 버전 · localStorage 기반
+</footer>
+
+
+<!-- PROFILE EDIT -->
+
+<div class="modal" id="nicknameModal">
+
+<div class="modal-box">
+
+<h2>프로필 편집</h2>
+
+<div class="avatar-upload-row">
+
+<div class="avatar-upload-preview" id="avatarImgPreview">?</div>
+
+<div class="avatar-upload-buttons">
+
+<label class="setting-btn avatar-upload-label">
+사진 선택
+<input type="file"
+       id="avatarImageInput"
+       accept="image/*"
+       style="display:none"
+       onchange="handleAvatarImageChange(event)">
+</label>
+
+<button type="button"
+        class="setting-btn"
+        onclick="removeAvatarImage()">
+사진 제거
+</button>
+
+</div>
+
+</div>
+
+<input id="avatarSetting"
+       maxlength="2"
+       placeholder="이모지 아바타 (사진이 없을 때 사용, 예: 🐱)">
+
+<input id="nicknameSetting"
+       maxlength="20"
+       placeholder="사용할 닉네임">
+
+<textarea id="bioSetting"
+          maxlength="60"
+          placeholder="한 줄 소개 (선택, 최대 60자)"
+          style="min-height:70px"></textarea>
+
+<div class="modal-buttons">
+
+<button onclick="closeNickname()">취소</button>
+
+<button class="modal-save" onclick="saveNickname()">저장</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- REPORT -->
+
+<div class="modal" id="reportModal">
+
+<div class="modal-box">
+
+<h2>🚨 게시글 신고</h2>
+
+<p style="color:var(--sub)">
+신고 사유를 선택하세요.
+</p>
+
+<label class="report-reason">
+<input type="radio" name="reportReason" value="스팸/광고" checked>
+스팸 / 광고
+</label>
+
+<label class="report-reason">
+<input type="radio" name="reportReason" value="욕설/비방">
+욕설 / 비방
+</label>
+
+<label class="report-reason">
+<input type="radio" name="reportReason" value="도배">
+도배
+</label>
+
+<label class="report-reason">
+<input type="radio" name="reportReason" value="기타">
+기타
+</label>
+
+<div class="modal-buttons">
+
+<button onclick="closeReport()">취소</button>
+
+<button class="modal-save" onclick="submitReport()">신고하기</button>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+/* =========================================================
+   USER
+========================================================= */
+
+let userId=localStorage.getItem("washu_user_id");
+
+if(!userId){
+
+    userId=
+        "user_"+
+        Date.now()+"_"+
+        Math.random()
+        .toString(36)
+        .slice(2,8);
+
+    localStorage.setItem(
+        "washu_user_id",
+        userId
+    );
+}
+
+let joinDate=
+    localStorage.getItem("washu_join_date");
+
+if(!joinDate){
+
+    joinDate=new Date().toISOString();
+
+    localStorage.setItem(
+        "washu_join_date",
+        joinDate
+    );
+}
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let posts=
+    JSON.parse(
+        localStorage.getItem("washu_posts")
+    )||[];
+
+let follows=
+    JSON.parse(
+        localStorage.getItem("washu_follows")
+    )||[];
+
+let bookmarks=
+    JSON.parse(
+        localStorage.getItem("washu_bookmarks")
+    )||[];
+
+let notifications=
+    JSON.parse(
+        localStorage.getItem("washu_notifications")
+    )||[];
+
+let reports=
+    JSON.parse(
+        localStorage.getItem("washu_reports")
+    )||[];
+
+let recentPosts=
+    JSON.parse(
+        localStorage.getItem("washu_recent")
+    )||[];
+
+let draft=
+    JSON.parse(
+        localStorage.getItem("washu_draft")
+    )||null;
+
+
+let currentCategory="전체";
+let currentTab="latest";
+let currentPostId=null;
+let currentPage=1;
+let searchKeyword="";
+let currentProfileUserId=null;
+
+const POSTS_PER_PAGE=10;
+
+
+/* =========================================================
+   NORMALIZE
+========================================================= */
+
+posts=posts.map(post=>({
+
+    ...post,
+
+    authorId:post.authorId||null,
+
+    avatar:post.avatar||null,
+
+    avatarImg:post.avatarImg||null,
+
+    bio:post.bio||"",
+
+    dislikes:post.dislikes||0,
+
+    comments:(post.comments||[]).map(comment=>({
+
+        ...comment,
+
+        authorId:comment.authorId||null,
+
+        avatar:comment.avatar||null,
+
+        avatarImg:comment.avatarImg||null,
+
+        bio:comment.bio||"",
+
+        likes:comment.likes||0,
+
+        replies:(comment.replies||[]).map(reply=>({
+
+            ...reply,
+
+            authorId:reply.authorId||null,
+
+            avatar:reply.avatar||null,
+
+            avatarImg:reply.avatarImg||null,
+
+            bio:reply.bio||""
+
+        }))
+
+    }))
+
+}));
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function savePosts(){
+
+    localStorage.setItem(
+        "washu_posts",
+        JSON.stringify(posts)
+    );
+
+}
+
+function saveFollows(){
+
+    localStorage.setItem(
+        "washu_follows",
+        JSON.stringify(follows)
+    );
+
+}
+
+function saveBookmarks(){
+
+    localStorage.setItem(
+        "washu_bookmarks",
+        JSON.stringify(bookmarks)
+    );
+
+}
+
+function saveNotifications(){
+
+    localStorage.setItem(
+        "washu_notifications",
+        JSON.stringify(notifications)
+    );
+
+}
+
+function saveRecent(){
+
+    localStorage.setItem(
+        "washu_recent",
+        JSON.stringify(recentPosts)
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function formatDate(date){
+
+    const d=new Date(date);
+    const now=new Date();
+
+    const diff=
+        Math.floor(
+            (now-d)/1000
+        );
+
+    if(diff<60)return"방금 전";
+    if(diff<3600)return Math.floor(diff/60)+"분 전";
+    if(diff<86400)return Math.floor(diff/3600)+"시간 전";
+
+    if(
+        d.getFullYear()===
+        now.getFullYear()
+    ){
+
+        return(
+            (d.getMonth()+1)+
+            "."+
+            d.getDate()
+        );
+
+    }
+
+    return(
+        d.getFullYear()+
+        "."+
+        (d.getMonth()+1)+
+        "."+
+        d.getDate()
+    );
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function score(post){
+
+    return(
+        (post.likes||0)*3+
+        (post.comments||[]).length*2+
+        (post.views||0)
+    );
+
+}
+
+function isHot(post){
+
+    return score(post)>=10;
+
+}
+
+function isNew(post){
+
+    return(
+        Date.now()-
+        new Date(post.date).getTime()
+        <
+        24*60*60*1000
+    );
+
+}
+
+
+/* =========================================================
+   USER HELPERS
+========================================================= */
+
+function nicknameOfUser(id){
+
+    if(id===userId){
+
+        return localStorage.getItem(
+            "washu_nickname"
+        )||"익명";
+
+    }
+
+    const post=
+        posts.find(
+            p=>p.authorId===id
+        );
+
+    if(post)return post.nickname;
+
+    for(const p of posts){
+
+        const comment=
+            p.comments.find(
+                c=>c.authorId===id
+            );
+
+        if(comment)return comment.nickname;
+
+    }
+
+    return "알 수 없는 회원";
+
+}
+
+
+function avatarOfUser(id){
+
+    if(id===userId){
+
+        return localStorage.getItem(
+            "washu_avatar"
+        )||"";
+
+    }
+
+    const post=
+        posts.find(
+            p=>p.authorId===id
+        );
+
+    if(post&&post.avatar)return post.avatar;
+
+    for(const p of posts){
+
+        const comment=
+            p.comments.find(
+                c=>c.authorId===id
+            );
+
+        if(comment&&comment.avatar)
+            return comment.avatar;
+
+
+        for(const c of p.comments){
+
+            const reply=
+                (c.replies||[]).find(
+                    r=>r.authorId===id
+                );
+
+            if(reply&&reply.avatar)
+                return reply.avatar;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+function avatarImgOfUser(id){
+
+    if(id===userId){
+
+        return localStorage.getItem(
+            "washu_avatar_img"
+        )||"";
+
+    }
+
+    const post=
+        posts.find(
+            p=>p.authorId===id
+        );
+
+    if(post&&post.avatarImg)
+        return post.avatarImg;
+
+    for(const p of posts){
+
+        const comment=
+            p.comments.find(
+                c=>c.authorId===id
+            );
+
+        if(comment&&comment.avatarImg)
+            return comment.avatarImg;
+
+
+        for(const c of p.comments){
+
+            const reply=
+                (c.replies||[]).find(
+                    r=>r.authorId===id
+                );
+
+            if(reply&&reply.avatarImg)
+                return reply.avatarImg;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+function bioOfUser(id){
+
+    if(id===userId){
+
+        return localStorage.getItem(
+            "washu_bio"
+        )||"";
+
+    }
+
+    const post=
+        posts.find(
+            p=>p.authorId===id
+        );
+
+    if(post&&post.bio)return post.bio;
+
+    for(const p of posts){
+
+        const comment=
+            p.comments.find(
+                c=>c.authorId===id
+            );
+
+        if(comment&&comment.bio)
+            return comment.bio;
+
+
+        for(const c of p.comments){
+
+            const reply=
+                (c.replies||[]).find(
+                    r=>r.authorId===id
+                );
+
+            if(reply&&reply.bio)
+                return reply.bio;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+function userExists(id){
+
+    return(
+        id===userId||
+        posts.some(p=>p.authorId===id)||
+        posts.some(p=>
+            p.comments.some(
+                c=>c.authorId===id
+            )
+        )
+    );
+
+}
+
+
+function getKnownUsers(){
+
+    const map=new Map();
+
+    map.set(
+        userId,
+        localStorage.getItem(
+            "washu_nickname"
+        )||"익명"
+    );
+
+    posts.forEach(post=>{
+
+        if(post.authorId){
+
+            map.set(
+                post.authorId,
+                post.nickname
+            );
+
+        }
+
+        post.comments.forEach(comment=>{
+
+            if(comment.authorId){
+
+                map.set(
+                    comment.authorId,
+                    comment.nickname
+                );
+
+            }
+
+            (comment.replies||[])
+            .forEach(reply=>{
+
+                if(reply.authorId){
+
+                    map.set(
+                        reply.authorId,
+                        reply.nickname
+                    );
+
+                }
+
+            });
+
+        });
+
+    });
+
+    return map;
+
+}
+
+
+/* =========================================================
+   FOLLOW
+========================================================= */
+
+function isFollowing(targetId){
+
+    return follows.some(
+        f=>
+            f.followerId===userId&&
+            f.followingId===targetId
+    );
+
+}
+
+
+function followerCount(targetId){
+
+    return follows.filter(
+        f=>f.followingId===targetId
+    ).length;
+
+}
+
+
+function followingCount(targetId){
+
+    return follows.filter(
+        f=>f.followerId===targetId
+    ).length;
+
+}
+
+
+function toggleFollow(targetId){
+
+    if(
+        !targetId||
+        targetId===userId
+    )return;
+
+
+    const index=
+        follows.findIndex(
+            f=>
+                f.followerId===userId&&
+                f.followingId===targetId
+        );
+
+
+    if(index>=0){
+
+        follows.splice(index,1);
+
+    }else{
+
+        follows.push({
+
+            followerId:userId,
+
+            followingId:targetId,
+
+            date:new Date().toISOString()
+
+        });
+
+        addNotification(
+
+            targetId,
+
+            "follow",
+
+            null,
+
+            `${nicknameOfUser(userId)}님이 회원님을 팔로우했습니다.`
+
+        );
+
+    }
+
+
+    saveFollows();
+
+    renderMyPage();
+
+    if(currentProfileUserId)
+        renderOtherProfile();
+
+}
+
+
+function toggleFollowCurrentProfile(){
+
+    if(!currentProfileUserId)return;
+
+    toggleFollow(currentProfileUserId);
+
+}
+
+
+function openFollowList(type,targetId){
+
+    if(!targetId)return;
+
+    currentProfileUserId=targetId;
+
+    document.getElementById(
+        "listPage"
+    ).style.display="none";
+
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "otherProfile"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "notificationPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "followListPage"
+    ).classList.add("show");
+
+
+    const name=
+        nicknameOfUser(targetId);
+
+    document.getElementById(
+        "followListTitle"
+    ).textContent=
+        type==="followers"
+        ?`${name}님의 팔로워`
+        :`${name}님의 팔로잉`;
+
+
+    let ids=[];
+
+
+    if(type==="followers"){
+
+        ids=
+            follows
+            .filter(
+                f=>f.followingId===targetId
+            )
+            .map(
+                f=>f.followerId
+            );
+
+    }else{
+
+        ids=
+            follows
+            .filter(
+                f=>f.followerId===targetId
+            )
+            .map(
+                f=>f.followingId
+            );
+
+    }
+
+
+    renderUserList(ids);
+
+}
+
+
+function renderUserList(ids){
+
+    const box=
+        document.getElementById(
+            "followUsers"
+        );
+
+
+    if(!ids.length){
+
+        box.innerHTML=
+        `<div class="empty">
+            아직 팔로우 관계가 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML=
+        ids.map(id=>{
+
+            const name=
+                nicknameOfUser(id);
+
+            const following=
+                isFollowing(id);
+
+
+            return`
+
+                <div class="user-row">
+
+                    <div class="user-avatar">
+                        ${escapeHTML(name.charAt(0))}
+                    </div>
+
+                    <div class="user-info">
+
+                        <div
+                            class="user-name"
+                            onclick="openUserProfile('${id}')"
+                        >
+                            ${escapeHTML(name)}
+                        </div>
+
+                        <div class="user-id">
+                            ${escapeHTML(id)}
+                        </div>
+
+                    </div>
+
+                    ${
+                        id!==userId
+                        ?`
+                        <button
+                            class="user-follow ${following?"on":""}"
+                            onclick="toggleFollow('${id}')"
+                        >
+                            ${following?"팔로잉":"팔로우"}
+                        </button>
+                        `
+                        :""
+                    }
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredPosts(){
+
+    let result=
+        currentCategory==="전체"
+        ?[...posts]
+        :posts.filter(
+            p=>p.category===currentCategory
+        );
+
+
+    if(searchKeyword){
+
+        result=result.filter(post=>{
+
+            const target=
+                (
+                    post.title+
+                    " "+
+                    post.content+
+                    " "+
+                    post.nickname+
+                    " "+
+                    post.category
+                ).toLowerCase();
+
+            return target.includes(searchKeyword);
+
+        });
+
+    }
+
+
+    if(currentTab==="latest"){
+
+        result.sort(
+            (a,b)=>
+                new Date(b.date)-
+                new Date(a.date)
+        );
+
+    }else{
+
+        result.sort(
+            (a,b)=>
+                score(b)-score(a)
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT
+========================================================= */
+
+function highlight(text){
+
+    const safe=
+        escapeHTML(text);
+
+    if(!searchKeyword)
+        return safe;
+
+    const escaped=
+        searchKeyword.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
+    return safe.replace(
+        new RegExp(
+            "("+escaped+")",
+            "gi"
+        ),
+        "<mark>$1</mark>"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER POSTS
+========================================================= */
+
+function renderPosts(){
+
+    const box=
+        document.getElementById("posts");
+
+    const all=
+        getFilteredPosts();
+
+    const totalPages=
+        Math.max(
+            1,
+            Math.ceil(
+                all.length/
+                POSTS_PER_PAGE
+            )
+        );
+
+
+    if(currentPage>totalPages)
+        currentPage=totalPages;
+
+
+    const start=
+        (currentPage-1)*
+        POSTS_PER_PAGE;
+
+
+    const list=
+        all.slice(
+            start,
+            start+POSTS_PER_PAGE
+        );
+
+
+    if(!list.length){
+
+        box.innerHTML=`
+            <div class="empty">
+                ${
+                    searchKeyword
+                    ?"검색 결과가 없습니다."
+                    :"아직 게시글이 없습니다."
+                }
+                <br><br>
+                ${
+                    searchKeyword
+                    ?"다른 검색어를 입력해보세요."
+                    :"첫 번째 글을 작성해보세요!"
+                }
+            </div>
+        `;
+
+    }else{
+
+        box.innerHTML=
+        list.map(post=>`
+
+            <div
+                class="post"
+                onclick="openPost(${post.id})"
+            >
+
+                <div class="post-title-row">
+
+                    ${
+                        isHot(post)
+                        ?'<span class="badge hot">HOT</span>'
+                        :""
+                    }
+
+                    ${
+                        isNew(post)
+                        ?'<span class="badge new">NEW</span>'
+                        :""
+                    }
+
+                    ${
+                        bookmarks.includes(post.id)
+                        ?'<span class="badge save">저장</span>'
+                        :""
+                    }
+
+                    <div class="post-title">
+                        ${highlight(post.title)}
+                        ${
+                            post.comments.length
+                            ?` <span class="comment-count">
+                                [${post.comments.length}]
+                               </span>`
+                            :""
+                        }
+                    </div>
+
+                </div>
+
+                <div class="post-preview">
+                    ${escapeHTML(post.content)}
+                </div>
+
+                <div class="post-info">
+
+                    <span
+                        class="category"
+                        onclick="event.stopPropagation();selectCategory('${escapeHTML(post.category)}',document.querySelector('.gallery button'))"
+                    >
+                        ${escapeHTML(post.category)}
+                    </span>
+
+                    <span
+                        onclick="event.stopPropagation();${
+                            post.authorId
+                            ?`openUserProfile('${post.authorId}')`
+                            :""
+                        }"
+                    >
+                        ${escapeHTML(post.nickname)}
+                    </span>
+
+                    <span>
+                        ${formatDate(post.date)}
+                    </span>
+
+                    <span>
+                        👁 ${post.views}
+                    </span>
+
+                    <span>
+                        👍 ${post.likes}
+                    </span>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+    }
+
+    renderPagination(totalPages);
+    renderPopular();
+    renderRecent();
+    updateStats();
+    updateGalleryCounts();
+    updateNotificationBadge();
+
+}
+
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+function renderPagination(totalPages){
+
+    const box=
+        document.getElementById(
+            "pagination"
+        );
+
+    if(totalPages<=1){
+
+        box.innerHTML="";
+        return;
+
+    }
+
+
+    let html=`
+
+        <button
+            onclick="changePage(${currentPage-1})"
+            ${currentPage===1?"disabled":""}
+        >‹</button>
+
+    `;
+
+
+    const start=
+        Math.max(
+            1,
+            currentPage-2
+        );
+
+    const end=
+        Math.min(
+            totalPages,
+            start+4
+        );
+
+
+    for(
+        let i=start;
+        i<=end;
+        i++
+    ){
+
+        html+=`
+
+            <button
+                class="${
+                    i===currentPage
+                    ?"active":""
+                }"
+                onclick="changePage(${i})"
+            >
+                ${i}
+            </button>
+
+        `;
+
+    }
+
+
+    html+=`
+
+        <button
+            onclick="changePage(${currentPage+1})"
+            ${
+                currentPage===totalPages
+                ?"disabled":""
+            }
+        >›</button>
+
+    `;
+
+
+    box.innerHTML=html;
+
+}
+
+
+function changePage(page){
+
+    const totalPages=
+        Math.max(
+            1,
+            Math.ceil(
+                getFilteredPosts().length/
+                POSTS_PER_PAGE
+            )
+        );
+
+
+    if(
+        page<1||
+        page>totalPages
+    )return;
+
+
+    currentPage=page;
+
+    renderPosts();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   POPULAR
+========================================================= */
+
+function renderPopular(){
+
+    const box=
+        document.getElementById(
+            "popularPosts"
+        );
+
+
+    const popular=
+        [...posts]
+        .sort(
+            (a,b)=>
+                score(b)-score(a)
+        )
+        .slice(0,5);
+
+
+    if(!popular.length){
+
+        box.innerHTML=
+        `<div class="stats">
+            인기글이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML=
+    popular.map(
+        (post,index)=>`
+
+            <div class="popular">
+
+                <div
+                    class="popular-title"
+                    onclick="openPost(${post.id})"
+                >
+                    ${index+1}.
+                    ${escapeHTML(post.title)}
+                </div>
+
+                <div class="popular-info">
+                    👍 ${post.likes}
+                    · 💬 ${post.comments.length}
+                    · 👁 ${post.views}
+                </div>
+
+            </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================================
+   RECENT
+========================================================= */
+
+function renderRecent(){
+
+    const box=
+        document.getElementById(
+            "recentPosts"
+        );
+
+
+    const recent=
+        recentPosts
+        .map(id=>
+            posts.find(
+                p=>p.id===id
+            )
+        )
+        .filter(Boolean)
+        .slice(0,5);
+
+
+    if(!recent.length){
+
+        box.innerHTML=
+        `<div class="stats">
+            최근 본 글이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML=
+        recent.map(post=>`
+
+            <div
+                class="recent-item"
+                onclick="openPost(${post.id})"
+            >
+
+                <div class="popular-title">
+                    ${escapeHTML(post.title)}
+                </div>
+
+                <div class="popular-info">
+                    ${escapeHTML(post.nickname)}
+                    · 👁 ${post.views}
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+/* =========================================================
+   COUNTS
+========================================================= */
+
+function updateGalleryCounts(){
+
+    const categories=[
+        "전체",
+        "자유",
+        "게임",
+        "음악",
+        "유머",
+        "스포츠",
+        "IT/컴퓨터",
+        "애니/만화"
+    ];
+
+
+    categories.forEach(category=>{
+
+        const count=
+            category==="전체"
+            ?posts.length
+            :posts.filter(
+                p=>p.category===category
+            ).length;
+
+
+        const element=
+            document.getElementById(
+                "count-"+category
+            );
+
+
+        if(element)
+            element.textContent=count;
+
+    });
+
+}
+
+
+/* =========================================================
+   WRITE
+========================================================= */
+
+function openWriteForm(){
+
+    document
+    .getElementById("writeForm")
+    .classList.add("show");
+
+
+    document.getElementById(
+        "nickname"
+    ).value=
+        localStorage.getItem(
+            "washu_nickname"
+        )||"";
+
+
+    if(draft){
+
+        document.getElementById(
+            "category"
+        ).value=
+            draft.category||"자유";
+
+        document.getElementById(
+            "nickname"
+        ).value=
+            draft.nickname||
+            localStorage.getItem(
+                "washu_nickname"
+            )||
+            "";
+
+        document.getElementById(
+            "title"
+        ).value=
+            draft.title||"";
+
+        document.getElementById(
+            "content"
+        ).value=
+            draft.content||"";
+
+        document.getElementById(
+            "draftStatus"
+        ).textContent=
+            "💾 임시저장된 글을 불러왔습니다.";
+
+    }else{
+
+        document.getElementById(
+            "draftStatus"
+        ).textContent="";
+
+    }
+
+}
+
+
+function closeWriteForm(){
+
+    document
+    .getElementById("writeForm")
+    .classList.remove("show");
+
+}
+
+
+function saveDraftAndClose(){
+
+    draft={
+
+        category:
+            document.getElementById(
+                "category"
+            ).value,
+
+        nickname:
+            document.getElementById(
+                "nickname"
+            ).value.trim(),
+
+        title:
+            document.getElementById(
+                "title"
+            ).value.trim(),
+
+        content:
+            document.getElementById(
+                "content"
+            ).value.trim(),
+
+        date:new Date().toISOString()
+
+    };
+
+
+    localStorage.setItem(
+        "washu_draft",
+        JSON.stringify(draft)
+    );
+
+
+    closeWriteForm();
+
+    alert("임시저장했습니다.");
+
+}
+
+
+function clearDraft(){
+
+    draft=null;
+
+    localStorage.removeItem(
+        "washu_draft"
+    );
+
+}
+
+
+function submitPost(){
+
+    const category=
+        document.getElementById(
+            "category"
+        ).value;
+
+    let nickname=
+        document.getElementById(
+            "nickname"
+        ).value.trim();
+
+    const title=
+        document.getElementById(
+            "title"
+        ).value.trim();
+
+    const content=
+        document.getElementById(
+            "content"
+        ).value.trim();
+
+
+    if(!nickname)
+        nickname=
+            localStorage.getItem(
+                "washu_nickname"
+            )||"익명";
+
+
+    if(!title){
+
+        alert("제목을 입력하세요.");
+        return;
+
+    }
+
+    if(!content){
+
+        alert("내용을 입력하세요.");
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "washu_nickname",
+        nickname
+    );
+
+
+    posts.unshift({
+
+        id:Date.now(),
+
+        authorId:userId,
+
+        category,
+
+        nickname,
+
+        avatar:
+            localStorage.getItem(
+                "washu_avatar"
+            )||null,
+
+        avatarImg:
+            localStorage.getItem(
+                "washu_avatar_img"
+            )||null,
+
+        bio:
+            localStorage.getItem(
+                "washu_bio"
+            )||"",
+
+        title,
+
+        content,
+
+        views:0,
+
+        likes:0,
+
+        dislikes:0,
+
+        comments:[],
+
+        date:new Date().toISOString()
+
+    });
+
+
+    savePosts();
+
+    clearDraft();
+
+
+    document.getElementById(
+        "title"
+    ).value="";
+
+    document.getElementById(
+        "content"
+    ).value="";
+
+
+    closeWriteForm();
+
+    currentPage=1;
+
+    renderPosts();
+
+    alert("게시글이 등록되었습니다.");
+
+}
+
+
+/* =========================================================
+   DETAIL
+========================================================= */
+
+function openPost(id){
+
+    const post=
+        posts.find(
+            p=>p.id===id
+        );
+
+
+    if(!post)return;
+
+
+    post.views++;
+
+
+    recentPosts=
+        [
+            id,
+            ...recentPosts.filter(
+                x=>x!==id
+            )
+        ].slice(0,20);
+
+
+    saveRecent();
+    savePosts();
+
+
+    currentPostId=id;
+
+
+    document.getElementById(
+        "listPage"
+    ).style.display="none";
+
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "otherProfile"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "followListPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "notificationPage"
+    ).classList.remove("show");
+
+
+    document.getElementById(
+        "detailPage"
+    ).classList.add("show");
+
+
+    document.getElementById(
+        "detailCategory"
+    ).textContent=
+        post.category;
+
+
+    document.getElementById(
+        "detailTitle"
+    ).textContent=
+        post.title;
+
+
+    document.getElementById(
+        "detailInfo"
+    ).innerHTML=
+        `<span
+            style="cursor:pointer;color:var(--point);font-weight:700"
+            onclick="${
+                post.authorId
+                ?`openUserProfile('${post.authorId}')`
+                :""
+            }"
+        >${escapeHTML(post.nickname)}</span>
+        · ${formatDate(post.date)}
+        · 조회 ${post.views}`;
+
+
+    document.getElementById(
+        "detailContent"
+    ).textContent=
+        post.content;
+
+
+    updateDetailCounts();
+    updateBookmarkButton();
+    renderComments();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function renderComments(){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+
+    if(!post)return;
+
+
+    const box=
+        document.getElementById(
+            "commentsList"
+        );
+
+
+    document.getElementById(
+        "commentCount"
+    ).textContent=
+        post.comments.length;
+
+
+    if(!post.comments.length){
+
+        box.innerHTML=
+        `<div style="color:var(--sub)">
+            아직 댓글이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML=
+    post.comments.map(
+        comment=>`
+
+            <div class="comment">
+
+                <div class="comment-head">
+
+                    <span
+                        class="comment-author"
+                        onclick="${
+                            comment.authorId
+                            ?`openUserProfile('${comment.authorId}')`
+                            :""
+                        }"
+                    >
+                        ${escapeHTML(comment.nickname)}
+                    </span>
+
+                    <span class="comment-date">
+                        ${formatDate(comment.date)}
+                    </span>
+
+                </div>
+
+                <div class="comment-text">
+                    ${escapeHTML(comment.text)}
+                </div>
+
+                <div class="comment-buttons">
+
+                    <button onclick="
+                        likeComment(${comment.id});
+                        event.stopPropagation();
+                    ">
+                        👍 ${comment.likes||0}
+                    </button>
+
+                    <button onclick="
+                        replyComment(${comment.id});
+                        event.stopPropagation();
+                    ">
+                        답글
+                    </button>
+
+                    ${
+                        comment.authorId===userId
+                        ?`
+                        <button onclick="
+                            editComment(${comment.id});
+                            event.stopPropagation();
+                        ">수정</button>
+
+                        <button onclick="
+                            deleteComment(${comment.id});
+                            event.stopPropagation();
+                        ">삭제</button>
+                        `
+                        :""
+                    }
+
+                </div>
+
+
+                ${
+                    (comment.replies||[])
+                    .map(
+                        reply=>`
+
+                            <div class="reply">
+
+                                <div class="comment-head">
+
+                                    <span
+                                        class="comment-author"
+                                        onclick="${
+                                            reply.authorId
+                                            ?`openUserProfile('${reply.authorId}')`
+                                            :""
+                                        }"
+                                    >
+                                        ↳ ${escapeHTML(reply.nickname)}
+                                    </span>
+
+                                    <span class="comment-date">
+                                        ${formatDate(reply.date)}
+                                    </span>
+
+                                </div>
+
+                                <div class="comment-text">
+                                    ${escapeHTML(reply.text)}
+                                </div>
+
+                            </div>
+
+                        `
+                    ).join("")
+                }
+
+            </div>
+
+        `
+    ).join("");
+
+}
+
+
+function addComment(){
+
+    const input=
+        document.getElementById(
+            "commentInput"
+        );
+
+    const text=
+        input.value.trim();
+
+
+    if(!text){
+
+        alert("댓글을 입력하세요.");
+        return;
+
+    }
+
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+
+    if(!post)return;
+
+
+    post.comments.push({
+
+        id:Date.now(),
+
+        authorId:userId,
+
+        nickname:
+            localStorage.getItem(
+                "washu_nickname"
+            )||"익명",
+
+        avatar:
+            localStorage.getItem(
+                "washu_avatar"
+            )||null,
+
+        avatarImg:
+            localStorage.getItem(
+                "washu_avatar_img"
+            )||null,
+
+        bio:
+            localStorage.getItem(
+                "washu_bio"
+            )||"",
+
+        text,
+
+        likes:0,
+
+        replies:[],
+
+        date:new Date().toISOString()
+
+    });
+
+
+    if(
+        post.authorId&&
+        post.authorId!==userId
+    ){
+
+        addNotification(
+            post.authorId,
+            "comment",
+            post.id,
+            `${nicknameOfUser(userId)}님이 회원님의 게시글에 댓글을 남겼습니다.`
+        );
+
+    }
+
+
+    input.value="";
+
+    savePosts();
+
+    renderComments();
+    renderPosts();
+    renderMyPage();
+
+}
+
+
+function likeComment(id){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    const comment=
+        post.comments.find(
+            c=>c.id===id
+        );
+
+    if(!comment)return;
+
+
+    comment.likes=
+        (comment.likes||0)+1;
+
+
+    if(
+        comment.authorId&&
+        comment.authorId!==userId
+    ){
+
+        addNotification(
+            comment.authorId,
+            "commentLike",
+            post.id,
+            `${nicknameOfUser(userId)}님이 회원님의 댓글을 추천했습니다.`
+        );
+
+    }
+
+
+    savePosts();
+
+    renderComments();
+    renderMyPage();
+
+}
+
+
+function replyComment(id){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    const comment=
+        post.comments.find(
+            c=>c.id===id
+        );
+
+    if(!comment)return;
+
+
+    const text=
+        prompt("답글을 입력하세요.");
+
+    if(!text||!text.trim())
+        return;
+
+
+    if(!comment.replies)
+        comment.replies=[];
+
+
+    comment.replies.push({
+
+        id:Date.now(),
+
+        authorId:userId,
+
+        nickname:
+            localStorage.getItem(
+                "washu_nickname"
+            )||"익명",
+
+        avatar:
+            localStorage.getItem(
+                "washu_avatar"
+            )||null,
+
+        avatarImg:
+            localStorage.getItem(
+                "washu_avatar_img"
+            )||null,
+
+        bio:
+            localStorage.getItem(
+                "washu_bio"
+            )||"",
+
+        text:text.trim(),
+
+        date:new Date().toISOString()
+
+    });
+
+
+    if(
+        comment.authorId&&
+        comment.authorId!==userId
+    ){
+
+        addNotification(
+            comment.authorId,
+            "reply",
+            post.id,
+            `${nicknameOfUser(userId)}님이 회원님의 댓글에 답글을 남겼습니다.`
+        );
+
+    }
+
+
+    savePosts();
+
+    renderComments();
+
+}
+
+
+function editComment(id){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    const comment=
+        post.comments.find(
+            c=>c.id===id
+        );
+
+
+    if(
+        !comment||
+        comment.authorId!==userId
+    )return;
+
+
+    const text=
+        prompt(
+            "댓글 수정",
+            comment.text
+        );
+
+
+    if(
+        text===null||
+        !text.trim()
+    )return;
+
+
+    comment.text=text.trim();
+
+    savePosts();
+
+    renderComments();
+    renderMyPage();
+
+}
+
+
+function deleteComment(id){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    const comment=
+        post.comments.find(
+            c=>c.id===id
+        );
+
+
+    if(
+        !comment||
+        comment.authorId!==userId
+    )return;
+
+
+    if(
+        !confirm(
+            "이 댓글을 삭제하시겠습니까?"
+        )
+    )return;
+
+
+    post.comments=
+        post.comments.filter(
+            c=>c.id!==id
+        );
+
+
+    savePosts();
+
+    renderComments();
+    renderPosts();
+    renderMyPage();
+
+}
+
+
+/* =========================================================
+   POST LIKE
+========================================================= */
+
+function likePost(){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    post.likes++;
+
+
+    if(
+        post.authorId&&
+        post.authorId!==userId
+    ){
+
+        addNotification(
+            post.authorId,
+            "like",
+            post.id,
+            `${nicknameOfUser(userId)}님이 회원님의 게시글을 추천했습니다.`
+        );
+
+    }
+
+
+    savePosts();
+
+    updateDetailCounts();
+    renderPosts();
+    renderPopular();
+    renderMyPage();
+
+}
+
+
+function dislikePost(){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    post.dislikes++;
+
+
+    if(
+        post.authorId&&
+        post.authorId!==userId
+    ){
+
+        addNotification(
+            post.authorId,
+            "dislike",
+            post.id,
+            `${nicknameOfUser(userId)}님이 회원님의 게시글에 비추천했습니다.`
+        );
+
+    }
+
+
+    savePosts();
+
+    updateDetailCounts();
+    renderMyPage();
+
+}
+
+
+function updateDetailCounts(){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+    if(!post)return;
+
+
+    document.getElementById(
+        "likeCount"
+    ).textContent=
+        post.likes;
+
+
+    document.getElementById(
+        "dislikeCount"
+    ).textContent=
+        post.dislikes;
+
+}
+
+
+/* =========================================================
+   BOOKMARK
+========================================================= */
+
+function toggleBookmark(){
+
+    if(currentPostId===null)return;
+
+
+    const index=
+        bookmarks.indexOf(
+            currentPostId
+        );
+
+
+    if(index>=0){
+
+        bookmarks.splice(index,1);
+
+    }else{
+
+        bookmarks.unshift(
+            currentPostId
+        );
+
+    }
+
+
+    saveBookmarks();
+
+    updateBookmarkButton();
+    renderPosts();
+    renderMyPage();
+
+}
+
+
+function updateBookmarkButton(){
+
+    const button=
+        document.getElementById(
+            "bookmarkButton"
+        );
+
+    if(!button)return;
+
+
+    const saved=
+        bookmarks.includes(
+            currentPostId
+        );
+
+
+    button.classList.toggle(
+        "saved",
+        saved
+    );
+
+
+    button.textContent=
+        saved
+        ?"🔖 저장됨"
+        :"🔖 저장";
+
+}
+
+
+/* =========================================================
+   REPORT
+========================================================= */
+
+function openReport(){
+
+    if(currentPostId===null)return;
+
+    document.getElementById(
+        "reportModal"
+    ).classList.add("show");
+
+}
+
+
+function closeReport(){
+
+    document.getElementById(
+        "reportModal"
+    ).classList.remove("show");
+
+}
+
+
+function submitReport(){
+
+    const selected=
+        document.querySelector(
+            'input[name="reportReason"]:checked'
+        );
+
+
+    if(!selected)return;
+
+
+    reports.push({
+
+        id:Date.now(),
+
+        postId:currentPostId,
+
+        reporterId:userId,
+
+        reason:selected.value,
+
+        date:new Date().toISOString()
+
+    });
+
+
+    localStorage.setItem(
+        "washu_reports",
+        JSON.stringify(reports)
+    );
+
+
+    closeReport();
+
+    alert(
+        "신고가 접수되었습니다.\n현재는 DB가 없어 이 브라우저에만 저장됩니다."
+    );
+
+}
+
+
+/* =========================================================
+   POST EDIT / DELETE
+========================================================= */
+
+function editCurrentPost(){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+
+    if(
+        !post||
+        post.authorId!==userId
+    ){
+
+        alert(
+            "내가 작성한 게시글만 수정할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    const title=
+        prompt(
+            "제목 수정",
+            post.title
+        );
+
+
+    if(title===null)return;
+
+
+    const content=
+        prompt(
+            "내용 수정",
+            post.content
+        );
+
+
+    if(content===null)return;
+
+
+    if(
+        !title.trim()||
+        !content.trim()
+    ){
+
+        alert(
+            "제목과 내용을 비워둘 수 없습니다."
+        );
+
+        return;
+
+    }
+
+
+    post.title=title.trim();
+    post.content=content.trim();
+
+    savePosts();
+
+    openPost(post.id);
+    renderMyPage();
+
+}
+
+
+function deleteCurrentPost(){
+
+    const post=
+        posts.find(
+            p=>p.id===currentPostId
+        );
+
+
+    if(
+        !post||
+        post.authorId!==userId
+    ){
+
+        alert(
+            "내가 작성한 게시글만 삭제할 수 있습니다."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "정말 이 게시글을 삭제하시겠습니까?"
+        )
+    )return;
+
+
+    posts=
+        posts.filter(
+            p=>p.id!==currentPostId
+        );
+
+
+    bookmarks=
+        bookmarks.filter(
+            id=>id!==currentPostId
+        );
+
+
+    recentPosts=
+        recentPosts.filter(
+            id=>id!==currentPostId
+        );
+
+
+    savePosts();
+    saveBookmarks();
+    saveRecent();
+
+    goHome();
+
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+function selectCategory(category,button){
+
+    currentCategory=category;
+    currentPage=1;
+    searchKeyword="";
+
+
+    document.getElementById(
+        "searchInput"
+    ).value="";
+
+
+    document
+    .querySelectorAll(
+        ".gallery button"
+    )
+    .forEach(
+        b=>b.classList.remove("active")
+    );
+
+
+    if(button)
+        button.classList.add("active");
+
+
+    document.getElementById(
+        "pageTitle"
+    ).textContent=
+        category==="전체"
+        ?"와슈 커뮤니티"
+        :category+" 게시판";
+
+
+    document.getElementById(
+        "searchInfo"
+    ).style.display="none";
+
+
+    showList();
+    renderPosts();
+
+}
+
+
+/* =========================================================
+   TAB
+========================================================= */
+
+function changeTab(tab,button){
+
+    currentTab=tab;
+    currentPage=1;
+
+
+    document
+    .querySelectorAll(".tabs button")
+    .forEach(
+        b=>b.classList.remove("active")
+    );
+
+
+    button.classList.add("active");
+
+    renderPosts();
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchPosts(){
+
+    searchKeyword=
+        document.getElementById(
+            "searchInput"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    currentPage=1;
+
+
+    const info=
+        document.getElementById(
+            "searchInfo"
+        );
+
+
+    if(searchKeyword){
+
+        info.style.display="block";
+
+        info.innerHTML=
+        `"${escapeHTML(searchKeyword)}"
+        검색 결과
+        <strong>${getFilteredPosts().length}</strong>개`;
+
+    }else{
+
+        info.style.display="none";
+
+    }
+
+
+    showList();
+    renderPosts();
+
+}
+
+
+/* =========================================================
+   USER PROFILE
+========================================================= */
+
+function openUserProfile(id){
+
+    if(!id)return;
+
+
+    if(id===userId){
+
+        openMyPage();
+        return;
+
+    }
+
+
+    currentProfileUserId=id;
+
+
+    document.getElementById(
+        "listPage"
+    ).style.display="none";
+
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "followListPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "notificationPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "otherProfile"
+    ).classList.add("show");
+
+
+    renderOtherProfile();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function renderOtherProfile(){
+
+    const id=
+        currentProfileUserId;
+
+    if(!id)return;
+
+
+    const name=
+        nicknameOfUser(id);
+
+
+    const otherAvatarEl=
+        document.getElementById(
+            "otherAvatar"
+        );
+
+    const otherImg=
+        avatarImgOfUser(id);
+
+    if(otherImg){
+
+        otherAvatarEl.innerHTML=
+            `<img src="${otherImg}" alt="아바타">`;
+
+    }else{
+
+        otherAvatarEl.textContent=
+            avatarOfUser(id)||
+            name.charAt(0);
+
+    }
+
+
+    document.getElementById(
+        "otherName"
+    ).textContent=
+        name;
+
+
+    document.getElementById(
+        "otherId"
+    ).textContent=
+        "회원 ID: "+id;
+
+
+    const otherBio=
+        bioOfUser(id);
+
+    const otherBioEl=
+        document.getElementById(
+            "otherBio"
+        );
+
+    if(otherBio){
+
+        otherBioEl.textContent=otherBio;
+        otherBioEl.style.display="block";
+
+    }else{
+
+        otherBioEl.style.display="none";
+
+    }
+
+
+    document.getElementById(
+        "otherFollowerCount"
+    ).textContent=
+        followerCount(id);
+
+
+    document.getElementById(
+        "otherFollowingCount"
+    ).textContent=
+        followingCount(id);
+
+
+    const followButton=
+        document.getElementById(
+            "otherFollowButton"
+        );
+
+
+    const following=
+        isFollowing(id);
+
+
+    followButton.textContent=
+        following
+        ?"팔로잉"
+        :"팔로우";
+
+
+    followButton.classList.toggle(
+        "following",
+        following
+    );
+
+
+    const userPosts=
+        posts
+        .filter(
+            p=>p.authorId===id
+        )
+        .sort(
+            (a,b)=>
+                new Date(b.date)-
+                new Date(a.date)
+        );
+
+
+    const comments=
+        posts.reduce(
+            (sum,p)=>
+                sum+
+                p.comments.filter(
+                    c=>c.authorId===id
+                ).length,
+            0
+        );
+
+
+    const likes=
+        userPosts.reduce(
+            (sum,p)=>
+                sum+(p.likes||0),
+            0
+        );
+
+
+    document.getElementById(
+        "otherPostCount"
+    ).textContent=
+        userPosts.length;
+
+
+    document.getElementById(
+        "otherLikeCount"
+    ).textContent=
+        likes;
+
+
+    document.getElementById(
+        "otherCommentCount"
+    ).textContent=
+        comments;
+
+
+    const firstPost=
+        userPosts[userPosts.length-1];
+
+
+    document.getElementById(
+        "otherJoinDate"
+    ).textContent=
+        firstPost
+        ?new Date(firstPost.date)
+            .toLocaleDateString("ko-KR")
+        :"정보 없음";
+
+
+    const box=
+        document.getElementById(
+            "otherPosts"
+        );
+
+
+    if(!userPosts.length){
+
+        box.innerHTML=
+        `<div class="empty">
+            작성한 게시글이 없습니다.
+        </div>`;
+
+    }else{
+
+        box.innerHTML=
+        userPosts
+        .slice(0,10)
+        .map(post=>`
+
+            <div
+                class="my-post"
+                onclick="openPost(${post.id})"
+            >
+
+                <div class="my-post-title">
+                    ${escapeHTML(post.title)}
+                </div>
+
+                <div class="my-post-info">
+                    ${escapeHTML(post.category)}
+                    · ${formatDate(post.date)}
+                    · 👁 ${post.views}
+                    · 👍 ${post.likes}
+                    · 💬 ${post.comments.length}
+                </div>
+
+            </div>
+
+        `).join("");
+
+    }
+
+}
+
+
+/* =========================================================
+   MY PAGE
+========================================================= */
+
+function openMyPage(){
+
+    document.getElementById(
+        "listPage"
+    ).style.display="none";
+
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "otherProfile"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "followListPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "notificationPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "myPage"
+    ).classList.add("show");
+
+
+    renderMyPage();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function renderMyPage(){
+
+    const nickname=
+        localStorage.getItem(
+            "washu_nickname"
+        )||"익명";
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent=
+        nickname;
+
+
+    const avatar=
+        localStorage.getItem(
+            "washu_avatar"
+        )||"";
+
+
+    const avatarImg=
+        localStorage.getItem(
+            "washu_avatar_img"
+        )||"";
+
+    const profileAvatarEl=
+        document.getElementById(
+            "profileAvatar"
+        );
+
+    if(avatarImg){
+
+        profileAvatarEl.innerHTML=
+            `<img src="${avatarImg}" alt="아바타">`;
+
+    }else{
+
+        profileAvatarEl.textContent=
+            avatar||nickname.charAt(0);
+
+    }
+
+
+    document.getElementById(
+        "profileId"
+    ).textContent=
+        "회원 ID: "+userId;
+
+
+    const bio=
+        localStorage.getItem(
+            "washu_bio"
+        )||"";
+
+    const bioEl=
+        document.getElementById(
+            "profileBio"
+        );
+
+    if(bio){
+
+        bioEl.textContent=bio;
+        bioEl.style.display="block";
+
+    }else{
+
+        bioEl.style.display="none";
+
+    }
+
+
+    document.getElementById(
+        "profileDate"
+    ).textContent=
+        "가입일: "+
+        new Date(joinDate)
+        .toLocaleDateString("ko-KR");
+
+
+    document.getElementById(
+        "settingNickname"
+    ).textContent=
+        nickname;
+
+
+    document.getElementById(
+        "myFollowerCount"
+    ).textContent=
+        followerCount(userId);
+
+
+    document.getElementById(
+        "myFollowingCount"
+    ).textContent=
+        followingCount(userId);
+
+
+    const myPosts=
+        posts.filter(
+            p=>p.authorId===userId
+        );
+
+
+    const legacyPosts=
+        posts.filter(
+            p=>
+                !p.authorId&&
+                p.nickname===nickname
+        );
+
+
+    const combinedPosts=[
+        ...myPosts,
+        ...legacyPosts
+            .filter(
+                p=>
+                    !myPosts.some(
+                        x=>x.id===p.id
+                    )
+            )
+    ]
+    .sort(
+        (a,b)=>
+            new Date(b.date)-
+            new Date(a.date)
+    );
+
+
+    document.getElementById(
+        "myPostCount"
+    ).textContent=
+        combinedPosts.length;
+
+
+    const postBox=
+        document.getElementById(
+            "myPosts"
+        );
+
+
+    if(!combinedPosts.length){
+
+        postBox.innerHTML=
+        `<div class="empty">
+            아직 작성한 글이 없습니다.
+        </div>`;
+
+    }else{
+
+        postBox.innerHTML=
+        combinedPosts
+        .slice(0,10)
+        .map(post=>`
+
+            <div
+                class="my-post"
+                onclick="openPost(${post.id})"
+            >
+
+                <div class="my-post-title">
+                    ${escapeHTML(post.title)}
+                </div>
+
+                <div class="my-post-info">
+                    ${escapeHTML(post.category)}
+                    · ${formatDate(post.date)}
+                    · 👁 ${post.views}
+                    · 👍 ${post.likes}
+                    · 💬 ${post.comments.length}
+                </div>
+
+            </div>
+
+        `).join("");
+
+    }
+
+
+    const myComments=[];
+
+
+    posts.forEach(post=>{
+
+        post.comments.forEach(comment=>{
+
+            if(
+                comment.authorId===userId
+                ||
+                (
+                    !comment.authorId&&
+                    comment.nickname===nickname
+                )
+            ){
+
+                myComments.push({
+
+                    postId:post.id,
+
+                    postTitle:post.title,
+
+                    ...comment
+
+                });
+
+            }
+
+        });
+
+    });
+
+
+    myComments.sort(
+        (a,b)=>
+            new Date(b.date)-
+            new Date(a.date)
+    );
+
+
+    document.getElementById(
+        "myCommentCount"
+    ).textContent=
+        myComments.length;
+
+
+    const commentBox=
+        document.getElementById(
+            "myComments"
+        );
+
+
+    if(!myComments.length){
+
+        commentBox.innerHTML=
+        `<div class="empty">
+            아직 작성한 댓글이 없습니다.
+        </div>`;
+
+    }else{
+
+        commentBox.innerHTML=
+        myComments
+        .slice(0,10)
+        .map(
+            comment=>`
+
+                <div class="my-comment">
+
+                    <div
+                        class="my-comment-post"
+                        onclick="openPost(${comment.postId})"
+                    >
+                        ${escapeHTML(comment.postTitle)}
+                    </div>
+
+                    <div class="my-comment-text">
+                        ${escapeHTML(comment.text)}
+                    </div>
+
+                    <div class="my-comment-date">
+                        ${formatDate(comment.date)}
+                        · 👍 ${comment.likes||0}
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+    }
+
+
+    renderMyBookmarks();
+
+
+    let likes=0;
+    let dislikes=0;
+
+
+    posts.forEach(post=>{
+
+        const isMine=
+            post.authorId===userId
+            ||
+            (
+                !post.authorId&&
+                post.nickname===nickname
+            );
+
+
+        if(isMine){
+
+            likes+=post.likes||0;
+            dislikes+=post.dislikes||0;
+
+        }
+
+    });
+
+
+    document.getElementById(
+        "myLikeCount"
+    ).textContent=likes;
+
+
+    document.getElementById(
+        "myDislikeCount"
+    ).textContent=dislikes;
+
+}
+
+
+function renderMyBookmarks(){
+
+    const box=
+        document.getElementById(
+            "myBookmarks"
+        );
+
+
+    const saved=
+        bookmarks
+        .map(id=>
+            posts.find(
+                p=>p.id===id
+            )
+        )
+        .filter(Boolean);
+
+
+    if(!saved.length){
+
+        box.innerHTML=
+        `<div class="empty">
+            저장한 글이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML=
+        saved.map(post=>`
+
+            <div
+                class="my-post"
+                onclick="openPost(${post.id})"
+            >
+
+                <div class="my-post-title">
+                    🔖 ${escapeHTML(post.title)}
+                </div>
+
+                <div class="my-post-info">
+                    ${escapeHTML(post.category)}
+                    · ${escapeHTML(post.nickname)}
+                    · 👍 ${post.likes}
+                    · 💬 ${post.comments.length}
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+function showMyTab(tab,button){
+
+    document
+    .querySelectorAll(".profile-tabs button")
+    .forEach(
+        b=>b.classList.remove("active")
+    );
+
+
+    button.classList.add("active");
+
+
+    document.getElementById(
+        "myPostsSection"
+    ).style.display=
+        tab==="posts"
+        ?"block"
+        :"none";
+
+
+    document.getElementById(
+        "myCommentsSection"
+    ).style.display=
+        tab==="comments"
+        ?"block"
+        :"none";
+
+
+    document.getElementById(
+        "myBookmarksSection"
+    ).style.display=
+        tab==="bookmarks"
+        ?"block"
+        :"none";
+
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+function addNotification(
+    targetId,
+    type,
+    postId,
+    text
+){
+
+    if(targetId===userId)return;
+
+
+    notifications.unshift({
+
+        id:Date.now()+Math.random(),
+
+        targetId,
+
+        type,
+
+        postId,
+
+        text,
+
+        read:false,
+
+        date:new Date().toISOString()
+
+    });
+
+
+    notifications=
+        notifications.slice(0,100);
+
+
+    saveNotifications();
+    updateNotificationBadge();
+
+}
+
+
+function unreadNotifications(){
+
+    return notifications.filter(
+        n=>
+            n.targetId===userId&&
+            !n.read
+    );
+
+}
+
+
+function updateNotificationBadge(){
+
+    const dot=
+        document.getElementById(
+            "notificationDot"
+        );
+
+
+    if(!dot)return;
+
+
+    const count=
+        unreadNotifications().length;
+
+
+    if(count){
+
+        dot.style.display="block";
+
+        dot.textContent=
+            count>99
+            ?"99+"
+            :count;
+
+    }else{
+
+        dot.style.display="none";
+
+    }
+
+}
+
+
+function openNotifications(){
+
+    document.getElementById(
+        "listPage"
+    ).style.display="none";
+
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "otherProfile"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "followListPage"
+    ).classList.remove("show");
+
+    document.getElementById(
+        "notificationPage"
+    ).classList.add("show");
+
+
+    renderNotifications();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+function renderNotifications(){
+
+    const box=
+        document.getElementById(
+            "notificationList"
+        );
+
+
+    const mine=
+        notifications.filter(
+            n=>n.targetId===userId
+        );
+
+
+    if(!mine.length){
+
+        box.innerHTML=
+        `<div class="empty">
+            새로운 알림이 없습니다.
+        </div>`;
+
+        return;
+
+    }
+
+
+    box.innerHTML=
+        mine.map(n=>`
+
+            <div
+                class="notification-item ${n.read?"":"unread"}"
+                onclick="clickNotification('${n.id}')"
+            >
+
+                <div class="notification-text">
+                    ${escapeHTML(n.text)}
+                </div>
+
+                <div class="notification-date">
+                    ${formatDate(n.date)}
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+function clickNotification(id){
+
+    const n=
+        notifications.find(
+            x=>String(x.id)===String(id)
+        );
+
+
+    if(!n)return;
+
+
+    n.read=true;
+
+    saveNotifications();
+    updateNotificationBadge();
+
+
+    if(n.postId){
+
+        const post=
+            posts.find(
+                p=>p.id===n.postId
+            );
+
+        if(post){
+
+            openPost(post.id);
+            return;
+
+        }
+
+    }
+
+
+    renderNotifications();
+
+}
+
+
+/* =========================================================
+   NICKNAME / PROFILE
+========================================================= */
+
+let pendingAvatarImg=undefined;
+
+const AVATAR_IMG_SIZE=120;
+
+
+function renderAvatarPreview(dataUrl,fallbackChar){
+
+    const preview=
+        document.getElementById(
+            "avatarImgPreview"
+        );
+
+    if(!preview)return;
+
+
+    if(dataUrl){
+
+        preview.innerHTML=
+            `<img src="${dataUrl}" alt="아바타 미리보기">`;
+
+    }else{
+
+        preview.innerHTML=
+            escapeHTML(fallbackChar||"?");
+
+    }
+
+}
+
+
+function handleAvatarImageChange(event){
+
+    const file=
+        event.target.files&&
+        event.target.files[0];
+
+    if(!file)return;
+
+
+    if(!file.type.startsWith("image/")){
+
+        alert("이미지 파일만 선택할 수 있습니다.");
+        event.target.value="";
+        return;
+
+    }
+
+
+    const reader=new FileReader();
+
+    reader.onload=function(){
+
+        const img=new Image();
+
+        img.onload=function(){
+
+            const canvas=
+                document.createElement("canvas");
+
+            canvas.width=AVATAR_IMG_SIZE;
+            canvas.height=AVATAR_IMG_SIZE;
+
+            const ctx=
+                canvas.getContext("2d");
+
+            const side=
+                Math.min(img.width,img.height);
+
+            const sx=
+                (img.width-side)/2;
+
+            const sy=
+                (img.height-side)/2;
+
+            ctx.drawImage(
+                img,
+                sx,sy,side,side,
+                0,0,
+                AVATAR_IMG_SIZE,
+                AVATAR_IMG_SIZE
+            );
+
+            pendingAvatarImg=
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.8
+                );
+
+            renderAvatarPreview(
+                pendingAvatarImg
+            );
+
+        };
+
+        img.src=reader.result;
+
+    };
+
+    reader.readAsDataURL(file);
+
+}
+
+
+function removeAvatarImage(){
+
+    pendingAvatarImg=null;
+
+    document.getElementById(
+        "avatarImageInput"
+    ).value="";
+
+    const nickname=
+        document.getElementById(
+            "nicknameSetting"
+        ).value.trim()||"?";
+
+    const emoji=
+        document.getElementById(
+            "avatarSetting"
+        ).value.trim();
+
+    renderAvatarPreview(
+        null,
+        emoji||nickname.charAt(0)
+    );
+
+}
+
+
+function openNickname(){
+
+    document
+    .getElementById(
+        "nicknameModal"
+    )
+    .classList.add("show");
+
+
+    const nickname=
+        localStorage.getItem(
+            "washu_nickname"
+        )||"";
+
+    document.getElementById(
+        "nicknameSetting"
+    ).value=nickname;
+
+
+    const avatarEmoji=
+        localStorage.getItem(
+            "washu_avatar"
+        )||"";
+
+    document.getElementById(
+        "avatarSetting"
+    ).value=avatarEmoji;
+
+
+    document.getElementById(
+        "bioSetting"
+    ).value=
+        localStorage.getItem(
+            "washu_bio"
+        )||"";
+
+
+    document.getElementById(
+        "avatarImageInput"
+    ).value="";
+
+
+    pendingAvatarImg=undefined;
+
+    const savedImg=
+        localStorage.getItem(
+            "washu_avatar_img"
+        );
+
+    renderAvatarPreview(
+        savedImg,
+        avatarEmoji||nickname.charAt(0)
+    );
+
+}
+
+
+function closeNickname(){
+
+    document
+    .getElementById(
+        "nicknameModal"
+    )
+    .classList.remove("show");
+
+}
+
+
+function saveNickname(){
+
+    const nickname=
+        document.getElementById(
+            "nicknameSetting"
+        ).value.trim();
+
+
+    if(!nickname){
+
+        alert("닉네임을 입력하세요.");
+        return;
+
+    }
+
+
+    const avatar=
+        document.getElementById(
+            "avatarSetting"
+        ).value.trim();
+
+
+    const bio=
+        document.getElementById(
+            "bioSetting"
+        ).value.trim();
+
+
+    const avatarImg=
+        pendingAvatarImg===undefined
+        ?(localStorage.getItem(
+            "washu_avatar_img"
+        )||null)
+        :pendingAvatarImg;
+
+
+    localStorage.setItem(
+        "washu_nickname",
+        nickname
+    );
+
+
+    if(avatar){
+
+        localStorage.setItem(
+            "washu_avatar",
+            avatar
+        );
+
+    }else{
+
+        localStorage.removeItem(
+            "washu_avatar"
+        );
+
+    }
+
+
+    if(avatarImg){
+
+        localStorage.setItem(
+            "washu_avatar_img",
+            avatarImg
+        );
+
+    }else{
+
+        localStorage.removeItem(
+            "washu_avatar_img"
+        );
+
+    }
+
+
+    localStorage.setItem(
+        "washu_bio",
+        bio
+    );
+
+
+    posts.forEach(post=>{
+
+        if(post.authorId===userId){
+
+            post.nickname=nickname;
+            post.avatar=avatar||null;
+            post.avatarImg=avatarImg||null;
+            post.bio=bio;
+
+        }
+
+
+        post.comments.forEach(comment=>{
+
+            if(comment.authorId===userId){
+
+                comment.nickname=nickname;
+                comment.avatar=avatar||null;
+                comment.avatarImg=avatarImg||null;
+                comment.bio=bio;
+
+            }
+
+
+            (comment.replies||[])
+            .forEach(reply=>{
+
+                if(reply.authorId===userId){
+
+                    reply.nickname=nickname;
+                    reply.avatar=avatar||null;
+                    reply.avatarImg=avatarImg||null;
+                    reply.bio=bio;
+
+                }
+
+            });
+
+        });
+
+    });
+
+
+    savePosts();
+
+    closeNickname();
+
+    renderMyPage();
+
+    alert("프로필이 저장되었습니다.");
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+function updateDarkModeButton(){
+
+    const button=
+        document.getElementById(
+            "darkModeBtn"
+        );
+
+
+    if(!button)return;
+
+
+    const dark=
+        document.body.classList.contains(
+            "dark"
+        );
+
+
+    button.textContent=
+        dark?"☀️":"🌙";
+
+
+    button.title=
+        dark
+        ?"라이트모드"
+        :"다크모드";
+
+}
+
+
+function toggleDark(){
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+    const dark=
+        document.body.classList.contains(
+            "dark"
+        );
+
+
+    localStorage.setItem(
+        "washu_dark",
+        dark
+    );
+
+
+    updateDarkModeButton();
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+    document.getElementById(
+        "totalPosts"
+    ).textContent=
+        posts.length;
+
+
+    const comments=
+        posts.reduce(
+            (sum,p)=>
+                sum+p.comments.length,
+            0
+        );
+
+
+    const likes=
+        posts.reduce(
+            (sum,p)=>
+                sum+p.likes,
+            0
+        );
+
+
+    document.getElementById(
+        "totalComments"
+    ).textContent=
+        comments;
+
+
+    document.getElementById(
+        "totalLikes"
+    ).textContent=
+        likes;
+
+
+    document.getElementById(
+        "totalUsers"
+    ).textContent=
+        getKnownUsers().size;
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function showList(){
+
+    document.getElementById(
+        "listPage"
+    ).style.display="block";
+
+
+    document.getElementById(
+        "detailPage"
+    ).classList.remove("show");
+
+
+    document.getElementById(
+        "myPage"
+    ).classList.remove("show");
+
+
+    document.getElementById(
+        "otherProfile"
+    ).classList.remove("show");
+
+
+    document.getElementById(
+        "followListPage"
+    ).classList.remove("show");
+
+
+    document.getElementById(
+        "notificationPage"
+    ).classList.remove("show");
+
+}
+
+
+function goHome(){
+
+    currentPostId=null;
+
+    showList();
+
+    renderPosts();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   MODAL CLOSE
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key==="Escape"){
+
+            document
+            .querySelectorAll(".modal.show")
+            .forEach(modal=>
+                modal.classList.remove("show")
+            );
+
+        }
+
+    }
+);
+
+
+document.querySelectorAll(".modal")
+.forEach(modal=>{
+
+    modal.addEventListener(
+        "click",
+        function(event){
+
+            if(event.target===modal)
+                modal.classList.remove("show");
+
+        }
+    );
+
+});
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+if(
+    localStorage.getItem(
+        "washu_dark"
+    )==="true"
+){
+
+    document.body.classList.add("dark");
+
+}
+
+updateDarkModeButton();
+updateNotificationBadge();
+renderPosts();
+
+</script>
+
+</body>
+    </html>
