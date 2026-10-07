@@ -9425,7 +9425,7 @@ function spotifySetStatus(text){
     if(el)el.textContent=text;
 }
 
-async async function spotifyConnect(){
+async function spotifyConnect(){
     if(!SPOTIFY_CLIENT_ID){uiAlert("Spotify Client ID가 없습니다.");return;}
     try{
         /* stale token이 있어도 반드시 새 OAuth 동의를 요청 */
