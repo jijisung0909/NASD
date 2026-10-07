@@ -2226,7 +2226,7 @@ footer{
 .spotify-controls input[type=range]{flex:1;accent-color:#1db954}
 
 </style>
-<script src="https://sdk.scdn.co/spotify-player.js" defer></script>
+
 </head>
 
 <body>
@@ -9415,31 +9415,52 @@ function spotifyBase64Url(buffer){
 
 async function spotifyConnect(){
     if(!SPOTIFY_CLIENT_ID){uiAlert("Spotify Client ID가 없습니다.");return;}
-    const verifier=spotifyRandomString(96);
-    const challenge=spotifyBase64Url(await spotifySha256(verifier));
-    sessionStorage.setItem("Nthnet_spotify_verifier",verifier);
-    const params=new URLSearchParams({
-        client_id:SPOTIFY_CLIENT_ID,
-        response_type:"code",
-        redirect_uri:SPOTIFY_REDIRECT_URI,
-        code_challenge_method:"S256",
-        code_challenge:challenge,
-        scope:SPOTIFY_SCOPES
-    });
-    window.location.href="https://accounts.spotify.com/authorize?"+params.toString();
+    try{
+        const verifier=spotifyRandomString(96);
+        const challenge=spotifyBase64Url(await spotifySha256(verifier));
+        const state=spotifyRandomString(32);
+        sessionStorage.setItem("Nthnet_spotify_verifier",verifier);
+        sessionStorage.setItem("Nthnet_spotify_state",state);
+        const params=new URLSearchParams({
+            client_id:SPOTIFY_CLIENT_ID,
+            response_type:"code",
+            redirect_uri:SPOTIFY_REDIRECT_URI,
+            code_challenge_method:"S256",
+            code_challenge:challenge,
+            scope:SPOTIFY_SCOPES,
+            state
+        });
+        window.location.assign("https://accounts.spotify.com/authorize?"+params.toString());
+    }catch(e){
+        console.error("[Spotify] authorize",e);
+        uiAlert("Spotify 연결 시작 실패: "+(e.message||e));
+    }
 }
 
 async function spotifyHandleCallback(){
     const params=new URLSearchParams(window.location.search);
     const code=params.get("code");
     const error=params.get("error");
+    const returnedState=params.get("state");
     if(error){
+        console.error("[Spotify] authorize error",error);
         history.replaceState({},document.title,window.location.pathname+window.location.hash);
+        uiAlert("Spotify 연결이 취소되었거나 거부되었습니다: "+error);
         return;
     }
     if(!code)return;
     const verifier=sessionStorage.getItem("Nthnet_spotify_verifier");
-    if(!verifier)return;
+    const savedState=sessionStorage.getItem("Nthnet_spotify_state");
+    if(!verifier){
+        uiAlert("Spotify 인증 정보가 사라졌습니다. 다시 연결해주세요.");
+        return;
+    }
+    if(savedState && returnedState!==savedState){
+        uiAlert("Spotify 인증 상태가 일치하지 않습니다. 다시 연결해주세요.");
+        sessionStorage.removeItem("Nthnet_spotify_verifier");
+        sessionStorage.removeItem("Nthnet_spotify_state");
+        return;
+    }
     try{
         const res=await fetch("https://accounts.spotify.com/api/token",{
             method:"POST",
@@ -9453,7 +9474,8 @@ async function spotifyHandleCallback(){
             })
         });
         const data=await res.json();
-        if(!res.ok)throw new Error(data.error_description||"Spotify 인증 실패");
+        if(!res.ok)throw new Error(data.error_description||data.error||"Spotify 인증 실패");
+        if(!data.access_token)throw new Error("Spotify access token이 반환되지 않았습니다.");
         sessionStorage.setItem("Nthnet_spotify_token",data.access_token);
         if(data.expires_in)sessionStorage.setItem("Nthnet_spotify_expires",String(Date.now()+data.expires_in*1000));
     }catch(e){
@@ -9461,6 +9483,7 @@ async function spotifyHandleCallback(){
         uiAlert("Spotify 연결에 실패했습니다: "+(e.message||e));
     }finally{
         sessionStorage.removeItem("Nthnet_spotify_verifier");
+        sessionStorage.removeItem("Nthnet_spotify_state");
         history.replaceState({},document.title,window.location.pathname+window.location.hash);
     }
 }
@@ -9604,18 +9627,41 @@ function spotifySetupPlayer(){
     spotifyPlayer.connect();
 }
 
-window.onSpotifyWebPlaybackSDKReady=function(){
-    spotifySdkReady=true;
-    spotifySetupPlayer();
-};
+function spotifyLoadSdk(){
+    if(window.Spotify){
+        spotifySdkReady=true;
+        spotifySetupPlayer();
+        return Promise.resolve();
+    }
+    return new Promise((resolve,reject)=>{
+        const old=window.onSpotifyWebPlaybackSDKReady;
+        window.onSpotifyWebPlaybackSDKReady=function(){
+            spotifySdkReady=true;
+            spotifySetupPlayer();
+            if(typeof old==="function")old();
+            resolve();
+        };
+        const script=document.createElement("script");
+        script.src="https://sdk.scdn.co/spotify-player.js";
+        script.async=true;
+        script.onerror=()=>reject(new Error("Spotify Web Playback SDK를 불러오지 못했습니다."));
+        document.head.appendChild(script);
+    });
+}
 
 async function spotifyInit(){
-    await spotifyHandleCallback();
-    spotifyRenderEmpty();
-    if(spotifyToken()){
-        if(spotifySdkReady)spotifySetupPlayer();
-        await spotifyFetchNowPlaying();
-        setInterval(spotifyFetchNowPlaying,15000);
+    try{
+        await spotifyHandleCallback();
+        spotifyRenderEmpty();
+        if(spotifyToken()){
+            try{await spotifyLoadSdk();}
+            catch(e){console.error("[Spotify] SDK load",e);uiAlert(e.message||String(e));}
+            await spotifyFetchNowPlaying();
+            setInterval(spotifyFetchNowPlaying,15000);
+        }
+    }catch(e){
+        console.error("[Spotify] init",e);
+        uiAlert("Spotify 초기화 실패: "+(e.message||e));
     }
 }
 spotifyInit();
