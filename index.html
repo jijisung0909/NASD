@@ -166,7 +166,21 @@ button{cursor:pointer}
 .spotify-panel-window .spotify-now-playing{display:block!important;width:100%;box-sizing:border-box;margin-top:8px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
 .spotify-panel-window .spotify-np-body{display:flex!important;width:100%;box-sizing:border-box}
 .spotify-panel-window .spotify-search{display:block!important}
-.spotify-panel-window #spotifyPanelBody{display:block;width:100%}
+.spotify-panel-window #spotifyPanelBody{display:none;width:100%}
+.spotify-floating-player{
+    position:fixed !important;
+    left:50% !important;
+    top:50% !important;
+    transform:translate(-50%,-50%) !important;
+    width:min(780px,90vw) !important;
+    max-width:780px !important;
+    max-height:calc(90vh - 80px) !important;
+    overflow:auto !important;
+    margin:0 !important;
+    z-index:10051 !important;
+    box-sizing:border-box !important;
+    display:block !important;
+}
 .spotify-np-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .spotify-np-title{font-weight:800}.spotify-np-status{font-size:12px;color:var(--sub)}
 .spotify-np-body{display:flex;align-items:center;gap:26px;min-height:260px;padding:8px 2px}
@@ -7479,24 +7493,59 @@ function spotifySetStatus(text){
 }
 
 
+let spotifyPopupOriginalStyle=null;
+
 function ensureSpotifyPanelMounted(){
-    const body=document.getElementById("spotifyPanelBody");
-    const target=document.getElementById("spotifyNowPlaying");
-    if(body && target && target.parentNode!==body) body.appendChild(target);
+    // 기존 메뉴 안의 Spotify 플레이어 DOM을 다른 곳으로 이동하지 않습니다.
+    // 이동하면 원래 메뉴 레이아웃이 깨질 수 있으므로, 팝업을 열 때만 fixed로 띄웁니다.
+    return document.getElementById("spotifyNowPlaying");
 }
 
 function openSpotifyPanel(){
     const modal=document.getElementById("spotifyPanelModal");
-    if(!modal)return;
-    ensureSpotifyPanelMounted();
+    const target=ensureSpotifyPanelMounted();
+    if(!modal || !target)return;
+
+    if(!spotifyPopupOriginalStyle){
+        spotifyPopupOriginalStyle={
+            position:target.style.position,
+            left:target.style.left,
+            top:target.style.top,
+            width:target.style.width,
+            maxWidth:target.style.maxWidth,
+            maxHeight:target.style.maxHeight,
+            margin:target.style.margin,
+            zIndex:target.style.zIndex,
+            display:target.style.display,
+            boxSizing:target.style.boxSizing
+        };
+    }
+
     modal.classList.add("show");
+    target.classList.add("spotify-floating-player");
     document.body.style.overflow="hidden";
     if(typeof spotifyFetchNowPlaying === "function") spotifyFetchNowPlaying().catch(()=>{});
 }
 
 function closeSpotifyPanel(){
     const modal=document.getElementById("spotifyPanelModal");
+    const target=document.getElementById("spotifyNowPlaying");
     if(modal)modal.classList.remove("show");
+    if(target){
+        target.classList.remove("spotify-floating-player");
+        if(spotifyPopupOriginalStyle){
+            target.style.position=spotifyPopupOriginalStyle.position;
+            target.style.left=spotifyPopupOriginalStyle.left;
+            target.style.top=spotifyPopupOriginalStyle.top;
+            target.style.width=spotifyPopupOriginalStyle.width;
+            target.style.maxWidth=spotifyPopupOriginalStyle.maxWidth;
+            target.style.maxHeight=spotifyPopupOriginalStyle.maxHeight;
+            target.style.margin=spotifyPopupOriginalStyle.margin;
+            target.style.zIndex=spotifyPopupOriginalStyle.zIndex;
+            target.style.display=spotifyPopupOriginalStyle.display;
+            target.style.boxSizing=spotifyPopupOriginalStyle.boxSizing;
+        }
+    }
     document.body.style.overflow="";
 }
 
