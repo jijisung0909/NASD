@@ -2248,23 +2248,34 @@ footer{
 .spotify-np-title{font-weight:800}
 .spotify-np-status{font-size:12px;color:var(--sub)}
 .spotify-np-body{display:flex;align-items:center;gap:22px;min-height:230px;padding:10px 4px}
-.spotify-cd-wrap{position:relative;width:220px;height:210px;flex:none;display:grid;place-items:center;perspective:900px}
-.spotify-cd-machine{position:relative;width:210px;height:198px;border-radius:18px;background:linear-gradient(145deg,#30343a,#111318);border:1px solid rgba(255,255,255,.13);box-shadow:0 18px 36px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden}
-.spotify-cd-machine::before{content:"CD PLAYER";position:absolute;top:12px;left:16px;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.42);font-weight:800}
-.spotify-cd-slot{position:absolute;left:18px;right:18px;top:38px;height:13px;border-radius:8px;background:#050608;box-shadow:inset 0 2px 5px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.08);z-index:3}
-.spotify-cd-tray{position:absolute;left:17px;right:17px;bottom:18px;height:83px;border-radius:12px;background:linear-gradient(180deg,#25292f,#0b0d10);border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 5px 12px rgba(0,0,0,.55);z-index:1}
-.spotify-cd-disc{position:absolute;width:126px;height:126px;left:50%;top:49%;transform:translate(-50%,70px) scale(.72);border-radius:50%;object-fit:cover;background:#151515;box-shadow:0 8px 20px rgba(0,0,0,.5),inset 0 0 0 7px rgba(255,255,255,.08);z-index:2;opacity:.96}
+.spotify-cd-wrap{position:relative;width:300px;height:250px;flex:none;display:grid;place-items:center;perspective:1200px}
+.spotify-cd-machine{position:relative;width:286px;height:226px;border-radius:12px;background:linear-gradient(165deg,#e9eaec 0%,#bfc2c6 42%,#8d9298 100%);border:1px solid #73777c;box-shadow:0 22px 40px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -2px 5px rgba(0,0,0,.18);overflow:hidden}
+.spotify-cd-machine::before{content:"NTH  •  CD PLAYER";position:absolute;top:13px;left:18px;color:#3e4247;font:700 8px/1 Arial,sans-serif;letter-spacing:2.2px;z-index:8}
+.spotify-cd-machine::after{content:"";position:absolute;left:14px;right:14px;bottom:10px;height:1px;background:rgba(40,42,45,.25);box-shadow:0 -1px 0 rgba(255,255,255,.55)}
+.spotify-cd-display{position:absolute;right:18px;top:11px;width:84px;height:28px;border-radius:3px;background:#17191a;border:1px solid #4c5052;box-shadow:inset 0 0 8px rgba(0,0,0,.8);display:flex;align-items:center;justify-content:space-around;padding:0 5px;z-index:9}
+.spotify-cd-display span,.spotify-cd-display b{font:700 7px Arial,sans-serif;letter-spacing:1px;color:#9aa1a2}
+.spotify-cd-display b{color:#d4d8d7}
+.spotify-cd-slot{display:none}
+.spotify-cd-tray{position:absolute;left:20px;right:20px;bottom:18px;height:142px;border-radius:5px 5px 9px 9px;background:linear-gradient(180deg,#45494d,#25282b 13%,#111315 100%);border:1px solid #666b70;box-shadow:inset 0 3px 8px rgba(0,0,0,.75),0 3px 5px rgba(0,0,0,.22);z-index:1}
+.spotify-cd-tray::before{content:"";position:absolute;left:9px;right:9px;top:8px;height:1px;background:rgba(255,255,255,.15)}
+.spotify-cd-platter{position:absolute;left:50%;top:51%;width:146px;height:146px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#090a0b 0 13%,#202326 14% 16%,#0b0c0d 17% 72%,#272a2d 73% 76%,#080909 77%);box-shadow:inset 0 0 0 2px #3b3e41,0 5px 10px rgba(0,0,0,.55)}
+.spotify-cd-lid{position:absolute;left:20px;right:20px;top:39px;height:146px;border:1px solid rgba(255,255,255,.28);border-radius:7px;background:linear-gradient(125deg,rgba(255,255,255,.17),rgba(120,145,160,.06) 45%,rgba(0,0,0,.16));box-shadow:inset 0 1px 0 rgba(255,255,255,.45);z-index:6;pointer-events:none}
+.spotify-cd-disc{position:absolute;width:132px;height:132px;left:50%;top:51%;transform:translate(-50%,80px) scale(.72);border-radius:50%;object-fit:cover;background:#151515;box-shadow:0 6px 13px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.5);z-index:3;opacity:.98}
 .spotify-cd-disc::after{content:""}
-.spotify-cd-spindle{position:absolute;left:50%;top:49%;width:26px;height:26px;transform:translate(-50%,-50%);border-radius:50%;background:linear-gradient(145deg,#e7e7e7,#777);border:4px solid #25272b;box-shadow:0 2px 7px rgba(0,0,0,.65);z-index:4}
-.spotify-cd-spindle::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;transform:translate(-50%,-50%);border-radius:50%;background:#17191c}
-.spotify-cd-clamp{position:absolute;left:50%;top:49%;width:35px;height:8px;transform:translate(-50%,-50%);border-radius:8px;background:linear-gradient(90deg,#666,#f2f2f2,#666);z-index:5;opacity:0;transition:opacity .25s;box-shadow:0 1px 4px rgba(0,0,0,.6)}
-.spotify-cd-wrap.inserting .spotify-cd-disc{animation:spotifyCdInsert 1.15s cubic-bezier(.2,.8,.2,1) forwards}
+.spotify-cd-spindle{position:absolute;left:50%;top:51%;width:20px;height:20px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#f6f6f6 0 9%,#9a9da0 10% 45%,#53575a 46% 70%,#1b1d1f 71%);border:2px solid #17191b;box-shadow:0 2px 4px rgba(0,0,0,.75);z-index:7}
+.spotify-cd-spindle::before{content:"";position:absolute;left:50%;top:-8px;width:6px;height:15px;transform:translateX(-50%);border-radius:4px 4px 1px 1px;background:linear-gradient(90deg,#555,#e3e3e3,#555);box-shadow:0 0 2px #111}
+.spotify-cd-clamp{position:absolute;left:50%;top:51%;width:29px;height:6px;transform:translate(-50%,-50%);border-radius:5px;background:linear-gradient(90deg,#4a4d50,#f0f0f0,#4a4d50);z-index:8;opacity:0;transition:opacity .2s;box-shadow:0 1px 3px rgba(0,0,0,.7)}
+.spotify-cd-pickup{position:absolute;left:79px;top:51%;width:38px;height:3px;transform:translateY(-50%);border-radius:3px;background:#686d71;z-index:7;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.spotify-cd-pickup::after{content:"";position:absolute;right:-3px;top:-2px;width:7px;height:7px;border-radius:50%;background:#151719;box-shadow:0 0 0 2px #aeb1b3}
+.spotify-cd-led{position:absolute;left:25px;bottom:27px;width:5px;height:5px;border-radius:50%;background:#1db954;box-shadow:0 0 7px #1db954;z-index:9;opacity:.35}
+.spotify-cd-wrap.inserting .spotify-cd-disc{animation:spotifyCdInsert 1.05s cubic-bezier(.18,.8,.2,1) forwards}
 .spotify-cd-wrap.loaded .spotify-cd-disc{transform:translate(-50%,-50%) scale(1)}
 .spotify-cd-wrap.loaded .spotify-cd-clamp{opacity:1}
+.spotify-cd-wrap.loaded .spotify-cd-led{opacity:1}
 .spotify-cd-wrap.playing .spotify-cd-disc{animation:spotifyCdSpin 7s linear infinite}
 .spotify-cd-wrap.paused .spotify-cd-disc{animation-play-state:paused}
-.spotify-cd-wrap.loaded::after{content:"";position:absolute;left:50%;top:49%;width:5px;height:5px;transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.7);z-index:6;pointer-events:none}
-@keyframes spotifyCdInsert{0%{transform:translate(-50%,75px) scale(.68);opacity:.65}45%{transform:translate(-50%,18px) scale(.86);opacity:.9}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.spotify-cd-wrap.loaded::after{content:"";position:absolute;left:50%;top:51%;width:3px;height:3px;transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.9);z-index:10;pointer-events:none}
+@keyframes spotifyCdInsert{0%{transform:translate(-50%,88px) scale(.68);opacity:.25}35%{transform:translate(-50%,35px) scale(.82);opacity:.75}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
 @keyframes spotifyCdSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .spotify-np-info{min-width:0;flex:1}
 .spotify-np-track{font-size:21px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -9783,11 +9794,14 @@ async function spotifyFetchNowPlaying(){
             body.dataset.trackId=trackId;
             body.innerHTML=`<div class="spotify-cd-wrap inserting">
                     <div class="spotify-cd-machine">
-                        <div class="spotify-cd-slot"></div>
-                        <div class="spotify-cd-tray"></div>
+                        <div class="spotify-cd-display"><span>DISC</span><b>PLAY</b></div>
+                        <div class="spotify-cd-lid"></div>
+                        <div class="spotify-cd-tray"><div class="spotify-cd-platter"></div></div>
                         <img class="spotify-cd-disc" src="${escapeHTML(cover)}" alt="앨범 커버">
                         <span class="spotify-cd-spindle" aria-hidden="true"></span>
                         <span class="spotify-cd-clamp" aria-hidden="true"></span>
+                        <span class="spotify-cd-pickup" aria-hidden="true"></span>
+                        <span class="spotify-cd-led" aria-hidden="true"></span>
                     </div>
                 </div>
                 <div class="spotify-np-info">
