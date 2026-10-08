@@ -131,6 +131,24 @@ button{cursor:pointer}
     background:var(--point-light);
 }
 
+.header-spotify-btn{
+    height:40px;
+    padding:0 13px !important;
+    border:0 !important;
+    border-radius:20px !important;
+    background:#1ed760 !important;
+    color:#07120b !important;
+    font-weight:900;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    box-shadow:0 4px 14px rgba(30,215,96,.22);
+}
+.header-spotify-btn:hover{
+    background:#1fdf64 !important;
+    transform:translateY(-1px);
+}
+
 .notification-dot{
     position:absolute;
     top:4px;
@@ -2291,6 +2309,8 @@ footer{
 </button>
 
 <button id="darkModeBtn" onclick="toggleDark()">🌙</button>
+
+<button id="spotifyHeaderBtn" class="header-spotify-btn" onclick="openSpotifyPanel()" title="Spotify">🎵 Spotify</button>
 
 <button class="admin-only" style="display:none" onclick="openDashboard()" title="관리 대시보드">📊</button>
 
@@ -9494,6 +9514,28 @@ function spotifyBase64Url(buffer){
 function spotifySetStatus(text){
     const el=document.getElementById("spotifyNpStatus");
     if(el)el.textContent=text;
+}
+
+
+function openSpotifyPanel(){
+    const target=document.getElementById("spotifyNowPlaying");
+    if(target){
+        const myPage=document.getElementById("myPage");
+        if(myPage && !myPage.classList.contains("show")){
+            openMyPage();
+        }
+        setTimeout(()=>{
+            target.scrollIntoView({behavior:"smooth",block:"center"});
+            target.style.transition="box-shadow .25s ease";
+            target.style.boxShadow="0 0 0 3px rgba(30,215,96,.45), 0 12px 35px rgba(30,215,96,.12)";
+            setTimeout(()=>{target.style.boxShadow="";},900);
+        },80);
+    }
+    if(typeof spotifyGetToken === "function"){
+        spotifyGetToken().then(token=>{
+            if(!token && typeof spotifyConnect === "function") spotifyConnect();
+        }).catch(()=>{});
+    }
 }
 
 async function spotifyConnect(){
