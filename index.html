@@ -844,7 +844,10 @@ mark{
 .profile-avatar img{
     width:100%;
     height:100%;
+    display:block;
     object-fit:cover;
+    object-position:center;
+    border-radius:50%;
 }
 
 .profile-name{
@@ -1120,6 +1123,16 @@ mark{
     background:var(--point-light);
     color:var(--point);
     font-weight:900;
+    overflow:hidden;
+}
+
+.user-avatar img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+    border-radius:50%;
 }
 
 .user-info{
@@ -2873,6 +2886,68 @@ body.dark .enth-wifi-guide-box{background:rgba(27,25,36,.99);border-color:rgba(1
 .enth-wifi-step strong{display:block;color:var(--text,#202124);font-size:12px}
 .enth-wifi-step p{margin:4px 0 0;color:var(--sub,#777b85);font-size:11px;line-height:1.55}
 .enth-wifi-guide-done{width:100%;height:43px;margin-top:18px;border:0;border-radius:12px;background:linear-gradient(135deg,#8ec7ff,#9a8cff);color:#fff;font-size:13px;font-weight:800;cursor:pointer}
+
+
+/* =========================================================
+   ONLINE / OFFLINE PRESENCE
+========================================================= */
+.presence-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-left:6px;
+    padding:2px 7px;
+    border-radius:999px;
+    font-size:11px;
+    line-height:1.5;
+    font-weight:700;
+    vertical-align:middle;
+    white-space:nowrap;
+    border:1px solid transparent;
+}
+.presence-badge.online{
+    color:#15803d;
+    background:rgba(34,197,94,.09);
+    border-color:rgba(34,197,94,.18);
+}
+.presence-badge.offline{
+    color:var(--sub);
+    background:rgba(148,163,184,.10);
+    border-color:rgba(148,163,184,.18);
+}
+.presence-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    display:inline-block;
+    flex:none;
+}
+.presence-badge.online .presence-dot{
+    background:#22c55e;
+    box-shadow:0 0 0 3px rgba(34,197,94,.10);
+}
+.presence-badge.offline .presence-dot{
+    background:#94a3b8;
+}
+.presence-line{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-top:4px;
+    font-size:12px;
+    color:var(--sub);
+}
+.presence-line .presence-dot{
+    width:8px;
+    height:8px;
+}
+@media(max-width:700px){
+    .presence-badge{
+        font-size:10px;
+        padding:2px 6px;
+        margin-left:4px;
+    }
+}
 </style>
 </head>
 
@@ -4043,7 +4118,7 @@ async function loadEverythingFromDB(){
             db.from("comments").select("*").order("created_at",{ascending:true}),
             db.from("reactions").select("target_type,target_id,kind"),
             db.from("roles").select("user_id,role"),
-            db.from("profiles").select("user_id,nickname")
+            db.from("profiles").select("user_id,nickname,last_seen")
         ]);
 
         if(pRes.error||cRes.error||rRes.error){
@@ -4059,7 +4134,8 @@ async function loadEverythingFromDB(){
                 .filter(r=>r&&r.user_id)
                 .map(r=>({
                     id:r.user_id,
-                    nickname:(r.nickname||"").trim()||"회원"
+                    nickname:(r.nickname||"").trim()||"회원",
+                    last_seen:r.last_seen||null
                 }));
         }
 
@@ -4274,9 +4350,116 @@ let rolesMap={};
 /* 가입한 전체 회원 목록(profiles 테이블): [{id, nickname}] */
 let profilesMembers=[];
 
+/* 온라인 상태: 최근 2분 이내 heartbeat가 있으면 온라인으로 표시 */
+const PRESENCE_ONLINE_MS=2*60*1000;
+let presenceLastPingAt=0;
+let presenceStarted=false;
+let presenceHeartbeatTimer=null;
+let presenceRefreshTimer=null;
+let presenceVisibilityBound=false;
+let presenceOnlineBound=false;
+
+function canonicalUserId(id){
+    if(id===null||id===undefined)return "";
+    return String(id).replace(/^auth_/i,"");
+}
+
+function sameUserId(a,b){
+    return canonicalUserId(a)!=="" &&
+           canonicalUserId(a)===canonicalUserId(b);
+}
+
+function profileRecordOf(id){
+    if(!id)return null;
+    const key=canonicalUserId(id);
+    return profilesMembers.find(p=>canonicalUserId(p.id)===key)||null;
+}
+
+function isUserOnline(id){
+    if(!id)return false;
+    if(String(id)===String(userId)){
+        return !!authUser && navigator.onLine && (Date.now()-presenceLastPingAt<PRESENCE_ONLINE_MS);
+    }
+    const profile=profileRecordOf(id);
+    if(!profile||!profile.last_seen)return false;
+    const t=new Date(profile.last_seen).getTime();
+    return Number.isFinite(t) && (Date.now()-t<PRESENCE_ONLINE_MS);
+}
+
+function presenceBadgeHTML(id){
+    const online=isUserOnline(id);
+    return `<span class="presence-badge ${online?"online":"offline"}" data-presence-user="${escapeHTML(String(id))}">`+
+        `<span class="presence-dot"></span>${online?"온라인":"오프라인"}</span>`;
+}
+
+function updatePresenceBadges(){
+    document.querySelectorAll("[data-presence-user]").forEach(el=>{
+        const id=el.getAttribute("data-presence-user");
+        const online=isUserOnline(id);
+        el.className=`presence-badge ${online?"online":"offline"}`;
+        el.innerHTML=`<span class="presence-dot"></span>${online?"온라인":"오프라인"}`;
+    });
+}
+
+async function sendPresenceHeartbeat(){
+    if(!authUser||!navigator.onLine)return;
+    presenceLastPingAt=Date.now();
+    try{
+        const{error}=await db.from("profiles").upsert({
+            user_id:userId,
+            nickname:(localStorage.getItem("Nthnet_nickname")||"회원").trim()||"회원",
+            last_seen:new Date().toISOString()
+        },{onConflict:"user_id"});
+        if(error)throw error;
+    }catch(e){
+        console.warn("[Presence] heartbeat failed",e);
+    }
+}
+
+async function refreshPresenceProfiles(){
+    try{
+        const{data,error}=await db.from("profiles").select("user_id,nickname,last_seen");
+        if(error)throw error;
+        if(Array.isArray(data)){
+            profilesMembers=data
+                .filter(r=>r&&r.user_id)
+                .map(r=>({
+                    id:r.user_id,
+                    nickname:(r.nickname||"").trim()||"회원",
+                    last_seen:r.last_seen||null
+                }));
+            updatePresenceBadges();
+        }
+    }catch(e){
+        console.warn("[Presence] refresh failed",e);
+    }
+}
+
+function startPresence(){
+    if(!authUser||presenceStarted)return;
+    presenceStarted=true;
+    sendPresenceHeartbeat();
+    presenceHeartbeatTimer=setInterval(()=>sendPresenceHeartbeat(),45000);
+    presenceRefreshTimer=setInterval(()=>refreshPresenceProfiles(),30000);
+    if(!presenceVisibilityBound){
+        document.addEventListener("visibilitychange",()=>{
+            if(document.visibilityState==="visible")sendPresenceHeartbeat();
+        });
+        presenceVisibilityBound=true;
+    }
+    if(!presenceOnlineBound){
+        window.addEventListener("online",()=>{
+            sendPresenceHeartbeat();
+            refreshPresenceProfiles();
+        });
+        presenceOnlineBound=true;
+    }
+    setTimeout(()=>refreshPresenceProfiles(),3000);
+}
+
 /* user_id -> 닉네임 (profiles 기반) */
 function nicknameOfProfile(id){
-    const hit=profilesMembers.find(p=>p.id===id);
+    const hit=profileRecordOf(id);
     return hit?hit.nickname:null;
 }
 
@@ -4395,6 +4578,17 @@ function applyAuthUser(u){
     refreshAuthUI();
 
     checkAdmin();
+
+    /* 로그인/로그아웃 후 DB 팔로우 관계를 다시 동기화 */
+    loadFollowsFromDB().then(()=>{
+        if(typeof renderMyPage==="function")renderMyPage();
+        if(currentProfileUserId&&typeof renderOtherProfile==="function")renderOtherProfile();
+    });
+
+    if(authUser){
+        presenceLastPingAt=Date.now();
+        setTimeout(startPresence,0);
+    }
 
 }
 
@@ -4815,6 +5009,33 @@ function saveFollows(){
 
 }
 
+/* 팔로우 관계를 Supabase에서 불러옵니다.
+   DB가 정상적으로 연결되면 DB를 source of truth로 사용합니다. */
+async function loadFollowsFromDB(){
+    try{
+        const{data,error}=await db
+            .from("follows")
+            .select("follower_id,following_id,created_at")
+            .order("created_at",{ascending:true});
+
+        if(error)throw error;
+
+        follows=(data||[])
+            .filter(r=>r&&r.follower_id&&r.following_id)
+            .map(r=>({
+                followerId:String(r.follower_id),
+                followingId:String(r.following_id),
+                date:r.created_at||null
+            }));
+
+        saveFollows();
+        return true;
+    }catch(e){
+        console.warn("[Follow] DB load failed",e);
+        return false;
+    }
+}
+
 function saveBookmarks(){
 
     localStorage.setItem(
@@ -5134,137 +5355,78 @@ function isNew(post){
 
 function nicknameOfUser(id){
 
-    if(id===userId){
+    if(sameUserId(id,userId)){
 
-        return localStorage.getItem(
-            "Nthnet_nickname"
-        )||"익명";
+        return localStorage.getItem("Nthnet_nickname")||"익명";
 
     }
 
-    const post=
-        posts.find(
-            p=>p.authorId===id
-        );
-
-    if(post)return post.nickname;
+    const post=posts.find(p=>sameUserId(p.authorId,id));
+    if(post&&post.nickname)return post.nickname;
 
     for(const p of posts){
+        const comment=(p.comments||[]).find(c=>sameUserId(c.authorId,id));
+        if(comment&&comment.nickname)return comment.nickname;
 
-        const comment=
-            p.comments.find(
-                c=>c.authorId===id
-            );
-
-        if(comment)return comment.nickname;
-
+        for(const c of (p.comments||[])){
+            const reply=(c.replies||[]).find(r=>sameUserId(r.authorId,id));
+            if(reply&&reply.nickname)return reply.nickname;
+        }
     }
 
-    /* 글·댓글이 없는 회원은 profiles 명부에서 닉네임을 찾는다 */
     const prof=nicknameOfProfile(id);
     if(prof)return prof;
 
-    /* 그래도 없으면 역할 기반 기본 이름(AI 등) */
     const role=roleOfUser(id);
     if(role==="ai")return "AI";
 
     return "회원";
-
 }
 
 
 function avatarOfUser(id){
 
-    if(id===userId){
-
-        return localStorage.getItem(
-            "Nthnet_avatar"
-        )||"";
-
+    if(sameUserId(id,userId)){
+        return localStorage.getItem("Nthnet_avatar")||"";
     }
 
-    const post=
-        posts.find(
-            p=>p.authorId===id
-        );
-
+    const post=posts.find(p=>sameUserId(p.authorId,id));
     if(post&&post.avatar)return post.avatar;
 
     for(const p of posts){
+        const comment=(p.comments||[]).find(c=>sameUserId(c.authorId,id));
+        if(comment&&comment.avatar)return comment.avatar;
 
-        const comment=
-            p.comments.find(
-                c=>c.authorId===id
-            );
-
-        if(comment&&comment.avatar)
-            return comment.avatar;
-
-
-        for(const c of p.comments){
-
-            const reply=
-                (c.replies||[]).find(
-                    r=>r.authorId===id
-                );
-
-            if(reply&&reply.avatar)
-                return reply.avatar;
-
+        for(const c of (p.comments||[])){
+            const reply=(c.replies||[]).find(r=>sameUserId(r.authorId,id));
+            if(reply&&reply.avatar)return reply.avatar;
         }
-
     }
 
     return "";
-
 }
 
 
 function avatarImgOfUser(id){
 
-    if(id===userId){
-
-        return localStorage.getItem(
-            "Nthnet_avatar_img"
-        )||"";
-
+    if(sameUserId(id,userId)){
+        return localStorage.getItem("Nthnet_avatar_img")||"";
     }
 
-    const post=
-        posts.find(
-            p=>p.authorId===id
-        );
-
-    if(post&&post.avatarImg)
-        return post.avatarImg;
+    const post=posts.find(p=>sameUserId(p.authorId,id));
+    if(post&&post.avatarImg)return post.avatarImg;
 
     for(const p of posts){
+        const comment=(p.comments||[]).find(c=>sameUserId(c.authorId,id));
+        if(comment&&comment.avatarImg)return comment.avatarImg;
 
-        const comment=
-            p.comments.find(
-                c=>c.authorId===id
-            );
-
-        if(comment&&comment.avatarImg)
-            return comment.avatarImg;
-
-
-        for(const c of p.comments){
-
-            const reply=
-                (c.replies||[]).find(
-                    r=>r.authorId===id
-                );
-
-            if(reply&&reply.avatarImg)
-                return reply.avatarImg;
-
+        for(const c of (p.comments||[])){
+            const reply=(c.replies||[]).find(r=>sameUserId(r.authorId,id));
+            if(reply&&reply.avatarImg)return reply.avatarImg;
         }
-
     }
 
     return "";
-
 }
 
 
@@ -5394,8 +5556,8 @@ function isFollowing(targetId){
 
     return follows.some(
         f=>
-            f.followerId===userId&&
-            f.followingId===targetId
+            String(f.followerId)===String(userId)&&
+            String(f.followingId)===String(targetId)
     );
 
 }
@@ -5404,7 +5566,7 @@ function isFollowing(targetId){
 function followerCount(targetId){
 
     return follows.filter(
-        f=>f.followingId===targetId
+        f=>String(f.followingId)===String(targetId)
     ).length;
 
 }
@@ -5413,65 +5575,98 @@ function followerCount(targetId){
 function followingCount(targetId){
 
     return follows.filter(
-        f=>f.followerId===targetId
+        f=>String(f.followerId)===String(targetId)
     ).length;
 
 }
 
 
-function toggleFollow(targetId){
+async function toggleFollow(targetId){
 
-    if(
-        !targetId||
-        targetId===userId
-    )return;
+    if(!requireLogin())return;
 
+    targetId=String(targetId||"");
+    const me=String(userId||"");
+
+    if(!targetId||!me||targetId===me)return;
 
     const index=
         follows.findIndex(
             f=>
-                f.followerId===userId&&
-                f.followingId===targetId
+                String(f.followerId)===me&&
+                String(f.followingId)===targetId
         );
 
+    const wasFollowing=index>=0;
 
-    if(index>=0){
-
+    /* 화면을 먼저 반영하고 DB 실패 시 되돌립니다. */
+    if(wasFollowing){
         follows.splice(index,1);
-
     }else{
-
         follows.push({
-
-            followerId:userId,
-
+            followerId:me,
             followingId:targetId,
-
             date:new Date().toISOString()
-
         });
-
-        addNotification(
-
-            targetId,
-
-            "follow",
-
-            null,
-
-            `${nicknameOfUser(userId)}님이 회원님을 팔로우했습니다.`
-
-        );
-
     }
-
-
     saveFollows();
-
     renderMyPage();
+    if(currentProfileUserId)renderOtherProfile();
 
-    if(currentProfileUserId)
-        renderOtherProfile();
+    try{
+        if(wasFollowing){
+            const{error}=await db
+                .from("follows")
+                .delete()
+                .eq("follower_id",me)
+                .eq("following_id",targetId);
+            if(error)throw error;
+        }else{
+            const{error}=await db
+                .from("follows")
+                .insert({
+                    follower_id:me,
+                    following_id:targetId
+                });
+            if(error)throw error;
+
+            /* 기존 알림 UI는 유지합니다. 알림 테이블이 없으면 무시됩니다. */
+            if(typeof addNotification==="function"){
+                addNotification(
+                    targetId,
+                    "follow",
+                    null,
+                    `${nicknameOfUser(userId)}님이 회원님을 팔로우했습니다.`
+                );
+            }
+        }
+
+        await loadFollowsFromDB();
+        renderMyPage();
+        if(currentProfileUserId)renderOtherProfile();
+    }catch(e){
+        console.error("[Follow] DB save failed",e);
+
+        /* 실패 시 로컬 상태 원복 */
+        if(wasFollowing){
+            follows.push({
+                followerId:me,
+                followingId:targetId,
+                date:new Date().toISOString()
+            });
+        }else{
+            const rollbackIndex=follows.findIndex(f=>
+                String(f.followerId)===me&&
+                String(f.followingId)===targetId
+            );
+            if(rollbackIndex>=0)follows.splice(rollbackIndex,1);
+        }
+
+        saveFollows();
+        renderMyPage();
+        if(currentProfileUserId)renderOtherProfile();
+        uiAlert("팔로우 처리에 실패했습니다: "+(e.message||e));
+    }
 
 }
 
@@ -5535,7 +5730,7 @@ function openFollowList(type,targetId){
         ids=
             follows
             .filter(
-                f=>f.followingId===targetId
+                f=>String(f.followingId)===String(targetId)
             )
             .map(
                 f=>f.followerId
@@ -5546,7 +5741,7 @@ function openFollowList(type,targetId){
         ids=
             follows
             .filter(
-                f=>f.followerId===targetId
+                f=>String(f.followerId)===String(targetId)
             )
             .map(
                 f=>f.followingId
@@ -5557,81 +5752,58 @@ function openFollowList(type,targetId){
 
     renderUserList(ids);
 
+    /* 목록을 열 때 DB 최신 상태를 다시 확인 */
+    loadFollowsFromDB().then(()=>{
+        let freshIds=[];
+        if(type==="followers"){
+            freshIds=follows.filter(
+                f=>String(f.followingId)===String(targetId)
+            ).map(f=>f.followerId);
+        }else{
+            freshIds=follows.filter(
+                f=>String(f.followerId)===String(targetId)
+            ).map(f=>f.followingId);
+        }
+        renderUserList(freshIds);
+    });
+
 }
 
 
 function renderUserList(ids){
 
-    const box=
-        document.getElementById(
-            "followUsers"
-        );
-
+    const box=document.getElementById("followUsers");
+    if(!box)return;
 
     if(!ids.length){
-
-        box.innerHTML=
-        `<div class="empty">
-            아직 팔로우 관계가 없습니다.
-        </div>`;
-
+        box.innerHTML=`<div class="empty">아직 팔로우 관계가 없습니다.</div>`;
         return;
-
     }
 
+    box.innerHTML=ids.map(id=>{
+        const name=nicknameOfUser(id);
+        const avatarImg=avatarImgOfUser(id);
+        const avatar=avatarOfUser(id);
+        const following=isFollowing(id);
+        const safeId=String(id).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+        const avatarHTML=avatarImg
+            ?`<img src="${escapeHTML(avatarImg)}" alt="아바타">`
+            :escapeHTML(avatar||name.charAt(0)||"?");
 
-    box.innerHTML=
-        ids.map(id=>{
-
-            const name=
-                nicknameOfUser(id);
-
-            const following=
-                isFollowing(id);
-
-
-            return`
-
-                <div class="user-row">
-
-                    <div class="user-avatar">
-                        ${escapeHTML(name.charAt(0))}
+        return `
+            <div class="user-row" onclick="openUserProfile('${safeId}')" style="cursor:pointer">
+                <div class="user-avatar">${avatarHTML}</div>
+                <div class="user-info">
+                    <div class="user-name">
+                        ${escapeHTML(name)} ${roleBadgeHTML(id)} ${presenceBadgeHTML(id)}
                     </div>
-
-                    <div class="user-info">
-
-                        <div
-                            class="user-name"
-                            onclick="openUserProfile('${id}')"
-                        >
-                            ${escapeHTML(name)}
-                        </div>
-
-                        <div class="user-id">
-                            ${escapeHTML(id)}
-                        </div>
-
-                    </div>
-
-                    ${
-                        id!==userId
-                        ?`
-                        <button
-                            class="user-follow ${following?"on":""}"
-                            onclick="toggleFollow('${id}')"
-                        >
-                            ${following?"팔로잉":"팔로우"}
-                        </button>
-                        `
-                        :""
-                    }
-
+                    <div class="user-id">회원 ID: ${escapeHTML(String(id))}</div>
                 </div>
-
-            `;
-
-        }).join("");
-
+                ${id!==userId&&!sameUserId(id,userId)
+                    ?`<button class="user-follow ${following?"on":""}" onclick="event.stopPropagation(); toggleFollow('${safeId}')">${following?"팔로잉":"팔로우"}</button>`
+                    :""}
+            </div>`;
+    }).join("");
 }
 
 
@@ -5848,6 +6020,7 @@ function renderPosts(){
                         }"
                     >
                         ${escapeHTML(post.nickname)}
+                        ${post.authorId?presenceBadgeHTML(post.authorId):""}
                     </span>
 
                     <span>
@@ -6103,6 +6276,7 @@ function renderRecent(){
 
                 <div class="popular-info">
                     ${escapeHTML(post.nickname)}
+                    ${post.authorId?presenceBadgeHTML(post.authorId):""}
                     · 👁 ${post.views}
                 </div>
 
@@ -6453,6 +6627,7 @@ function openPost(id){
             }"
         >${escapeHTML(post.nickname)}</span>
         ${post.authorId?roleBadgeHTML(post.authorId):""}
+        ${post.authorId?presenceBadgeHTML(post.authorId):""}
         · ${formatDate(post.date)}
         · 조회 ${post.views}`;
 
@@ -6547,6 +6722,7 @@ function renderComments(){
                         ${escapeHTML(comment.nickname)}
                     </span>
                     ${comment.authorId?roleBadgeHTML(comment.authorId):""}
+                    ${comment.authorId?presenceBadgeHTML(comment.authorId):""}
 
                     <span class="comment-date">
                         ${formatDate(comment.date)}
@@ -6613,6 +6789,7 @@ function renderComments(){
                                         ↳ ${escapeHTML(reply.nickname)}
                                     </span>
                                     ${reply.authorId?roleBadgeHTML(reply.authorId):""}
+                                    ${reply.authorId?presenceBadgeHTML(reply.authorId):""}
 
                                     <span class="comment-date">
                                         ${formatDate(reply.date)}
@@ -7706,6 +7883,7 @@ function renderDashboard(){
                              onclick="openUserProfile('${idEsc}')">
                             ${escapeHTML(m.nickname)}
                             ${roleBadgeHTML(m.id)}
+                            ${presenceBadgeHTML(m.id)}
                         </div>
                         <div class="dash-member-meta">
                             게시글 ${m.posts}개 · 댓글 ${m.comments}개
@@ -8404,6 +8582,7 @@ function renderUserResults(){
                     <div class="user-result-name">
                         ${highlight(u.nickname)}
                         ${roleBadgeHTML(u.id)}
+                        ${presenceBadgeHTML(u.id)}
                     </div>
                     <div class="user-result-meta">
                         게시글 ${postCount}개
@@ -8518,7 +8697,8 @@ function renderOtherProfile(){
         "otherName"
     ).innerHTML=
         escapeHTML(name)+
-        " "+roleBadgeHTML(id);
+        " "+roleBadgeHTML(id)+
+        presenceBadgeHTML(id);
 
 
     document.getElementById(
@@ -8866,7 +9046,8 @@ function renderMyPage(){
         "profileName"
     ).innerHTML=
         escapeHTML(nickname)+
-        " "+roleBadgeHTML(userId);
+        " "+roleBadgeHTML(userId)+
+        presenceBadgeHTML(userId);
 
 
     const avatar=
@@ -10318,6 +10499,7 @@ loadSiteAnnouncement();
     posts=normalizePosts(fresh);
     localStorage.setItem("Nthnet_posts",JSON.stringify(posts));
 
+    await loadFollowsFromDB();
     renderPosts();
     loadSiteAnnouncement();
 
