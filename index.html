@@ -180,25 +180,19 @@ button{cursor:pointer}
 .spotify-cd-lid{display:none}
 .spotify-cd-disc{position:absolute;width:150px;height:150px;left:50%;top:52%;transform:translate(-50%,68px) scale(.62);border-radius:50%;object-fit:cover;background:#222;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.65);z-index:5;opacity:1}
 .spotify-cd-disc::after{content:""}
-/* 중앙 스핀들 */
-.spotify-cd-spindle{position:absolute;left:50%;top:52%;width:18px;height:18px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fafafa 0 8%,#b7b4ad 9% 43%,#5e5b56 44% 68%,#171817 69%);border:2px solid #34322f;box-shadow:0 2px 4px rgba(0,0,0,.65);z-index:9}
-.spotify-cd-spindle::before{content:"";position:absolute;left:50%;top:-6px;width:4px;height:12px;transform:translateX(-50%);border-radius:3px;background:#55524d}
 /* CD 위를 가로지르는 실제 턴테이블 느낌의 톤암 */
 .spotify-cd-pickup{position:absolute;left:235px;top:42px;width:8px;height:112px;transform:rotate(38deg);transform-origin:top center;border-radius:6px;background:linear-gradient(90deg,#a7a29a,#fff,#aaa59d);z-index:12;box-shadow:1px 2px 4px rgba(0,0,0,.25)}
 .spotify-cd-pickup::before{content:"";position:absolute;left:-9px;top:-10px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ddd8ce 55%,#aaa49a);border:1px solid #aaa49a;box-shadow:0 2px 4px rgba(0,0,0,.2)}
 .spotify-cd-pickup::after{content:"";position:absolute;left:-7px;bottom:-5px;width:20px;height:25px;border-radius:3px 3px 7px 7px;background:#eeeae2;border:1px solid #a7a29a;box-shadow:1px 2px 3px rgba(0,0,0,.25)}
-.spotify-cd-clamp{position:absolute;left:50%;top:52%;width:24px;height:5px;transform:translate(-50%,-50%);border-radius:5px;background:#d8d4cb;border:1px solid #9d9991;z-index:10;opacity:0;box-shadow:0 1px 3px rgba(0,0,0,.35)}
 .spotify-cd-led{position:absolute;left:20px;top:18px;width:5px;height:5px;border-radius:50%;background:#8d8a83;box-shadow:0 0 5px rgba(0,0,0,.12);z-index:22;opacity:.35}
 /* 좌우 스피커 그릴 */
 .spotify-cd-machine .cd-speaker{position:absolute;bottom:25px;width:54px;height:42px;z-index:15;background:repeating-linear-gradient(to bottom,transparent 0 5px,#252522 5px 8px,transparent 8px 12px);border-radius:3px;opacity:.92}
 .spotify-cd-machine .cd-speaker.left{left:20px}.spotify-cd-machine .cd-speaker.right{right:20px}
-.spotify-cd-wrap.inserting .spotify-cd-disc{animation:spotifyCdInsert 1.05s cubic-bezier(.18,.8,.2,1) forwards}
+.spotify-cd-wrap.inserting .spotify-cd-disc{animation:spotifyCdInsert 1.55s cubic-bezier(.18,.8,.2,1) forwards}
 .spotify-cd-wrap.loaded .spotify-cd-disc{transform:translate(-50%,-50%) scale(1)}
-.spotify-cd-wrap.loaded .spotify-cd-clamp{opacity:1}
 .spotify-cd-wrap.loaded .spotify-cd-led{opacity:1}
 .spotify-cd-wrap.playing .spotify-cd-disc{animation:spotifyCdSpin 7s linear infinite}
 .spotify-cd-wrap.paused .spotify-cd-disc{animation-play-state:paused}
-.spotify-cd-wrap.loaded::after{content:"";position:absolute;left:50%;top:52%;width:3px;height:3px;transform:translate(-50%,-50%);border-radius:50%;background:#fff;z-index:18;pointer-events:none}
 @keyframes spotifyCdInsert{0%{transform:translate(-50%,68px) scale(.62);opacity:.1}35%{transform:translate(-50%,20px) scale(.82);opacity:.75}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
 @keyframes spotifyCdSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .spotify-np-info{min-width:0;flex:1}
@@ -7722,9 +7716,7 @@ async function spotifyFetchNowPlaying(){
                         <div class="spotify-cd-lid"></div>
                         <div class="spotify-cd-tray"><div class="spotify-cd-platter"></div></div>
                         <img class="spotify-cd-disc" src="${escapeHTML(cover)}" alt="앨범 커버">
-                        <span class="spotify-cd-spindle" aria-hidden="true"></span>
-                        <span class="spotify-cd-clamp" aria-hidden="true"></span>
-                        <span class="spotify-cd-pickup" aria-hidden="true"></span>
+                                                <span class="spotify-cd-pickup" aria-hidden="true"></span>
                         <span class="spotify-cd-led" aria-hidden="true"></span>
                     </div>
                 </div>
