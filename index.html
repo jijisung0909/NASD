@@ -156,14 +156,17 @@ button{cursor:pointer}
 }
 .spotify-panel-modal.show{display:flex}
 .spotify-panel-window{
-    width:min(760px,94vw);max-height:88vh;overflow:auto;position:relative;
+    width:min(820px,94vw);max-height:90vh;overflow:auto;position:relative;
     border:1px solid var(--line,#ddd);border-radius:22px;background:var(--card,#fff);
     box-shadow:0 24px 80px rgba(0,0,0,.35);padding:20px;
 }
 .spotify-panel-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .spotify-panel-title{font-size:20px;font-weight:900}
 .spotify-panel-close{width:38px;height:38px;border:0;border-radius:50%;background:var(--point-light,#f2f2f2);color:var(--text);font-size:22px;cursor:pointer}
-.spotify-panel-window .spotify-now-playing{margin-top:18px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+.spotify-panel-window .spotify-now-playing{display:block!important;width:100%;box-sizing:border-box;margin-top:8px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+.spotify-panel-window .spotify-np-body{display:flex!important;width:100%;box-sizing:border-box}
+.spotify-panel-window .spotify-search{display:block!important}
+.spotify-panel-window #spotifyPanelBody{display:block;width:100%}
 .spotify-np-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .spotify-np-title{font-weight:800}.spotify-np-status{font-size:12px;color:var(--sub)}
 .spotify-np-body{display:flex;align-items:center;gap:26px;min-height:260px;padding:8px 2px}
@@ -180,6 +183,9 @@ button{cursor:pointer}
 .spotify-cd-lid{display:none}
 .spotify-cd-disc{position:absolute;width:150px;height:150px;left:50%;top:52%;transform:translate(-50%,68px) scale(.62);border-radius:50%;object-fit:cover;background:#222;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.65);z-index:5;opacity:1}
 .spotify-cd-disc::after{content:""}
+.spotify-cd-disc-empty{background:radial-gradient(circle at 50% 50%,transparent 0 8%,#d7d5ce 9% 12%,#f5f3ed 13% 30%,#d9d7d0 31% 47%,#f7f5ef 48% 65%,#d5d3cc 66% 100%);box-shadow:0 4px 10px rgba(0,0,0,.35),inset 0 0 0 1px rgba(255,255,255,.75)}
+.spotify-inline-connect{margin-top:16px;cursor:pointer}
+
 /* CD 위를 가로지르는 실제 턴테이블 느낌의 톤암 */
 .spotify-cd-pickup{position:absolute;left:235px;top:42px;width:8px;height:112px;transform:rotate(38deg);transform-origin:top center;border-radius:6px;background:linear-gradient(90deg,#a7a29a,#fff,#aaa59d);z-index:12;box-shadow:1px 2px 4px rgba(0,0,0,.25)}
 .spotify-cd-pickup::before{content:"";position:absolute;left:-9px;top:-10px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ddd8ce 55%,#aaa49a);border:1px solid #aaa49a;box-shadow:0 2px 4px rgba(0,0,0,.2)}
@@ -7473,38 +7479,28 @@ function spotifySetStatus(text){
 }
 
 
-function openSpotifyPanel(){
-    const modal=document.getElementById("spotifyPanelModal");
+function ensureSpotifyPanelMounted(){
     const body=document.getElementById("spotifyPanelBody");
     const target=document.getElementById("spotifyNowPlaying");
-    if(!modal || !body || !target)return;
-    if(!window.__spotifyPanelPlaceholder){
-        const placeholder=document.createElement("span");
-        placeholder.id="spotifyPanelPlaceholder";
-        placeholder.style.display="none";
-        target.parentNode.insertBefore(placeholder,target);
-        window.__spotifyPanelPlaceholder=placeholder;
-    }
-    body.appendChild(target);
+    if(body && target && target.parentNode!==body) body.appendChild(target);
+}
+
+function openSpotifyPanel(){
+    const modal=document.getElementById("spotifyPanelModal");
+    if(!modal)return;
+    ensureSpotifyPanelMounted();
     modal.classList.add("show");
     document.body.style.overflow="hidden";
-    if(typeof spotifyGetToken === "function"){
-        spotifyGetToken().then(token=>{
-            if(!token && typeof spotifyConnect === "function") spotifyConnect();
-        }).catch(()=>{});
-    }
+    if(typeof spotifyFetchNowPlaying === "function") spotifyFetchNowPlaying().catch(()=>{});
 }
 
 function closeSpotifyPanel(){
     const modal=document.getElementById("spotifyPanelModal");
-    const target=document.getElementById("spotifyNowPlaying");
-    const placeholder=window.__spotifyPanelPlaceholder;
-    if(placeholder && target){
-        placeholder.parentNode.insertBefore(target,placeholder.nextSibling);
-    }
     if(modal)modal.classList.remove("show");
     document.body.style.overflow="";
 }
+
+document.addEventListener("DOMContentLoaded",ensureSpotifyPanelMounted);
 
 async function spotifyConnect(){
     if(!SPOTIFY_CLIENT_ID){uiAlert("Spotify Client ID가 없습니다.");return;}
@@ -7650,7 +7646,25 @@ function spotifyRenderEmpty(){
     btn.type="button";
     btn.onclick=connected?spotifyDisconnect:spotifyConnect;
     if(controls)controls.style.display=connected&&spotifyDeviceId?"flex":"none";
-    if(!connected)body.innerHTML='<div class="spotify-empty">Spotify를 연결하면 지금 듣고 있는 곡이 여기에 표시됩니다.</div>';
+    if(!connected){
+        body.innerHTML=`
+            <div class="spotify-cd-wrap loaded paused">
+                <div class="spotify-cd-machine">
+                    <div class="spotify-cd-display"><span>DISC</span><b>STOP</b></div>
+                    <div class="cd-speaker left"></div><div class="cd-speaker right"></div>
+                    <div class="spotify-cd-lid"></div>
+                    <div class="spotify-cd-tray"><div class="spotify-cd-platter"></div></div>
+                    <div class="spotify-cd-disc spotify-cd-disc-empty" aria-hidden="true"></div>
+                    <span class="spotify-cd-pickup" aria-hidden="true"></span>
+                    <span class="spotify-cd-led" aria-hidden="true"></span>
+                </div>
+            </div>
+            <div class="spotify-np-info">
+                <div class="spotify-np-track">CD PLAYER</div>
+                <div class="spotify-np-artist">Spotify를 연결하면 앨범 CD가 여기에 들어옵니다.</div>
+                <button type="button" class="spotify-connect-btn spotify-inline-connect" onclick="spotifyConnect()">Spotify 연결</button>
+            </div>`;
+    }
 }
 
 async function spotifyApi(path,options={}){
