@@ -2229,16 +2229,6 @@ footer{
 .spotify-np-track{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-artist{margin-top:4px;color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-link{display:inline-flex;margin-top:7px;font-size:12px;color:#1db954;text-decoration:none;font-weight:700}
-.spotify-mv-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;margin-left:8px;padding:7px 10px;border:1px solid rgba(29,185,84,.5);border-radius:9px;background:rgba(29,185,84,.1);color:#1db954;font-size:12px;font-weight:800;cursor:pointer}
-.spotify-mv-btn:hover{background:rgba(29,185,84,.18)}
-.spotify-mv-modal{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
-.spotify-mv-modal.show{display:flex}
-.spotify-mv-box{width:min(960px,96vw);background:var(--card,#fff);border:1px solid var(--line,#ddd);border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.45)}
-.spotify-mv-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line,#ddd)}
-.spotify-mv-title{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.spotify-mv-close{width:34px;height:34px;border:0;border-radius:50%;background:var(--bg,#f5f5f5);color:var(--text,#111);font-size:20px;cursor:pointer}
-.spotify-mv-frame{display:block;width:100%;height:min(62vh,540px);background:#000}
-.spotify-mv-note{padding:10px 14px;font-size:11px;color:var(--sub,#888);text-align:center}
 .spotify-connect-btn{border:0;border-radius:10px;padding:9px 12px;background:#1db954;color:#fff;font-weight:800}
 .spotify-disconnect-btn{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);color:var(--text);font-weight:700}
 .spotify-empty{color:var(--sub);font-size:13px;line-height:1.5}
@@ -2272,6 +2262,44 @@ footer{
 .spotify-search-play{font-size:18px;opacity:.8}
 .spotify-cd-wrap{transform-origin:center}
 @media(max-width:600px){.spotify-np-body{gap:16px;min-height:150px}.spotify-cd-wrap,.spotify-cd{width:135px;height:135px}.spotify-cd-wrap .spotify-cd-hole{width:34px;height:34px;border-width:6px}.spotify-np-track{font-size:17px}.other-spotify-main{gap:14px}.other-spotify-card .spotify-cd-wrap,.other-spotify-card .spotify-cd{width:120px;height:120px}.other-spotify-card .spotify-cd-hole{width:30px;height:30px;border-width:5px}}
+
+/* =========================================================
+   상단 고정 공지
+========================================================= */
+.notice-banner{
+    display:none;
+    margin:0 0 14px;
+    padding:14px 16px;
+    border:1px solid var(--line);
+    border-left:4px solid var(--point);
+    border-radius:14px;
+    background:var(--card);
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+.notice-banner.show{display:block}
+.notice-banner-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.notice-banner-label{font-size:12px;font-weight:800;color:var(--point);margin-bottom:5px}
+.notice-banner-title{font-size:16px;font-weight:900;line-height:1.35}
+.notice-banner-content{margin-top:7px;color:var(--sub);font-size:13px;line-height:1.55;white-space:pre-wrap}
+.notice-banner-time{font-size:11px;color:var(--sub);white-space:nowrap}
+.notice-empty{color:var(--sub);font-size:13px}
+.announcement-admin{margin-top:18px}
+.announcement-admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.announcement-admin-title{font-weight:900}
+.announcement-admin-state{font-size:12px;color:var(--sub)}
+.announcement-form{display:grid;gap:9px}
+.announcement-form input,.announcement-form textarea{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+.announcement-form textarea{min-height:110px;resize:vertical}
+.announcement-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.announcement-actions button{border:0;border-radius:9px;padding:10px 14px;font-weight:800;cursor:pointer}
+.announcement-save{background:var(--point);color:#fff}
+.announcement-hide{background:var(--line);color:var(--text)}
+.announcement-delete{background:#d94848;color:#fff}
+@media(max-width:700px){
+    .notice-banner{padding:13px}
+    .notice-banner-top{align-items:flex-start;flex-direction:column}
+    .notice-banner-time{white-space:normal}
+}
 </style>
 
 </head>
@@ -2384,6 +2412,18 @@ footer{
 <!-- LIST -->
 
 <div id="listPage">
+
+
+<div id="announcementBanner" class="notice-banner" aria-live="polite">
+    <div class="notice-banner-top">
+        <div>
+            <div class="notice-banner-label">📢 엔쓰넷 공지</div>
+            <div class="notice-banner-title" id="announcementBannerTitle"></div>
+        </div>
+        <div class="notice-banner-time" id="announcementBannerTime"></div>
+    </div>
+    <div class="notice-banner-content" id="announcementBannerContent"></div>
+</div>
 
 <div class="page-title">
 <h1 id="pageTitle">엔쓰넷</h1>
@@ -2897,6 +2937,28 @@ footer{
 </div>
 
 <div class="dash-grid" id="dashStats"></div>
+
+
+<div class="mypage-section announcement-admin">
+<div class="mypage-section-title">📢 상단 고정 공지</div>
+<div class="card">
+    <div class="announcement-admin-head">
+        <div>
+            <div class="announcement-admin-title">커뮤니티 상단에 공지 표시</div>
+            <div class="announcement-admin-state" id="announcementAdminState">불러오는 중...</div>
+        </div>
+    </div>
+    <div class="announcement-form">
+        <input id="announcementTitleInput" maxlength="100" placeholder="공지 제목">
+        <textarea id="announcementContentInput" maxlength="2000" placeholder="공지 내용을 입력하세요."></textarea>
+        <div class="announcement-actions">
+            <button type="button" class="announcement-save" onclick="saveSiteAnnouncement()">📌 공지 고정</button>
+            <button type="button" class="announcement-hide" onclick="hideSiteAnnouncement()">공지 숨기기</button>
+            <button type="button" class="announcement-delete" onclick="deleteSiteAnnouncement()">공지 삭제</button>
+        </div>
+    </div>
+</div>
+</div>
 
 <div class="mypage-section">
 <div class="mypage-section-title">👥 회원 관리</div>
@@ -6636,6 +6698,103 @@ function submitReport(){
 let adminReports=[];
 let adminFilter="pending";
 
+
+/* =========================================================
+   SITE ANNOUNCEMENT
+   - public.site_announcement 싱글톤 테이블 사용
+========================================================= */
+async function loadSiteAnnouncement(){
+    const banner=document.getElementById("announcementBanner");
+    if(!banner)return;
+    try{
+        const{data,error}=await db.from("site_announcement").select("*").eq("id",1).maybeSingle();
+        if(error)throw error;
+        if(!data||!data.is_active){
+            banner.classList.remove("show");
+            return data||null;
+        }
+        const title=document.getElementById("announcementBannerTitle");
+        const content=document.getElementById("announcementBannerContent");
+        const time=document.getElementById("announcementBannerTime");
+        if(title)title.textContent=data.title||"엔쓰넷 공지";
+        if(content)content.textContent=data.content||"";
+        if(time)time.textContent=data.updated_at?formatDate(data.updated_at):"";
+        banner.classList.add("show");
+        return data;
+    }catch(e){
+        console.warn("[Announcement] load failed",e);
+        banner.classList.remove("show");
+        return null;
+    }
+}
+
+async function loadAdminAnnouncementForm(){
+    const state=document.getElementById("announcementAdminState");
+    try{
+        const{data,error}=await db.from("site_announcement").select("*").eq("id",1).maybeSingle();
+        if(error)throw error;
+        const title=document.getElementById("announcementTitleInput");
+        const content=document.getElementById("announcementContentInput");
+        if(title)title.value=data?.title||"";
+        if(content)content.value=data?.content||"";
+        if(state)state.textContent=data?(data.is_active?"현재 공지 고정 중":"공지 숨김 상태"):"등록된 공지가 없습니다.";
+    }catch(e){
+        console.warn("[Announcement] admin load failed",e);
+        if(state)state.textContent="공지 테이블을 불러오지 못했습니다.";
+    }
+}
+
+async function saveSiteAnnouncement(){
+    if(!requireLogin()||!isAdmin)return;
+    const title=document.getElementById("announcementTitleInput")?.value.trim()||"";
+    const content=document.getElementById("announcementContentInput")?.value.trim()||"";
+    if(!title||!content){uiAlert("공지 제목과 내용을 모두 입력해주세요.");return;}
+    try{
+        const{error}=await db.from("site_announcement").upsert({
+            id:1,
+            title:title,
+            content:content,
+            is_active:true,
+            updated_by:authUser.id,
+            updated_at:new Date().toISOString()
+        });
+        if(error)throw error;
+        await loadSiteAnnouncement();
+        await loadAdminAnnouncementForm();
+        uiSuccess("상단 공지가 고정되었습니다.");
+    }catch(e){
+        console.error("[Announcement] save failed",e);
+        uiAlert("공지 저장 실패: "+(e.message||e)+"\n\nSupabase에 site_announcement 테이블과 정책이 생성되어 있는지 확인해주세요.");
+    }
+}
+
+async function hideSiteAnnouncement(){
+    if(!requireLogin()||!isAdmin)return;
+    try{
+        const{error}=await db.from("site_announcement").upsert({id:1,is_active:false,updated_by:authUser.id,updated_at:new Date().toISOString()});
+        if(error)throw error;
+        await loadSiteAnnouncement();
+        await loadAdminAnnouncementForm();
+        uiSuccess("상단 공지를 숨겼습니다.");
+    }catch(e){
+        uiAlert("공지 숨김 실패: "+(e.message||e));
+    }
+}
+
+async function deleteSiteAnnouncement(){
+    if(!requireLogin()||!isAdmin)return;
+    if(!(await uiConfirm("상단 공지를 완전히 삭제할까요?")))return;
+    try{
+        const{error}=await db.from("site_announcement").delete().eq("id",1);
+        if(error)throw error;
+        await loadSiteAnnouncement();
+        await loadAdminAnnouncementForm();
+        uiSuccess("상단 공지를 삭제했습니다.");
+    }catch(e){
+        uiAlert("공지 삭제 실패: "+(e.message||e));
+    }
+}
+
 function openAdminPage(){
 
     if(!requireLogin())return;
@@ -6684,6 +6843,9 @@ function openDashboard(){
     document.getElementById("dashboardPage").classList.add("show");
 
     renderDashboard();
+    const announcementAdmin=document.querySelector(".announcement-admin");
+    if(announcementAdmin)announcementAdmin.style.display=isAdmin?"":"none";
+    if(isAdmin)loadAdminAnnouncementForm();
 
     /* 신고 현황도 불러오기(가능한 경우) */
     loadDashboardReports();
@@ -9413,6 +9575,7 @@ initAuth();
 /* 먼저 화면을 그리고(캐시된 localStorage 게시글),
    이어서 Supabase에서 최신 게시글을 불러와 갱신한다. */
 renderPosts();
+loadSiteAnnouncement();
 
 (async function initDB(){
 
@@ -9429,6 +9592,7 @@ renderPosts();
     localStorage.setItem("Nthnet_posts",JSON.stringify(posts));
 
     renderPosts();
+    loadSiteAnnouncement();
 
     if(typeof renderMyPage==="function")renderMyPage();
 
@@ -9710,7 +9874,6 @@ async function spotifyFetchNowPlaying(){
                 <div class="spotify-np-artist">${escapeHTML(artists||"알 수 없는 아티스트")}</div>
                 <div class="spotify-np-album">${escapeHTML(item.album?.name||"")}</div>
                 <a class="spotify-np-link" href="${escapeHTML(url)}" target="_blank" rel="noopener">Spotify에서 열기 ↗</a>
-                <button type="button" class="spotify-mv-btn" onclick="openSpotifyMusicVideo('${escapeHTML(item.id||"")}','${escapeHTML(item.name||"")}')">🎬 뮤직비디오</button>
             </div>`;
         status.textContent=data.is_playing?"Spotify 연결됨 · 지금 재생 중":"Spotify 연결됨 · 일시정지";
         spotifyUpdatePlayButton(!!data.is_playing);
@@ -9886,75 +10049,6 @@ async function spotifyInit(){
 
 spotifyInit();
 
-</script>
-
-<div id="spotifyMusicVideoModal" class="spotify-mv-modal" aria-hidden="true" onclick="if(event.target===this)closeSpotifyMusicVideo()">
-    <div class="spotify-mv-box" role="dialog" aria-modal="true" aria-labelledby="spotifyMusicVideoTitle">
-        <div class="spotify-mv-head">
-            <div class="spotify-mv-title" id="spotifyMusicVideoTitle">Spotify 뮤직비디오</div>
-            <button type="button" class="spotify-mv-close" onclick="closeSpotifyMusicVideo()" aria-label="닫기">×</button>
-        </div>
-        <div id="spotifyMusicVideoFrame" class="spotify-mv-frame" aria-label="Spotify Embed"></div>
-        <div style="margin-top:10px;display:flex;justify-content:flex-end;">
-            <a id="spotifyMusicVideoOpen" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:9px 12px;border-radius:9px;background:#1db954;color:#fff;font-weight:700;">Spotify에서 전체 재생 ↗</a>
-        </div>
-        <div class="spotify-mv-note">Spotify 공식 Embed입니다. 뮤직비디오가 제공되는 트랙은 Spotify가 같은 트랙 Embed에서 영상으로 표시합니다.</div>
-    </div>
-</div>
-
-<script>
-function createSpotifyMusicVideoEmbed(trackId){
-    const host=document.getElementById("spotifyMusicVideoFrame");
-    if(!host)return;
-    trackId=String(trackId||"").trim();
-    host.innerHTML="";
-    if(!trackId)return;
-
-    const iframe=document.createElement("iframe");
-    iframe.title="Spotify Embed";
-    iframe.src="https://open.spotify.com/embed/track/"+encodeURIComponent(trackId);
-    iframe.width="100%";
-    iframe.height="100%";
-    iframe.frameBorder="0";
-    iframe.allowFullscreen=true;
-    iframe.setAttribute("allow","autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
-    iframe.setAttribute("loading","eager");
-    iframe.style.cssText="display:block;width:100%;height:100%;min-height:352px;border:0;border-radius:0;";
-    host.appendChild(iframe);
-}
-
-function openSpotifyMusicVideo(trackId, trackName){
-    trackId=String(trackId||"").trim();
-    if(!trackId){
-        uiAlert("이 곡의 Spotify 트랙 정보를 찾을 수 없습니다.");
-        return;
-    }
-    const modal=document.getElementById("spotifyMusicVideoModal");
-    const host=document.getElementById("spotifyMusicVideoFrame");
-    const title=document.getElementById("spotifyMusicVideoTitle");
-    const openLink=document.getElementById("spotifyMusicVideoOpen");
-    if(!modal||!host)return;
-    if(title)title.textContent=(trackName?trackName+" · ":"")+"Spotify 뮤직비디오";
-    const spotifyUrl="https://open.spotify.com/track/"+encodeURIComponent(trackId);
-    if(openLink)openLink.href=spotifyUrl;
-    modal.classList.add("show");
-    modal.setAttribute("aria-hidden","false");
-    createSpotifyMusicVideoEmbed(trackId);
-}
-
-function closeSpotifyMusicVideo(){
-    const modal=document.getElementById("spotifyMusicVideoModal");
-    const host=document.getElementById("spotifyMusicVideoFrame");
-    if(host)host.innerHTML="";
-    if(modal){
-        modal.classList.remove("show");
-        modal.setAttribute("aria-hidden","true");
-    }
-}
-
-document.addEventListener("keydown",e=>{
-    if(e.key==="Escape")closeSpotifyMusicVideo();
-});
 </script>
 
 </body>
