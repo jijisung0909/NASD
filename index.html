@@ -9894,8 +9894,11 @@ spotifyInit();
             <div class="spotify-mv-title" id="spotifyMusicVideoTitle">Spotify 뮤직비디오</div>
             <button type="button" class="spotify-mv-close" onclick="closeSpotifyMusicVideo()" aria-label="닫기">×</button>
         </div>
-        <iframe id="spotifyMusicVideoFrame" class="spotify-mv-frame" title="Spotify Embed" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="eager"></iframe>
-        <div class="spotify-mv-note">뮤직비디오가 제공되는 곡은 Spotify가 영상으로 표시합니다. 전체 재생은 같은 브라우저에서 Spotify Premium으로 로그인되어 있고 브라우저의 암호화 미디어 재생이 허용된 경우 가능합니다.</div>
+        <iframe id="spotifyMusicVideoFrame" class="spotify-mv-frame" title="Spotify Embed" style="border-radius:12px" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <div style="margin-top:10px;display:flex;justify-content:flex-end;">
+            <a id="spotifyMusicVideoOpen" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:9px 12px;border-radius:9px;background:#1db954;color:#fff;font-weight:700;">Spotify에서 전체 재생 ↗</a>
+        </div>
+        <div class="spotify-mv-note">Spotify 공식 Embed 방식입니다. Embed가 브라우저에서 암호화 미디어를 허용하지 못하면 30초 미만 미리듣기로 제한될 수 있습니다.</div>
     </div>
 </div>
 
@@ -9909,9 +9912,13 @@ function openSpotifyMusicVideo(trackId, trackName){
     const modal=document.getElementById("spotifyMusicVideoModal");
     const frame=document.getElementById("spotifyMusicVideoFrame");
     const title=document.getElementById("spotifyMusicVideoTitle");
+    const openLink=document.getElementById("spotifyMusicVideoOpen");
     if(!modal||!frame)return;
     if(title)title.textContent=(trackName?trackName+" · " : "")+"Spotify 뮤직비디오";
-    frame.src="https://open.spotify.com/embed/track/"+encodeURIComponent(trackId)+"?utm_source=generator";
+    const embedUrl="https://open.spotify.com/embed/track/"+encodeURIComponent(trackId)+"?utm_source=generator";
+    const spotifyUrl="https://open.spotify.com/track/"+encodeURIComponent(trackId);
+    frame.src=embedUrl;
+    if(openLink)openLink.href=spotifyUrl;
     modal.classList.add("show");
     modal.setAttribute("aria-hidden","false");
 }
