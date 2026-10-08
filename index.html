@@ -9898,44 +9898,29 @@ spotifyInit();
         <div style="margin-top:10px;display:flex;justify-content:flex-end;">
             <a id="spotifyMusicVideoOpen" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:9px 12px;border-radius:9px;background:#1db954;color:#fff;font-weight:700;">Spotify에서 전체 재생 ↗</a>
         </div>
-        <div class="spotify-mv-note">Spotify 공식 iFrame API 방식입니다. 뮤직비디오가 제공되는 곡은 Spotify가 해당 Embed에서 영상으로 표시합니다.</div>
+        <div class="spotify-mv-note">Spotify 공식 Embed입니다. 뮤직비디오가 제공되는 트랙은 Spotify가 같은 트랙 Embed에서 영상으로 표시합니다.</div>
     </div>
 </div>
 
-<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 <script>
-let spotifyMVApi=null;
-let spotifyMVController=null;
-let spotifyMVApiReady=false;
-let spotifyMVPending=null;
-
-window.onSpotifyIframeApiReady=function(IFrameAPI){
-    spotifyMVApi=IFrameAPI;
-    spotifyMVApiReady=true;
-    if(spotifyMVPending){
-        const pending=spotifyMVPending;
-        spotifyMVPending=null;
-        createSpotifyMusicVideoEmbed(pending.trackId);
-    }
-};
-
 function createSpotifyMusicVideoEmbed(trackId){
     const host=document.getElementById("spotifyMusicVideoFrame");
-    if(!host||!spotifyMVApi)return;
-    host.innerHTML='';
-    const embed=document.createElement('div');
-    embed.id='spotifyMusicVideoEmbed';
-    embed.style.width='100%';
-    embed.style.height='100%';
-    host.appendChild(embed);
-    try{
-        spotifyMVApi.createController(embed,{uri:'spotify:track:'+trackId},controller=>{
-            spotifyMVController=controller;
-        });
-    }catch(e){
-        console.error('[Spotify] embed create',e);
-        host.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;background:#000;padding:20px;box-sizing:border-box;text-align:center">Spotify Embed를 불러오지 못했습니다.<br>잠시 후 다시 시도해주세요.</div>';
-    }
+    if(!host)return;
+    trackId=String(trackId||"").trim();
+    host.innerHTML="";
+    if(!trackId)return;
+
+    const iframe=document.createElement("iframe");
+    iframe.title="Spotify Embed";
+    iframe.src="https://open.spotify.com/embed/track/"+encodeURIComponent(trackId);
+    iframe.width="100%";
+    iframe.height="100%";
+    iframe.frameBorder="0";
+    iframe.allowFullscreen=true;
+    iframe.setAttribute("allow","autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+    iframe.setAttribute("loading","eager");
+    iframe.style.cssText="display:block;width:100%;height:100%;min-height:352px;border:0;border-radius:0;";
+    host.appendChild(iframe);
 }
 
 function openSpotifyMusicVideo(trackId, trackName){
@@ -9954,15 +9939,13 @@ function openSpotifyMusicVideo(trackId, trackName){
     if(openLink)openLink.href=spotifyUrl;
     modal.classList.add("show");
     modal.setAttribute("aria-hidden","false");
-    if(spotifyMVApiReady) createSpotifyMusicVideoEmbed(trackId);
-    else spotifyMVPending={trackId};
+    createSpotifyMusicVideoEmbed(trackId);
 }
 
 function closeSpotifyMusicVideo(){
     const modal=document.getElementById("spotifyMusicVideoModal");
     const host=document.getElementById("spotifyMusicVideoFrame");
-    spotifyMVController=null;
-    if(host)host.innerHTML='';
+    if(host)host.innerHTML="";
     if(modal){
         modal.classList.remove("show");
         modal.setAttribute("aria-hidden","true");
