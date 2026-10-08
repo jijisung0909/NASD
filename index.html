@@ -2229,6 +2229,16 @@ footer{
 .spotify-np-track{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-artist{margin-top:4px;color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-link{display:inline-flex;margin-top:7px;font-size:12px;color:#1db954;text-decoration:none;font-weight:700}
+.spotify-mv-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;margin-left:8px;padding:7px 10px;border:1px solid rgba(29,185,84,.5);border-radius:9px;background:rgba(29,185,84,.1);color:#1db954;font-size:12px;font-weight:800;cursor:pointer}
+.spotify-mv-btn:hover{background:rgba(29,185,84,.18)}
+.spotify-mv-modal{position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
+.spotify-mv-modal.show{display:flex}
+.spotify-mv-box{width:min(960px,96vw);background:var(--card,#fff);border:1px solid var(--line,#ddd);border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.spotify-mv-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line,#ddd)}
+.spotify-mv-title{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-mv-close{width:34px;height:34px;border:0;border-radius:50%;background:var(--bg,#f5f5f5);color:var(--text,#111);font-size:20px;cursor:pointer}
+.spotify-mv-frame{display:block;width:100%;height:min(62vh,540px);border:0;background:#000}
+.spotify-mv-note{padding:10px 14px;font-size:11px;color:var(--sub,#888);text-align:center}
 .spotify-connect-btn{border:0;border-radius:10px;padding:9px 12px;background:#1db954;color:#fff;font-weight:800}
 .spotify-disconnect-btn{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);color:var(--text);font-weight:700}
 .spotify-empty{color:var(--sub);font-size:13px;line-height:1.5}
@@ -9700,6 +9710,7 @@ async function spotifyFetchNowPlaying(){
                 <div class="spotify-np-artist">${escapeHTML(artists||"알 수 없는 아티스트")}</div>
                 <div class="spotify-np-album">${escapeHTML(item.album?.name||"")}</div>
                 <a class="spotify-np-link" href="${escapeHTML(url)}" target="_blank" rel="noopener">Spotify에서 열기 ↗</a>
+                <button type="button" class="spotify-mv-btn" onclick="openSpotifyMusicVideo('${escapeHTML(item.id||"")}','${escapeHTML(item.name||"")}')">🎬 뮤직비디오</button>
             </div>`;
         status.textContent=data.is_playing?"Spotify 연결됨 · 지금 재생 중":"Spotify 연결됨 · 일시정지";
         spotifyUpdatePlayButton(!!data.is_playing);
@@ -9875,6 +9886,49 @@ async function spotifyInit(){
 
 spotifyInit();
 
+</script>
+
+<div id="spotifyMusicVideoModal" class="spotify-mv-modal" aria-hidden="true" onclick="if(event.target===this)closeSpotifyMusicVideo()">
+    <div class="spotify-mv-box" role="dialog" aria-modal="true" aria-labelledby="spotifyMusicVideoTitle">
+        <div class="spotify-mv-head">
+            <div class="spotify-mv-title" id="spotifyMusicVideoTitle">Spotify 뮤직비디오</div>
+            <button type="button" class="spotify-mv-close" onclick="closeSpotifyMusicVideo()" aria-label="닫기">×</button>
+        </div>
+        <iframe id="spotifyMusicVideoFrame" class="spotify-mv-frame" title="Spotify 뮤직비디오" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="eager"></iframe>
+        <div class="spotify-mv-note">뮤직비디오가 제공되는 곡은 Spotify가 영상으로 표시합니다. 제공되지 않는 곡은 일반 Spotify 재생 화면이 표시될 수 있습니다.</div>
+    </div>
+</div>
+
+<script>
+function openSpotifyMusicVideo(trackId, trackName){
+    trackId=String(trackId||"").trim();
+    if(!trackId){
+        uiAlert("이 곡의 Spotify 트랙 정보를 찾을 수 없습니다.");
+        return;
+    }
+    const modal=document.getElementById("spotifyMusicVideoModal");
+    const frame=document.getElementById("spotifyMusicVideoFrame");
+    const title=document.getElementById("spotifyMusicVideoTitle");
+    if(!modal||!frame)return;
+    if(title)title.textContent=(trackName?trackName+" · " : "")+"Spotify 뮤직비디오";
+    frame.src="https://open.spotify.com/embed/track/"+encodeURIComponent(trackId)+"?utm_source=embed";
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden","false");
+}
+
+function closeSpotifyMusicVideo(){
+    const modal=document.getElementById("spotifyMusicVideoModal");
+    const frame=document.getElementById("spotifyMusicVideoFrame");
+    if(frame)frame.src="about:blank";
+    if(modal){
+        modal.classList.remove("show");
+        modal.setAttribute("aria-hidden","true");
+    }
+}
+
+document.addEventListener("keydown",e=>{
+    if(e.key==="Escape")closeSpotifyMusicVideo();
+});
 </script>
 
 </body>
