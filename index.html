@@ -149,6 +149,23 @@ button{cursor:pointer}
     transform:translateY(-1px);
 }
 
+/* Spotify 별도 창 */
+.spotify-panel-modal{
+    position:fixed;inset:0;z-index:10050;display:none;align-items:center;justify-content:center;
+    padding:24px;background:rgba(0,0,0,.62);backdrop-filter:blur(8px);
+}
+.spotify-panel-modal.show{display:flex}
+.spotify-panel-window{
+    width:min(760px,94vw);max-height:88vh;overflow:auto;position:relative;
+    border:1px solid var(--line,#ddd);border-radius:22px;background:var(--card,#fff);
+    box-shadow:0 24px 80px rgba(0,0,0,.35);padding:20px;
+}
+.spotify-panel-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.spotify-panel-title{font-size:20px;font-weight:900}
+.spotify-panel-close{width:38px;height:38px;border:0;border-radius:50%;background:var(--point-light,#f2f2f2);color:var(--text);font-size:22px;cursor:pointer}
+.spotify-panel-window .spotify-now-playing{margin:0;border:0;box-shadow:none;padding:0;background:transparent}
+@media(max-width:600px){.spotify-panel-modal{padding:10px}.spotify-panel-window{width:100%;max-height:94vh;padding:14px;border-radius:18px}}
+
 .notification-dot{
     position:absolute;
     top:4px;
@@ -9518,24 +9535,36 @@ function spotifySetStatus(text){
 
 
 function openSpotifyPanel(){
+    const modal=document.getElementById("spotifyPanelModal");
+    const body=document.getElementById("spotifyPanelBody");
     const target=document.getElementById("spotifyNowPlaying");
-    if(target){
-        const myPage=document.getElementById("myPage");
-        if(myPage && !myPage.classList.contains("show")){
-            openMyPage();
-        }
-        setTimeout(()=>{
-            target.scrollIntoView({behavior:"smooth",block:"center"});
-            target.style.transition="box-shadow .25s ease";
-            target.style.boxShadow="0 0 0 3px rgba(30,215,96,.45), 0 12px 35px rgba(30,215,96,.12)";
-            setTimeout(()=>{target.style.boxShadow="";},900);
-        },80);
+    if(!modal || !body || !target)return;
+    if(!window.__spotifyPanelPlaceholder){
+        const placeholder=document.createElement("span");
+        placeholder.id="spotifyPanelPlaceholder";
+        placeholder.style.display="none";
+        target.parentNode.insertBefore(placeholder,target);
+        window.__spotifyPanelPlaceholder=placeholder;
     }
+    body.appendChild(target);
+    modal.classList.add("show");
+    document.body.style.overflow="hidden";
     if(typeof spotifyGetToken === "function"){
         spotifyGetToken().then(token=>{
             if(!token && typeof spotifyConnect === "function") spotifyConnect();
         }).catch(()=>{});
     }
+}
+
+function closeSpotifyPanel(){
+    const modal=document.getElementById("spotifyPanelModal");
+    const target=document.getElementById("spotifyNowPlaying");
+    const placeholder=window.__spotifyPanelPlaceholder;
+    if(placeholder && target){
+        placeholder.parentNode.insertBefore(target,placeholder.nextSibling);
+    }
+    if(modal)modal.classList.remove("show");
+    document.body.style.overflow="";
 }
 
 async function spotifyConnect(){
@@ -9918,6 +9947,17 @@ async function spotifyInit(){
 spotifyInit();
 
 </script>
+
+<!-- Spotify 별도 창 -->
+<div id="spotifyPanelModal" class="spotify-panel-modal" onclick="if(event.target===this)closeSpotifyPanel()">
+  <div class="spotify-panel-window" role="dialog" aria-modal="true" aria-label="Spotify">
+    <div class="spotify-panel-top">
+      <div class="spotify-panel-title">🎵 Spotify</div>
+      <button type="button" class="spotify-panel-close" onclick="closeSpotifyPanel()" aria-label="닫기">×</button>
+    </div>
+    <div id="spotifyPanelBody"></div>
+  </div>
+</div>
 
 </body>
     </html>
