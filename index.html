@@ -2237,7 +2237,7 @@ footer{
 .spotify-mv-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line,#ddd)}
 .spotify-mv-title{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-mv-close{width:34px;height:34px;border:0;border-radius:50%;background:var(--bg,#f5f5f5);color:var(--text,#111);font-size:20px;cursor:pointer}
-.spotify-mv-frame{display:block;width:100%;height:min(62vh,540px);border:0;background:#000}
+.spotify-mv-frame{display:block;width:100%;height:min(62vh,540px);background:#000}
 .spotify-mv-note{padding:10px 14px;font-size:11px;color:var(--sub,#888);text-align:center}
 .spotify-connect-btn{border:0;border-radius:10px;padding:9px 12px;background:#1db954;color:#fff;font-weight:800}
 .spotify-disconnect-btn{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);color:var(--text);font-weight:700}
@@ -9894,15 +9894,50 @@ spotifyInit();
             <div class="spotify-mv-title" id="spotifyMusicVideoTitle">Spotify 뮤직비디오</div>
             <button type="button" class="spotify-mv-close" onclick="closeSpotifyMusicVideo()" aria-label="닫기">×</button>
         </div>
-        <iframe id="spotifyMusicVideoFrame" class="spotify-mv-frame" title="Spotify Embed" style="border-radius:12px" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <div id="spotifyMusicVideoFrame" class="spotify-mv-frame" aria-label="Spotify Embed"></div>
         <div style="margin-top:10px;display:flex;justify-content:flex-end;">
             <a id="spotifyMusicVideoOpen" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:9px 12px;border-radius:9px;background:#1db954;color:#fff;font-weight:700;">Spotify에서 전체 재생 ↗</a>
         </div>
-        <div class="spotify-mv-note">Spotify 공식 Embed 방식입니다. Embed가 브라우저에서 암호화 미디어를 허용하지 못하면 30초 미만 미리듣기로 제한될 수 있습니다.</div>
+        <div class="spotify-mv-note">Spotify 공식 iFrame API 방식입니다. 뮤직비디오가 제공되는 곡은 Spotify가 해당 Embed에서 영상으로 표시합니다.</div>
     </div>
 </div>
 
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 <script>
+let spotifyMVApi=null;
+let spotifyMVController=null;
+let spotifyMVApiReady=false;
+let spotifyMVPending=null;
+
+window.onSpotifyIframeApiReady=function(IFrameAPI){
+    spotifyMVApi=IFrameAPI;
+    spotifyMVApiReady=true;
+    if(spotifyMVPending){
+        const pending=spotifyMVPending;
+        spotifyMVPending=null;
+        createSpotifyMusicVideoEmbed(pending.trackId);
+    }
+};
+
+function createSpotifyMusicVideoEmbed(trackId){
+    const host=document.getElementById("spotifyMusicVideoFrame");
+    if(!host||!spotifyMVApi)return;
+    host.innerHTML='';
+    const embed=document.createElement('div');
+    embed.id='spotifyMusicVideoEmbed';
+    embed.style.width='100%';
+    embed.style.height='100%';
+    host.appendChild(embed);
+    try{
+        spotifyMVApi.createController(embed,{uri:'spotify:track:'+trackId},controller=>{
+            spotifyMVController=controller;
+        });
+    }catch(e){
+        console.error('[Spotify] embed create',e);
+        host.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;background:#000;padding:20px;box-sizing:border-box;text-align:center">Spotify Embed를 불러오지 못했습니다.<br>잠시 후 다시 시도해주세요.</div>';
+    }
+}
+
 function openSpotifyMusicVideo(trackId, trackName){
     trackId=String(trackId||"").trim();
     if(!trackId){
@@ -9910,23 +9945,24 @@ function openSpotifyMusicVideo(trackId, trackName){
         return;
     }
     const modal=document.getElementById("spotifyMusicVideoModal");
-    const frame=document.getElementById("spotifyMusicVideoFrame");
+    const host=document.getElementById("spotifyMusicVideoFrame");
     const title=document.getElementById("spotifyMusicVideoTitle");
     const openLink=document.getElementById("spotifyMusicVideoOpen");
-    if(!modal||!frame)return;
-    if(title)title.textContent=(trackName?trackName+" · " : "")+"Spotify 뮤직비디오";
-    const embedUrl="https://open.spotify.com/embed/track/"+encodeURIComponent(trackId)+"?utm_source=generator";
+    if(!modal||!host)return;
+    if(title)title.textContent=(trackName?trackName+" · ":"")+"Spotify 뮤직비디오";
     const spotifyUrl="https://open.spotify.com/track/"+encodeURIComponent(trackId);
-    frame.src=embedUrl;
     if(openLink)openLink.href=spotifyUrl;
     modal.classList.add("show");
     modal.setAttribute("aria-hidden","false");
+    if(spotifyMVApiReady) createSpotifyMusicVideoEmbed(trackId);
+    else spotifyMVPending={trackId};
 }
 
 function closeSpotifyMusicVideo(){
     const modal=document.getElementById("spotifyMusicVideoModal");
-    const frame=document.getElementById("spotifyMusicVideoFrame");
-    if(frame)frame.src="about:blank";
+    const host=document.getElementById("spotifyMusicVideoFrame");
+    spotifyMVController=null;
+    if(host)host.innerHTML='';
     if(modal){
         modal.classList.remove("show");
         modal.setAttribute("aria-hidden","true");
