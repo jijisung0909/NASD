@@ -2212,9 +2212,20 @@ footer{
 .spotify-np-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .spotify-np-title{font-weight:800}
 .spotify-np-status{font-size:12px;color:var(--sub)}
-.spotify-np-body{display:flex;align-items:center;gap:14px;min-height:64px}
-.spotify-np-cover{width:64px;height:64px;border-radius:8px;object-fit:cover;background:var(--line);flex:none}
+.spotify-np-body{display:flex;align-items:center;gap:22px;min-height:190px;padding:10px 4px}
+.spotify-cd-wrap{position:relative;width:170px;height:170px;flex:none;display:grid;place-items:center}
+.spotify-cd-wrap::before{content:"";position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(from 20deg,rgba(30,215,96,.9),rgba(255,255,255,.12),rgba(30,215,96,.25),rgba(255,255,255,.08),rgba(30,215,96,.9));filter:blur(7px);opacity:.5}
+.spotify-cd{position:relative;width:170px;height:170px;border-radius:50%;object-fit:cover;background:#151515;flex:none;box-shadow:0 12px 30px rgba(0,0,0,.3),inset 0 0 0 8px rgba(255,255,255,.08);animation:spotifyCdSpin 7s linear infinite}
+.spotify-cd::after{content:""}
+.spotify-cd-wrap .spotify-cd-hole{position:absolute;width:42px;height:42px;border-radius:50%;background:var(--card,#111);border:7px solid rgba(255,255,255,.25);box-shadow:0 0 0 2px rgba(0,0,0,.35);z-index:2;pointer-events:none}
+.spotify-cd-wrap.paused .spotify-cd{animation-play-state:paused}
+.spotify-cd-wrap.paused::before{opacity:.22}
+@keyframes spotifyCdSpin{to{transform:rotate(360deg)}}
 .spotify-np-info{min-width:0;flex:1}
+.spotify-np-track{font-size:21px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-np-artist{margin-top:7px;color:var(--sub);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-np-album{margin-top:4px;color:var(--sub);font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spotify-np-link{display:inline-flex;margin-top:14px;font-size:12px;color:#1db954;text-decoration:none;font-weight:800}
 .spotify-np-track{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-artist{margin-top:4px;color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-np-link{display:inline-flex;margin-top:7px;font-size:12px;color:#1db954;text-decoration:none;font-weight:700}
@@ -2227,6 +2238,15 @@ footer{
 .spotify-controls input[type=range]{flex:1;accent-color:#1db954}
 
 
+.other-spotify-card{margin-top:10px;padding:14px;border:1px solid var(--line,#ddd);border-radius:16px;background:var(--card,#fff);overflow:hidden}
+.other-spotify-head{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:4px}
+.other-spotify-live{color:#1db954;font-size:11px;letter-spacing:.5px}
+.other-spotify-main{display:flex;align-items:center;gap:18px;padding:8px 2px}
+.other-spotify-info{min-width:0;flex:1}
+.other-spotify-track{font-size:18px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-spotify-artist{margin-top:6px;font-size:13px;color:var(--sub,#888);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-spotify-album{margin-top:3px;font-size:12px;color:var(--sub,#888);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-spotify-link{display:inline-flex;margin-top:11px;color:#1db954;font-size:12px;font-weight:800;text-decoration:none}
 .spotify-search{margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
 .spotify-search-row{display:flex;gap:8px}
 .spotify-search-row input{flex:1;min-width:0;padding:11px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.05);color:inherit;outline:none}
@@ -2240,6 +2260,8 @@ footer{
 .spotify-search-track{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-search-artist{font-size:12px;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spotify-search-play{font-size:18px;opacity:.8}
+.spotify-cd-wrap{transform-origin:center}
+@media(max-width:600px){.spotify-np-body{gap:16px;min-height:150px}.spotify-cd-wrap,.spotify-cd{width:135px;height:135px}.spotify-cd-wrap .spotify-cd-hole{width:34px;height:34px;border-width:6px}.spotify-np-track{font-size:17px}.other-spotify-main{gap:14px}.other-spotify-card .spotify-cd-wrap,.other-spotify-card .spotify-cd{width:120px;height:120px}.other-spotify-card .spotify-cd-hole{width:30px;height:30px;border-width:5px}}
 </style>
 
 </head>
@@ -2699,7 +2721,7 @@ footer{
 <div class="profile-bio" id="otherBio" style="display:none"></div>
 
 <div id="otherSpotifyStatus" style="margin-top:10px"></div>
-<div id="otherPublicMemos" style="margin-top:14px"></div>
+
 
 <div class="follow-stats">
 
@@ -7808,59 +7830,23 @@ function renderOtherProfile(){
 
 async function loadOtherPublicActivity(id){
     const spotifyBox=document.getElementById("otherSpotifyStatus");
-    const memoBox=document.getElementById("otherPublicMemos");
     if(spotifyBox) spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 듣는 곡 불러오는 중…</div>';
-    if(memoBox) memoBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">📝 메모 불러오는 중…</div>';
-
     try{
-        /* 게시글/프로필에서 사용하는 auth_<UUID>를 실제 UUID로 변환 */
-        const rawId=String(id||"");
-        const dbUserId=rawId.indexOf("auth_")===0 ? rawId.slice(5) : rawId;
-        const uuidLike=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-        if(!uuidLike.test(dbUserId)){
-            if(spotifyBox) spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 현재 듣고 있는 곡이 없습니다.</div>';
-            if(memoBox) memoBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">📝 공개된 24시간 메모가 없습니다.</div>';
-            return;
-        }
-
-        /*
-           공개 프로필 활동은 SECURITY DEFINER RPC 하나로 조회합니다.
-           따라서 anon/authenticated의 테이블 SELECT RLS 정책에 의존하지 않습니다.
-        */
-        const {data,error}=await db.rpc("get_public_profile_activity",{
-            target_user_id:dbUserId
-        });
-
-        if(error) throw new Error(error.message||"공개 프로필 활동 조회 실패");
-
-        const song=data?.song||null;
-        const memos=Array.isArray(data?.memos)?data.memos:[];
-        const fresh=song && song.is_playing!==false && song.updated_at &&
-            (Date.now()-new Date(song.updated_at).getTime()<120000);
-
+        const {data:song,error}=await db.from("user_now_playing")
+            .select("track_name,artist_name,album_name,cover_url,spotify_url,is_playing,updated_at")
+            .eq("user_id",id).maybeSingle();
+        if(error) throw error;
+        const fresh=song && song.is_playing!==false && (Date.now()-new Date(song.updated_at).getTime()<120000);
         if(spotifyBox){
             if(!song || !fresh){
                 spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 현재 듣고 있는 곡이 없습니다.</div>';
             }else{
-                spotifyBox.innerHTML=`<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px"><div style="font-weight:800;margin-bottom:10px">🎵 지금 듣는 곡</div><div style="display:flex;gap:12px;align-items:center">${song.cover_url?`<img src="${escapeHTML(song.cover_url)}" alt="앨범 커버" style="width:58px;height:58px;border-radius:9px;object-fit:cover">`:""}<div style="min-width:0"><div style="font-weight:800">${escapeHTML(song.track_name||"알 수 없는 곡")}</div><div style="font-size:13px;color:var(--sub,#888);margin-top:3px">${escapeHTML(song.artist_name||"알 수 없는 아티스트")}</div>${song.album_name?`<div style="font-size:12px;color:var(--sub,#888);margin-top:2px">${escapeHTML(song.album_name)}</div>`:""}</div></div>${song.spotify_url?`<a href="${escapeHTML(song.spotify_url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:9px;color:#1db954;font-size:12px;font-weight:700;text-decoration:none">Spotify에서 열기 ↗</a>`:""}</div>`;
-            }
-        }
-
-        if(memoBox){
-            if(!memos.length){
-                memoBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">📝 공개된 24시간 메모가 없습니다.</div>';
-            }else{
-                memoBox.innerHTML='<div style="font-weight:800;margin-bottom:8px">📝 24시간 메모</div>'+memos.map(m=>{
-                    const left=Math.max(0,new Date(m.expires_at).getTime()-Date.now());
-                    return `<div style="padding:12px 14px;border:1px solid var(--line,#ddd);border-radius:14px;margin-top:8px;white-space:pre-wrap;word-break:break-word">${memoEsc(m.content)}<div style="margin-top:7px;font-size:12px;color:var(--sub,#888)">⏳ 약 ${Math.floor(left/3600000)}시간 ${Math.floor((left%3600000)/60000)}분 남음</div></div>`;
-                }).join("");
+                spotifyBox.innerHTML=`<div class="other-spotify-card"><div class="other-spotify-head"><span>🎵 지금 듣는 곡</span><span class="other-spotify-live">● LIVE</span></div><div class="other-spotify-main"><div class="spotify-cd-wrap"><img class="spotify-cd" src="${escapeHTML(song.cover_url||"")}" alt="앨범 커버"><span class="spotify-cd-hole"></span></div><div class="other-spotify-info"><div class="other-spotify-track">${escapeHTML(song.track_name||"알 수 없는 곡")}</div><div class="other-spotify-artist">${escapeHTML(song.artist_name||"알 수 없는 아티스트")}</div>${song.album_name?`<div class="other-spotify-album">${escapeHTML(song.album_name)}</div>`:""}${song.spotify_url?`<a href="${escapeHTML(song.spotify_url)}" target="_blank" rel="noopener" class="other-spotify-link">Spotify에서 열기 ↗</a>`:""}</div></div></div>`;
             }
         }
     }catch(e){
-        console.error("[Profile] public activity RPC",e);
-        if(spotifyBox) spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:#d33;font-size:13px">🎵 현재 재생 정보를 불러오지 못했습니다.</div>';
-        if(memoBox) memoBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:#d33;font-size:13px">📝 메모를 불러오지 못했습니다.</div>';
+        console.error("[Profile] public Spotify activity",e);
+        if(spotifyBox) spotifyBox.innerHTML='<div style="padding:14px;border:1px solid var(--line,#ddd);border-radius:14px;color:var(--sub,#888);font-size:13px">🎵 현재 재생 정보를 불러오지 못했습니다.</div>';
     }
 }
 
@@ -9708,10 +9694,11 @@ async function spotifyFetchNowPlaying(){
         const artists=(item.artists||[]).map(a=>a.name).join(", ");
         const url=item.external_urls?.spotify||"https://open.spotify.com";
         await publishSpotifyNowPlaying({track_name:item.name,artist_name:artists,album_name:item.album?.name||"",cover_url:cover,spotify_url:url,is_playing:!!data.is_playing});
-        body.innerHTML=`<img class="spotify-np-cover" src="${escapeHTML(cover)}" alt="앨범 커버">
+        body.innerHTML=`<div class="spotify-cd-wrap ${data.is_playing?"":"paused"}"><img class="spotify-cd" src="${escapeHTML(cover)}" alt="앨범 커버"><span class="spotify-cd-hole"></span></div>
             <div class="spotify-np-info">
                 <div class="spotify-np-track">${escapeHTML(item.name||"알 수 없는 곡")}</div>
                 <div class="spotify-np-artist">${escapeHTML(artists||"알 수 없는 아티스트")}</div>
+                <div class="spotify-np-album">${escapeHTML(item.album?.name||"")}</div>
                 <a class="spotify-np-link" href="${escapeHTML(url)}" target="_blank" rel="noopener">Spotify에서 열기 ↗</a>
             </div>`;
         status.textContent=data.is_playing?"Spotify 연결됨 · 지금 재생 중":"Spotify 연결됨 · 일시정지";
@@ -9889,118 +9876,6 @@ async function spotifyInit(){
 spotifyInit();
 
 </script>
-<button type="button" onclick="openNthMemo()" title="24시간 메모" style="position:fixed;right:18px;bottom:88px;z-index:9998;border:0;border-radius:999px;padding:12px 15px;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.18)">📝 메모</button>
 
-
-<!-- Nthnet 24시간 메모 -->
-<div id="nthMemoModal" class="modal">
-  <div class="modal-box" style="max-width:520px">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-      <h3 style="margin:0">📝 24시간 메모</h3>
-      <button type="button" onclick="closeNthMemo()" style="border:0;background:transparent;font-size:22px;cursor:pointer">×</button>
-    </div>
-    <p style="margin:8px 0 14px;color:var(--muted,#888);font-size:13px">작성 후 24시간이 지나면 데이터베이스에서도 자동으로 삭제됩니다.</p>
-    <textarea id="nthMemoInput" maxlength="2000" placeholder="메모를 입력하세요..." style="width:100%;min-height:150px;resize:vertical;box-sizing:border-box"></textarea>
-    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
-      <button type="button" onclick="closeNthMemo()">취소</button>
-      <button type="button" class="modal-save" onclick="saveNthMemo()">메모 저장</button>
-    </div>
-    <div id="nthMemoList" style="margin-top:18px"></div>
-  </div>
-</div>
-
-<script>
-/* =========================================================
-   24시간 메모
-   - Supabase public.memos 테이블 사용
-   - expires_at 기준으로 24시간 후 만료
-========================================================= */
-(function(){
-    function memoEsc(v){
-        if(typeof escapeHTML === "function") return escapeHTML(String(v ?? ""));
-        return String(v ?? "").replace(/[&<>"']/g,function(c){return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];});
-    }
-
-    window.openNthMemo=function(){
-        if(typeof requireLogin === "function" && !requireLogin()) return;
-        var modal=document.getElementById("nthMemoModal");
-        if(modal) modal.classList.add("show");
-        loadNthMemos();
-    };
-
-    window.closeNthMemo=function(){
-        var modal=document.getElementById("nthMemoModal");
-        if(modal) modal.classList.remove("show");
-    };
-
-    window.saveNthMemo=async function(){
-        if(typeof requireLogin === "function" && !requireLogin()) return;
-        if(typeof authUser === "undefined" || !authUser){
-            if(typeof uiAlert === "function") uiAlert("로그인이 필요합니다.");
-            return;
-        }
-        var input=document.getElementById("nthMemoInput");
-        var content=(input?.value||"").trim();
-        if(!content){
-            if(typeof uiAlert === "function") uiAlert("메모를 입력하세요.");
-            return;
-        }
-        var expires=new Date(Date.now()+24*60*60*1000).toISOString();
-        var {error}=await db.from("memos").insert({
-            user_id:authUser.id,
-            content:content,
-            expires_at:expires
-        });
-        if(error){
-            console.error("[DB] memo insert",error);
-            if(typeof uiAlert === "function") uiAlert("메모 저장 실패: "+error.message);
-            return;
-        }
-        input.value="";
-        await loadNthMemos();
-        if(typeof uiAlert === "function") uiAlert("메모가 저장됐습니다. 24시간 후 자동 삭제됩니다.");
-    };
-
-    window.deleteNthMemo=async function(id){
-        if(typeof requireLogin === "function" && !requireLogin()) return;
-        var {error}=await db.from("memos").delete().eq("id",String(id)).eq("user_id",authUser.id);
-        if(error){
-            if(typeof uiAlert === "function") uiAlert("메모 삭제 실패: "+error.message);
-            return;
-        }
-        loadNthMemos();
-    };
-
-    window.loadNthMemos=async function(){
-        if(typeof authUser === "undefined" || !authUser) return;
-        var list=document.getElementById("nthMemoList");
-        if(!list) return;
-        var {data,error}=await db.from("memos")
-            .select("id,content,created_at,expires_at")
-            .eq("user_id",authUser.id)
-            .gt("expires_at",new Date().toISOString())
-            .order("created_at",{ascending:false});
-        if(error){
-            list.innerHTML='<div style="color:#d33;font-size:13px">메모를 불러오지 못했습니다.</div>';
-            return;
-        }
-        if(!data?.length){
-            list.innerHTML='<div style="color:var(--muted,#888);font-size:13px;text-align:center;padding:16px">저장된 메모가 없습니다.</div>';
-            return;
-        }
-        list.innerHTML=data.map(function(m){
-            var left=Math.max(0,new Date(m.expires_at).getTime()-Date.now());
-            var hours=Math.floor(left/3600000);
-            var mins=Math.floor((left%3600000)/60000);
-            return '<div style="padding:12px 0;border-top:1px solid var(--border,#ddd)">'+
-                '<div style="white-space:pre-wrap;word-break:break-word">'+memoEsc(m.content)+'</div>'+
-                '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--muted,#888)">'+
-                '<span>⏳ 약 '+hours+'시간 '+mins+'분 남음</span>'+
-                '<button type="button" onclick="deleteNthMemo(\''+memoEsc(m.id)+'\')" style="border:0;background:none;cursor:pointer">삭제</button>'+
-                '</div></div>';
-        }).join("");
-    };
-})();
-</script>
 </body>
     </html>
