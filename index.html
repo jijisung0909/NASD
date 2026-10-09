@@ -2225,6 +2225,7 @@ footer{
 .spotify-np-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .spotify-np-title{font-weight:800}
 .spotify-np-status{font-size:12px;color:var(--sub)}
+.spotify-np-diagnostic{margin-top:6px;max-width:420px;font-size:12px;line-height:1.5;color:var(--danger);overflow-wrap:anywhere;white-space:normal}
 .spotify-np-body{display:flex;align-items:center;gap:22px;min-height:190px;padding:10px 4px}
 .spotify-cd-wrap{position:relative;width:170px;height:170px;flex:none;display:grid;place-items:center}
 .spotify-cd-wrap::before{content:"";position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(from 20deg,rgba(30,215,96,.9),rgba(255,255,255,.12),rgba(30,215,96,.25),rgba(255,255,255,.08),rgba(30,215,96,.9));filter:blur(7px);opacity:.5}
@@ -2316,6 +2317,96 @@ footer{
     .notice-banner-top{align-items:flex-start;flex-direction:column}
     .notice-banner-time{white-space:normal}
 }
+
+
+/* ============================================
+   오늘의 학교
+============================================ */
+.school-modal{z-index:2200;align-items:flex-start;overflow-y:auto;padding:24px 14px;}
+.school-modal-box{width:min(1050px,100%);max-width:1050px;max-height:none;min-height:70vh;margin:auto;padding:0;overflow:hidden;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 80px rgba(25,20,60,.25);}
+.school-head{display:flex;align-items:center;gap:14px;padding:22px 24px 18px;background:linear-gradient(135deg,rgba(79,70,229,.10),rgba(96,165,250,.13));border-bottom:1px solid var(--line);}
+.school-head-icon{width:48px;height:48px;display:grid;place-items:center;flex:none;border-radius:15px;background:linear-gradient(135deg,#635bdb,#82b9f5);color:#fff;font-size:25px;box-shadow:0 6px 18px rgba(79,70,229,.18);}
+.school-head-copy{flex:1;min-width:0;}
+.school-head-title{font-size:22px;font-weight:900;letter-spacing:-.04em;}
+.school-head-desc{margin-top:4px;color:var(--sub);font-size:13px;line-height:1.5;}
+.school-close{width:38px;height:38px;flex:none;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-size:23px;}
+.school-tabs{display:flex;gap:8px;padding:14px 22px 0;border-bottom:1px solid var(--line);overflow-x:auto;background:var(--card);}
+.school-tab{flex:none;padding:12px 16px;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--sub);font-weight:800;white-space:nowrap;}
+.school-tab.active{color:var(--point);border-bottom-color:var(--point);}
+.school-panel{padding:22px;}
+.school-panel[hidden]{display:none!important;}
+.school-topline{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+.school-current{display:flex;align-items:center;gap:12px;min-width:0;}
+.school-current-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:var(--point-light);font-size:23px;flex:none;}
+.school-current-name{font-size:17px;font-weight:900;word-break:break-word;}
+.school-current-meta{margin-top:4px;color:var(--sub);font-size:12px;}
+.school-day-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.school-day-controls input{min-height:40px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);}
+.school-action{border:0;border-radius:10px;padding:10px 14px;background:var(--point);color:#fff;font-weight:800;}
+.school-action.secondary{background:var(--point-light);color:var(--point);border:1px solid rgba(79,70,229,.12);}
+.school-status{margin:0 0 14px;padding:11px 13px;border-radius:10px;background:var(--bg);color:var(--sub);font-size:13px;line-height:1.5;}
+.school-status.error{background:rgba(239,68,68,.08);color:#dc2626;}
+.school-status.success{background:rgba(22,163,74,.09);color:#15803d;}
+.school-empty{padding:34px 16px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--sub);line-height:1.7;}
+.school-empty strong{display:block;color:var(--text);font-size:15px;margin-bottom:5px;}
+.school-periods{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;}
+.school-period-card{min-height:115px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--card);box-shadow:var(--shadow);}
+.school-period-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.school-period-num{font-size:12px;font-weight:900;color:var(--point);}
+.school-period-time{font-size:11px;color:var(--sub);}
+.school-period-subject{margin-top:15px;font-size:16px;font-weight:900;word-break:break-word;}
+.school-period-room{margin-top:5px;font-size:11px;color:var(--sub);}
+.school-two-cols{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:16px;}
+.school-box{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--card);min-width:0;}
+.school-box-title{font-size:15px;font-weight:900;margin:0 0 12px;}
+.school-field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px;min-width:0;}
+.school-field label{font-size:12px;font-weight:800;color:var(--sub);}
+.school-field input,.school-field select{width:100%;min-width:0;min-height:40px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);}
+.school-fields-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px;}
+.school-fields-grid .wide{grid-column:1/-1;}
+.school-search-row{display:flex;gap:8px;}
+.school-search-row input{flex:1;min-width:0;}
+.school-results{display:flex;flex-direction:column;gap:7px;margin-top:11px;max-height:240px;overflow:auto;}
+.school-result{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);}
+.school-result:hover{border-color:var(--point);background:var(--point-light);}
+.school-result-name{font-size:13px;font-weight:900;}
+.school-result-meta{font-size:11px;color:var(--sub);margin-top:4px;}
+.school-selected{padding:12px;border-radius:10px;background:var(--point-light);color:var(--text);font-size:13px;line-height:1.6;}
+.school-bells{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+.school-bell-row{display:grid;grid-template-columns:40px 1fr 1fr;gap:6px;align-items:center;}
+.school-bell-row span{font-size:12px;font-weight:800;color:var(--sub);}
+.school-bell-row input{width:100%;min-width:0;padding:7px 6px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--text);font-size:12px;}
+.school-book-add{display:grid;grid-template-columns:1fr 1.5fr 1fr auto;gap:8px;align-items:end;}
+.school-book-add input,.school-book-add select{width:100%;min-width:0;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--text);}
+.school-book-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:15px;}
+.school-book-card{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);min-width:0;}
+.school-book-subject{font-size:11px;font-weight:900;color:var(--point);}
+.school-book-title{margin-top:7px;font-size:14px;font-weight:900;word-break:break-word;}
+.school-book-publisher{margin-top:4px;color:var(--sub);font-size:12px;}
+.school-book-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:10px;}
+.school-book-actions button{padding:6px 9px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--text);font-size:12px;}
+.school-note{font-size:12px;line-height:1.65;color:var(--sub);margin-top:12px;}
+.school-settings-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.school-status a,.school-note a{color:var(--point);font-weight:800;}
+@media(max-width:720px){
+ .school-modal{padding:8px 6px;}
+ .school-modal-box{border-radius:14px;}
+ .school-head{padding:16px 14px;gap:10px;}
+ .school-head-icon{width:40px;height:40px;font-size:21px;}
+ .school-head-title{font-size:19px;}
+ .school-head-desc{font-size:12px;}
+ .school-tabs{padding:10px 10px 0;gap:2px;}
+ .school-tab{padding:11px 12px;font-size:13px;}
+ .school-panel{padding:13px;}
+ .school-two-cols{grid-template-columns:1fr;}
+ .school-bells{grid-template-columns:1fr;}
+ .school-book-add{grid-template-columns:1fr 1fr;}
+ .school-book-add button{grid-column:1/-1;}
+ .school-topline{gap:10px;}
+ .school-day-controls{width:100%;}
+ .school-day-controls input{flex:1;min-width:0;}
+}
+
 </style>
 
 <style>
@@ -3146,6 +3237,10 @@ body.dark .enth-wifi-guide-box{background:rgba(27,25,36,.99);border-color:rgba(1
 📺 애니/만화 <span class="gallery-count" id="count-애니/만화">0</span>
 </button>
 
+<button type="button" onclick="schoolOpen()">
+🏫 오늘의 학교
+</button>
+
 <button onclick="openMyPage()">
 👤 마이페이지
 </button>
@@ -3346,6 +3441,7 @@ body.dark .enth-wifi-guide-box{background:rgba(27,25,36,.99);border-color:rgba(1
         <div>
             <div class="spotify-np-title">🎵 Spotify 현재 듣는 곡</div>
             <div class="spotify-np-status" id="spotifyNpStatus">연동되지 않음</div>
+            <div class="spotify-np-diagnostic" id="spotifyNpDiagnostic" role="status" aria-live="polite" style="display:none"></div>
         </div>
         <button class="spotify-connect-btn" id="spotifyConnectBtn" onclick="spotifyConnect()">Spotify 연결</button>
     </div>
@@ -10579,6 +10675,29 @@ function spotifySetStatus(text){
     if(el)el.textContent=text;
 }
 
+function spotifySetDiagnostic(text, isError=true){
+    const el=document.getElementById("spotifyNpDiagnostic");
+    if(!el)return;
+    el.textContent=text||"";
+    el.style.display=text?"block":"none";
+    el.style.color=isError?"var(--danger)":"var(--sub)";
+}
+
+async function spotifyCheckEmeSupport(){
+    if(typeof navigator.requestMediaKeySystemAccess!=="function"){
+        return "EME API 없음";
+    }
+    try{
+        await navigator.requestMediaKeySystemAccess("com.widevine.alpha",[{
+            initDataTypes:["cenc"],
+            audioCapabilities:[{contentType:'audio/mp4; codecs="mp4a.40.2"'}]
+        }]);
+        return "Widevine/EME 사용 가능";
+    }catch(e){
+        return "Widevine/EME 접근 실패 ("+(e&&e.name||"오류")+")";
+    }
+}
+
 async function spotifyConnect(){
     if(!SPOTIFY_CLIENT_ID){uiAlert("Spotify Client ID가 없습니다.");return;}
     try{
@@ -10853,9 +10972,15 @@ async function spotifyPlaySearchResult(index){
        검색 결과 클릭 시, 비동기 요청 전에 SDK 오디오 요소를 활성화한다. */
     try{
         if(spotifyPlayer && typeof spotifyPlayer.activateElement === "function"){
-            spotifyPlayer.activateElement().catch(e=>console.debug("[Spotify] audio activation",e));
+            await spotifyPlayer.activateElement();
+            spotifySetDiagnostic("오디오 활성화 완료 · 곡 재생 요청 중…", false);
+        }else{
+            spotifySetDiagnostic("SDK의 activateElement()를 사용할 수 없습니다.");
         }
-    }catch(e){console.debug("[Spotify] audio activation",e);}
+    }catch(e){
+        console.warn("[Spotify] audio activation",e);
+        spotifySetDiagnostic("오디오 활성화 실패: "+(e&&e.message||e));
+    }
     try{
         const token=await spotifyGetToken();
         if(!token)throw new Error("Spotify 로그인이 필요합니다.");
@@ -10879,16 +11004,25 @@ async function spotifyPlaySearchResult(index){
     }
 }
 
-async function spotifyTransferToWeb(){
+async function spotifyTransferToWeb(startPlayback=true){
     if(!spotifyDeviceId)return false;
     try{
-        await spotifyApi("/me/player",{method:"PUT",body:JSON.stringify({device_ids:[spotifyDeviceId],play:false})});
+        await spotifyApi("/me/player",{
+            method:"PUT",
+            body:JSON.stringify({device_ids:[spotifyDeviceId],play:!!startPlayback})
+        });
         return true;
-    }catch(e){console.error("[Spotify] transfer",e);return false;}
+    }catch(e){
+        console.error("[Spotify] transfer",e);
+        spotifySetStatus("Spotify 재생 이전 실패: "+(e&&e.message||e));
+        spotifySetDiagnostic("재생 이전 API 오류: "+(e&&e.message||e),true);
+        return false;
+    }
 }
 async function spotifyTogglePlay(){
     if(!spotifyPlayer || !spotifyDeviceId){
         spotifySetStatus("엔쓰넷 웹 플레이어 연결을 기다리는 중…");
+        spotifySetDiagnostic("Spotify 앱의 현재 곡 정보는 조회되지만, 엔쓰넷 플레이어의 ready 이벤트는 아직 확인되지 않았습니다.");
         uiAlert("엔쓰넷 웹 플레이어가 아직 준비되지 않았습니다. 잠시 후 다시 눌러주세요.");
         return;
     }
@@ -10896,12 +11030,16 @@ async function spotifyTogglePlay(){
         /* 이 함수는 재생 버튼의 직접 클릭에서 호출한다. 비동기 요청 전에 오디오를 활성화한다. */
         try{
             if(typeof spotifyPlayer.activateElement === "function"){
-                const activation=spotifyPlayer.activateElement();
-                if(activation && typeof activation.catch === "function"){
-                    activation.catch(e=>console.debug("[Spotify] audio activation",e));
-                }
+                /* Must be invoked from this click, then wait for activation before sending playback. */
+                await spotifyPlayer.activateElement();
+                spotifySetDiagnostic("오디오 활성화 완료 · Spotify 재생 요청 중…", false);
+            }else{
+                spotifySetDiagnostic("SDK의 activateElement()를 사용할 수 없습니다. 앱 브라우저의 오디오 지원을 확인해야 합니다.");
             }
-        }catch(e){console.debug("[Spotify] audio activation",e);}
+        }catch(e){
+            console.warn("[Spotify] audio activation",e);
+            spotifySetDiagnostic("오디오 활성화 실패: "+(e&&e.message||e));
+        }
 
         /* 먼저 엔쓰넷 플레이어 자체에 곡이 있는지 확인한다. */
         let localState=null;
@@ -10932,9 +11070,25 @@ async function spotifyTogglePlay(){
             });
         }
 
-        spotifySetStatus("엔쓰넷 웹 플레이어에서 재생 중…");
-        setTimeout(spotifyFetchNowPlaying,700);
-        setTimeout(spotifyFetchNowPlaying,1500);
+        spotifySetStatus("엔쓰넷 웹 플레이어에 재생 요청을 보냈습니다…");
+        spotifySetDiagnostic("재생 API 요청 완료 · SDK 상태 확인 중…", false);
+        setTimeout(async()=>{
+            try{
+                const verify=spotifyPlayer&&typeof spotifyPlayer.getCurrentState==="function"
+                    ?await spotifyPlayer.getCurrentState():null;
+                const hasTrack=!!(verify&&verify.track_window&&verify.track_window.current_track);
+                if(hasTrack){
+                    spotifySetStatus(verify.paused?"엔쓰넷 웹 플레이어 · 일시정지":"엔쓰넷 웹 플레이어 · 재생 중");
+                    spotifySetDiagnostic("엔쓰넷 플레이어에서 곡 상태를 받았습니다.", false);
+                }else{
+                    spotifySetStatus("재생 요청 후 웹 플레이어 상태 없음");
+                    spotifySetDiagnostic("Spotify API 요청은 완료됐지만 앱의 Web Playback SDK에서 곡 상태를 받지 못했습니다. EME/보호 콘텐츠 지원 여부와 아래 재생 오류를 확인하세요.");
+                }
+            }catch(verifyError){
+                spotifySetDiagnostic("재생 후 상태 확인 실패: "+(verifyError&&verifyError.message||verifyError));
+            }
+            spotifyFetchNowPlaying();
+        },1500);
     }catch(e){
         console.error("[Spotify] toggle/play on NthNet device",e);
         spotifySetStatus("재생 실패: "+(e.message||e));
@@ -10966,13 +11120,41 @@ function spotifySetupPlayer(){
         },
         enableMediaSession:true
     });
-    spotifyPlayer.addListener("ready",({device_id})=>{
+    spotifyPlayer.addListener("ready",async({device_id})=>{
         spotifyDeviceId=device_id;
         spotifyRenderEmpty();
-        spotifySetStatus("엔쓰넷 웹 플레이어 준비됨 · ▶를 눌러 재생하세요");
-        /* 로그인 직후 기존 Spotify 앱의 소리를 자동으로 빼앗지 않는다.
-           사용자가 ▶를 눌렀을 때 현재 곡을 이 기기로 전송한다. */
-        setTimeout(spotifyFetchNowPlaying,1000);
+        spotifySetStatus("엔쓰넷 플레이어 연결됨 · 재생 기기 전환 중…");
+        spotifySetDiagnostic("Web Playback SDK 연결됨 · 현재 Spotify 재생을 엔쓰넷으로 전환합니다.", false);
+        spotifyCheckEmeSupport().then(result=>{
+            const host=(window.chrome&&window.chrome.webview)?"앱 내 WebView2":"브라우저 환경";
+            const bad=result.indexOf("실패")>=0||result.indexOf("없음")>=0;
+            spotifySetDiagnostic(host+" · "+result+(bad?" · 보호 콘텐츠 재생 지원이 부족할 수 있습니다.":""), bad);
+        }).catch(e=>spotifySetDiagnostic("EME 검사 실패: "+(e&&e.message||e)));
+
+        /* 현재 Spotify 앱에서 듣고 있는 곡을 엔쓰넷 Web Playback 기기로 이전하고 재생한다. */
+        const transferred=await spotifyTransferToWeb(true);
+        if(!transferred){
+            spotifySetStatus("엔쓰넷 플레이어 연결됨 · 재생 이전 실패");
+            spotifySetDiagnostic("Spotify 재생 기기로 이전하지 못했습니다. 기존 Spotify 앱에서 곡이 재생 중인지 확인하고 엔쓰넷 재생 버튼을 눌러보세요.", true);
+        }else{
+            spotifySetStatus("엔쓰넷 플레이어 · 재생 요청 완료");
+            spotifySetDiagnostic("재생 기기 이전 요청을 보냈습니다. 플레이어 상태 확인 중…", false);
+        }
+        setTimeout(async()=>{
+            try{
+                const state=await spotifyPlayer.getCurrentState();
+                if(state&&state.track_window&&state.track_window.current_track){
+                    spotifySetStatus(state.paused?"엔쓰넷 플레이어 · 일시정지":"엔쓰넷 플레이어 · 재생 중");
+                    spotifySetDiagnostic(state.paused?"엔쓰넷 플레이어에 곡이 로드됐지만 일시정지 상태입니다.":"엔쓰넷 플레이어에서 재생 상태를 확인했습니다.",false);
+                }else{
+                    spotifySetStatus("재생 기기는 연결됐지만 곡 상태가 없습니다");
+                    spotifySetDiagnostic("재생 이전 요청 후에도 Web Playback SDK가 곡 상태를 보내지 않습니다. 앱의 보호 콘텐츠(EME/Widevine) 지원을 확인해야 합니다.",true);
+                }
+            }catch(e){
+                spotifySetDiagnostic("플레이어 상태 조회 실패: "+(e&&e.message||e),true);
+            }
+            spotifyFetchNowPlaying();
+        },1800);
     });
     spotifyPlayer.addListener("not_ready",({device_id})=>{
         if(device_id===spotifyDeviceId)spotifyDeviceId="";
@@ -10981,21 +11163,33 @@ function spotifySetupPlayer(){
     spotifyPlayer.addListener("player_state_changed",state=>{
         if(!state)return;
         spotifyUpdatePlayButton(!state.paused);
+        if(state.track_window&&state.track_window.current_track){
+            spotifySetDiagnostic("엔쓰넷 플레이어에서 곡 상태를 받았습니다.", false);
+        }
         spotifyFetchNowPlaying();
     });
-    spotifyPlayer.addListener("initialization_error",({message})=>uiAlert("Spotify 웹 플레이어 초기화 실패: "+message));
-    spotifyPlayer.addListener("authentication_error",({message})=>uiAlert("Spotify 인증 오류: "+message));
-    spotifyPlayer.addListener("account_error",({message})=>uiAlert("Spotify 계정 오류: "+message));
+    spotifyPlayer.addListener("initialization_error",({message})=>{spotifySetStatus("웹 플레이어 초기화 실패");spotifySetDiagnostic("초기화 오류: "+(message||"원인 미상")+" · 앱 환경의 EME/보호 콘텐츠 지원을 확인하세요.");uiAlert("Spotify 웹 플레이어 초기화 실패: "+message);});
+    spotifyPlayer.addListener("authentication_error",({message})=>{spotifySetStatus("웹 플레이어 인증 실패");spotifySetDiagnostic("인증 오류: "+(message||"원인 미상"));uiAlert("Spotify 인증 오류: "+message);});
+    spotifyPlayer.addListener("account_error",({message})=>{spotifySetStatus("계정 확인 실패");spotifySetDiagnostic("계정 오류: "+(message||"원인 미상")+" · Web Playback SDK는 Premium 계정이 필요합니다.");uiAlert("Spotify 계정 오류: "+message);});
     spotifyPlayer.addListener("playback_error",({message})=>{
         console.error("[Spotify] playback",message);
-        spotifySetStatus("Spotify 재생 오류: "+(message||"알 수 없는 오류"));
+        spotifySetStatus("Spotify 재생 오류");
+        spotifySetDiagnostic("재생 오류: "+(message||"알 수 없는 오류"));
     });
     spotifyPlayer.addListener("autoplay_failed",()=>{
-        spotifySetStatus("자동 재생 제한 · 엔쓰넷의 재생 버튼을 눌러주세요");
+        spotifySetStatus("자동 재생 제한");
+        spotifySetDiagnostic("자동 재생이 차단됐습니다. 엔쓰넷 안의 재생 버튼을 직접 눌러주세요.");
         console.info("[Spotify] autoplay blocked; waiting for direct user interaction");
     });
     spotifyPlayer.connect().then(ok=>{
-        if(!ok)uiAlert("Spotify 웹 플레이어 연결에 실패했습니다. Spotify Premium 계정과 Web Playback SDK 설정을 확인해주세요.");
+        if(!ok){
+            spotifySetStatus("웹 플레이어 연결 실패");
+            spotifySetDiagnostic("SDK connect()가 false를 반환했습니다. 앱 내 브라우저/보호 콘텐츠 지원을 확인하세요.");
+            uiAlert("Spotify 웹 플레이어 연결에 실패했습니다. Spotify Premium 계정과 앱의 Web Playback SDK 지원을 확인해주세요.");
+        }
+    }).catch(e=>{
+        spotifySetStatus("웹 플레이어 연결 오류");
+        spotifySetDiagnostic("SDK 연결 오류: "+(e&&e.message||e));
     });
 }
 
@@ -11014,7 +11208,7 @@ function spotifyLoadSdk(){
         script.src="https://sdk.scdn.co/spotify-player.js";
         script.async=true;
         script.onload=()=>{if(window.Spotify){spotifySdkReady=true;spotifySetupPlayer();resolve();}};
-        script.onerror=()=>reject(new Error("Spotify Web Playback SDK를 불러오지 못했습니다. 광고 차단/보안 확장 프로그램을 잠시 확인해주세요."));
+        script.onerror=()=>{const e=new Error("Spotify Web Playback SDK를 불러오지 못했습니다. 네트워크/보안 확장 프로그램을 확인해주세요.");spotifySetStatus("SDK 로드 실패");spotifySetDiagnostic(e.message);reject(e);};
         document.head.appendChild(script);
     });
     return spotifySdkPromise;
@@ -11397,5 +11591,296 @@ spotifyInit();
 
 
 
+
+
+<!-- 오늘의 학교: 학교 시간표와 개인 교과서 목록 -->
+<div id="todaySchoolModal" class="modal school-modal" role="presentation" onclick="if(event.target===this)schoolClose()">
+  <div class="modal-box school-modal-box" role="dialog" aria-modal="true" aria-labelledby="schoolWindowTitle">
+    <div class="school-head">
+      <div class="school-head-icon">🏫</div>
+      <div class="school-head-copy">
+        <div class="school-head-title" id="schoolWindowTitle">오늘의 학교</div>
+        <div class="school-head-desc">내 학교 시간표와 교과서를 한곳에서 확인하세요.</div>
+      </div>
+      <button type="button" class="school-close" onclick="schoolClose()" aria-label="닫기">×</button>
+    </div>
+    <div class="school-tabs" role="tablist">
+      <button type="button" class="school-tab active" data-school-tab="timetable" onclick="schoolSetTab('timetable',this)">🗓️ 오늘 시간표</button>
+      <button type="button" class="school-tab" data-school-tab="books" onclick="schoolSetTab('books',this)">📚 교과서</button>
+      <button type="button" class="school-tab" data-school-tab="settings" onclick="schoolSetTab('settings',this)">⚙️ 학교 설정</button>
+    </div>
+
+    <section class="school-panel" id="schoolTabTimetable">
+      <div class="school-topline">
+        <div class="school-current">
+          <div class="school-current-icon">📘</div>
+          <div>
+            <div class="school-current-name" id="schoolCurrentName">학교를 설정해 주세요</div>
+            <div class="school-current-meta" id="schoolCurrentMeta">학교·학년·반 설정 후 시간표를 불러올 수 있어요.</div>
+          </div>
+        </div>
+        <div class="school-day-controls">
+          <input type="date" id="schoolDate" aria-label="시간표 날짜">
+          <button type="button" class="school-action" onclick="schoolLoadTimetable()">시간표 불러오기</button>
+        </div>
+      </div>
+      <div class="school-status" id="schoolTimetableStatus" role="status" aria-live="polite">학교 설정에서 NEIS 인증키와 학교 정보를 등록해 주세요.</div>
+      <div id="schoolTimetableList" class="school-periods">
+        <div class="school-empty" style="grid-column:1/-1"><strong>아직 시간표가 없어요</strong>학교를 설정하면 해당 날짜의 공개 시간표를 불러옵니다.</div>
+      </div>
+      <div class="school-note">실제 시간표는 나이스(NEIS)에 등록된 정보 기준입니다. 교시 시작·종료 시각은 학교마다 다를 수 있어 직접 설정할 수 있어요.</div>
+    </section>
+
+    <section class="school-panel" id="schoolTabBooks" hidden>
+      <div class="school-topline">
+        <div>
+          <div class="school-current-name">📚 내 교과서</div>
+          <div class="school-current-meta">과목별 교과서 이름과 출판사를 저장해 두세요.</div>
+        </div>
+      </div>
+      <div class="school-box">
+        <div class="school-box-title">교과서 추가</div>
+        <div class="school-book-add">
+          <div class="school-field" style="margin:0"><label for="schoolBookSubject">과목</label><input id="schoolBookSubject" maxlength="30" placeholder="예: 수학"></div>
+          <div class="school-field" style="margin:0"><label for="schoolBookTitle">교과서 이름</label><input id="schoolBookTitle" maxlength="100" placeholder="예: 수학 1"></div>
+          <div class="school-field" style="margin:0"><label for="schoolBookPublisher">출판사 (선택)</label><input id="schoolBookPublisher" maxlength="60" placeholder="출판사"></div>
+          <button type="button" class="school-action" onclick="schoolAddBook()">추가</button>
+        </div>
+      </div>
+      <div id="schoolBookList" class="school-book-list"></div>
+      <div class="school-note">교과서 목록은 나이스 시간표 API에서 제공하지 않으므로 직접 입력해요. 입력한 내용은 이 기기의 브라우저에만 저장되며, 엔쓰넷 프로필에는 공개되지 않습니다.</div>
+    </section>
+
+    <section class="school-panel" id="schoolTabSettings" hidden>
+      <div class="school-two-cols">
+        <div class="school-box">
+          <div class="school-box-title">🏫 학교와 학급</div>
+          <div class="school-fields-grid">
+            <div class="school-field wide">
+              <label for="schoolRegion">시·도 교육청</label>
+              <select id="schoolRegion">
+                <option value="B10">서울특별시</option><option value="C10">부산광역시</option><option value="D10">대구광역시</option><option value="E10">인천광역시</option><option value="F10">광주광역시</option><option value="G10">대전광역시</option><option value="H10">울산광역시</option><option value="I10">세종특별자치시</option><option value="J10">경기도</option><option value="K10">강원특별자치도</option><option value="M10">충청북도</option><option value="N10">충청남도</option><option value="P10">전북특별자치도</option><option value="Q10">전라남도</option><option value="R10">경상북도</option><option value="S10">경상남도</option><option value="T10">제주특별자치도</option>
+              </select>
+            </div>
+            <div class="school-field">
+              <label for="schoolKind">학교급</label>
+              <select id="schoolKind" onchange="schoolUpdateGradeOptions()"><option value="elementary">초등학교</option><option value="middle" selected>중학교</option><option value="high">고등학교</option><option value="special">특수학교</option></select>
+            </div>
+            <div class="school-field">
+              <label for="schoolGrade">학년</label>
+              <select id="schoolGrade"><option value="1">1학년</option><option value="2">2학년</option><option value="3">3학년</option></select>
+            </div>
+            <div class="school-field">
+              <label for="schoolClass">반</label>
+              <input id="schoolClass" type="number" min="1" max="50" value="1" inputmode="numeric">
+            </div>
+            <div class="school-field">
+              <label for="schoolAcademicYear">학년도</label>
+              <input id="schoolAcademicYear" type="number" min="2020" max="2100">
+            </div>
+            <div class="school-field wide">
+              <label for="schoolNameSearch">학교명</label>
+              <div class="school-search-row"><input id="schoolNameSearch" maxlength="80" placeholder="예: 인천논현중학교"><button type="button" class="school-action" onclick="schoolSearch()">학교 찾기</button></div>
+            </div>
+          </div>
+          <div id="schoolSearchStatus" class="school-status" role="status" aria-live="polite">학교를 검색하고 목록에서 정확한 학교를 선택해 주세요.</div>
+          <div id="schoolSearchResults" class="school-results"></div>
+          <div id="schoolSelectedInfo" class="school-selected" style="display:none;margin-top:12px"></div>
+          <div class="school-settings-actions"><button type="button" class="school-action" onclick="schoolSaveSettings()">설정 저장</button><button type="button" class="school-action secondary" onclick="schoolSetTab('timetable')">시간표 보기</button></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+          <div class="school-box">
+            <div class="school-box-title">🔑 나이스 API 인증키</div>
+            <div class="school-field"><label for="schoolApiKey">인증키</label><input id="schoolApiKey" type="password" autocomplete="off" placeholder="나이스 Open API 인증키 붙여넣기"></div>
+            <div class="school-settings-actions"><button type="button" class="school-action secondary" onclick="schoolSaveApiKey()">인증키 저장</button><button type="button" class="school-action secondary" onclick="window.open('https://open.neis.go.kr/portal/guide/actKeyPage.do','_blank','noopener')">인증키 신청</button></div>
+            <div class="school-note">시간표 자동 조회에는 인증키가 필요해요. 키는 이 기기의 브라우저에만 저장돼요. 공유 컴퓨터라면 저장하지 마세요.</div>
+          </div>
+          <div class="school-box">
+            <div class="school-box-title">⏰ 교시별 시간 설정</div>
+            <div class="school-note" style="margin:0 0 10px">아래 시간은 예시예요. 학교 종례표에 맞게 수정하세요. 저장해 둔 시간은 시간표 카드에 표시됩니다.</div>
+            <div id="schoolBellRows" class="school-bells"></div>
+            <div class="school-settings-actions"><button type="button" class="school-action secondary" onclick="schoolSaveBellTimes()">교시 시간 저장</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="school-note">학교명 검색과 시간표는 교육부 나이스 교육정보 개방 포털의 공개 API를 사용합니다. 학교 시간표가 나이스에 등록되지 않았거나 휴일이면 결과가 없을 수 있습니다.</div>
+    </section>
+  </div>
+</div>
+
+<script>
+
+
+/* ============================================
+   오늘의 학교 (NEIS 공개 시간표 + 기기 내 교과서 목록)
+   Spotify 코드와 별도로 동작합니다.
+============================================ */
+const SCHOOL_STORAGE_KEYS={
+  api:'Nthnet_school_neis_key',
+  config:'Nthnet_school_config_v1',
+  books:'Nthnet_school_books_v1',
+  bells:'Nthnet_school_bells_v1'
+};
+let schoolSearchResults=[];
+let schoolConfig={region:'E10',kind:'middle',name:'',schoolCode:'',schoolKindName:'',grade:'1',schoolClass:'1',academicYear:String(new Date().getFullYear()),semester:String(new Date().getMonth()+1<=7?1:2)};
+const SCHOOL_TIMETABLE_ENDPOINTS={elementary:'elsTimetable',middle:'misTimetable',high:'hisTimetable',special:'spsTimetable'};
+const SCHOOL_KINDS={elementary:'초등학교',middle:'중학교',high:'고등학교',special:'특수학교'};
+const SCHOOL_BELL_DEFAULTS=[
+  {period:1,start:'08:50',end:'09:35'},
+  {period:2,start:'09:45',end:'10:30'},
+  {period:3,start:'10:40',end:'11:25'},
+  {period:4,start:'11:35',end:'12:20'},
+  {period:5,start:'13:20',end:'14:05'},
+  {period:6,start:'14:15',end:'15:00'},
+  {period:7,start:'15:10',end:'15:55'},
+  {period:8,start:'16:05',end:'16:50'}
+];
+function schoolSafeParse(key,fallback){try{const v=JSON.parse(localStorage.getItem(key)||'');return v==null?fallback:v;}catch(e){return fallback;}}
+function schoolGetConfig(){return Object.assign({},schoolConfig,schoolSafeParse(SCHOOL_STORAGE_KEYS.config,{}));}
+function schoolGetBooks(){const v=schoolSafeParse(SCHOOL_STORAGE_KEYS.books,[]);return Array.isArray(v)?v:[];}
+function schoolGetBellTimes(){const saved=schoolSafeParse(SCHOOL_STORAGE_KEYS.bells,null);return Array.isArray(saved)&&saved.length?saved:SCHOOL_BELL_DEFAULTS.map(x=>({...x}));}
+function schoolTodayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function schoolSetStatus(id,message,type=''){const el=document.getElementById(id);if(!el)return;el.className='school-status'+(type?' '+type:'');el.textContent=message;}
+function schoolOpen(){
+  const modal=document.getElementById('todaySchoolModal');if(!modal)return;
+  modal.classList.add('show');document.body.style.overflow='hidden';
+  schoolInitializeForm();schoolSetTab('timetable',document.querySelector('[data-school-tab="timetable"]'));
+  schoolRenderSummary();schoolRenderBooks();schoolRenderBellRows();
+  const date=document.getElementById('schoolDate');if(date&&!date.value)date.value=schoolTodayISO();
+  if(schoolGetConfig().schoolCode)schoolSetStatus('schoolTimetableStatus','학교 설정이 있어요. 날짜를 선택하고 시간표를 불러오세요.');
+}
+function schoolClose(){const modal=document.getElementById('todaySchoolModal');if(modal)modal.classList.remove('show');if(!document.querySelector('.modal.show'))document.body.style.overflow='';}
+function schoolSetTab(name,button){
+  ['timetable','books','settings'].forEach(tab=>{const el=document.getElementById('schoolTab'+tab.charAt(0).toUpperCase()+tab.slice(1));if(el)el.hidden=tab!==name;});
+  document.querySelectorAll('[data-school-tab]').forEach(el=>el.classList.toggle('active',el.dataset.schoolTab===name));
+  if(name==='books')schoolRenderBooks();
+  if(name==='settings'){schoolInitializeForm();schoolRenderBellRows();}
+}
+function schoolInitializeForm(){
+  const c=schoolGetConfig();schoolConfig=c;
+  const keyEl=document.getElementById('schoolApiKey');if(keyEl&& !keyEl.value)keyEl.value=localStorage.getItem(SCHOOL_STORAGE_KEYS.api)||'';
+  const region=document.getElementById('schoolRegion');if(region)region.value=c.region||'E10';
+  const kind=document.getElementById('schoolKind');if(kind)kind.value=c.kind||'middle';
+  schoolUpdateGradeOptions(false);
+  const grade=document.getElementById('schoolGrade');if(grade)grade.value=String(c.grade||'1');
+  const cls=document.getElementById('schoolClass');if(cls)cls.value=String(c.schoolClass||'1');
+  const year=document.getElementById('schoolAcademicYear');if(year)year.value=String(c.academicYear||new Date().getFullYear());
+  const name=document.getElementById('schoolNameSearch');if(name)name.value=c.name||'';
+  schoolRenderSelectedSchool();
+  schoolEnsureDate();
+}
+function schoolEnsureDate(){const el=document.getElementById('schoolDate');if(el&&!el.value)el.value=schoolTodayISO();}
+function schoolUpdateGradeOptions(reset=true){
+  const kind=document.getElementById('schoolKind')?.value||'middle';const grade=document.getElementById('schoolGrade');if(!grade)return;
+  const old=grade.value;const max=kind==='elementary'?6:(kind==='special'?6:3);
+  grade.innerHTML=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1}학년</option>`).join('');
+  grade.value=!reset&&Number(old)<=max?old:(Number(schoolGetConfig().grade)<=max?String(schoolGetConfig().grade):'1');
+}
+function schoolSaveApiKey(){const value=(document.getElementById('schoolApiKey')?.value||'').trim();if(value)localStorage.setItem(SCHOOL_STORAGE_KEYS.api,value);else localStorage.removeItem(SCHOOL_STORAGE_KEYS.api);schoolSetStatus('schoolSearchStatus',value?'NEIS 인증키를 이 기기에 저장했어요.':'인증키 입력란이 비어 있어 저장된 키를 삭제했어요.',value?'success':'');}
+function schoolSaveSettings(){
+  const prior=schoolGetConfig();const region=document.getElementById('schoolRegion')?.value||'E10';const kind=document.getElementById('schoolKind')?.value||'middle';
+  schoolConfig={...prior,region,kind,grade:String(document.getElementById('schoolGrade')?.value||'1'),schoolClass:String(Math.max(1,Number(document.getElementById('schoolClass')?.value||1))),academicYear:String(document.getElementById('schoolAcademicYear')?.value||new Date().getFullYear()),semester:String((Number((document.getElementById('schoolDate')?.value||schoolTodayISO()).slice(5,7))<=7)?1:2)};
+  const name=(document.getElementById('schoolNameSearch')?.value||'').trim();
+  if(name)schoolConfig.name=name;
+  localStorage.setItem(SCHOOL_STORAGE_KEYS.config,JSON.stringify(schoolConfig));
+  schoolSaveApiKey();schoolRenderSummary();schoolRenderSelectedSchool();schoolSetStatus('schoolSearchStatus','학교 설정을 저장했어요. 시간표 탭에서 불러오세요.','success');
+}
+function schoolRenderSummary(){
+  const c=schoolGetConfig();const nameEl=document.getElementById('schoolCurrentName');const metaEl=document.getElementById('schoolCurrentMeta');
+  if(nameEl)nameEl.textContent=c.name||'학교를 설정해 주세요';
+  if(metaEl)metaEl.textContent=c.name?`${SCHOOL_KINDS[c.kind]||'학교'} · ${c.grade||1}학년 ${c.schoolClass||1}반`:'학교·학년·반 설정 후 시간표를 불러올 수 있어요.';
+}
+function schoolRenderSelectedSchool(){
+  const el=document.getElementById('schoolSelectedInfo');if(!el)return;const c=schoolGetConfig();
+  if(!c.schoolCode||!c.name){el.style.display='none';el.textContent='';return;}
+  el.style.display='block';el.textContent=`선택된 학교: ${c.name} (${SCHOOL_KINDS[c.kind]||c.schoolKindName||'학교'}) · 학년 ${c.grade||1}, ${c.schoolClass||1}반`;
+}
+function schoolSetFound(i){
+  const item=schoolSearchResults[i];if(!item)return;
+  const c=schoolGetConfig();schoolConfig={...c,region:item.ATPT_OFCDC_SC_CODE||document.getElementById('schoolRegion')?.value||c.region,kind:document.getElementById('schoolKind')?.value||c.kind,grade:String(document.getElementById('schoolGrade')?.value||c.grade||'1'),schoolClass:String(document.getElementById('schoolClass')?.value||c.schoolClass||'1'),academicYear:String(document.getElementById('schoolAcademicYear')?.value||c.academicYear||new Date().getFullYear()),name:item.SCHUL_NM||'',schoolCode:item.SD_SCHUL_CODE||'',schoolKindName:item.SCHUL_KND_SC_NM||'',address:item.ORG_RDNMA||item.ORG_RDNDA||''};
+  document.getElementById('schoolRegion').value=schoolConfig.region;
+  document.getElementById('schoolNameSearch').value=schoolConfig.name;
+  localStorage.setItem(SCHOOL_STORAGE_KEYS.config,JSON.stringify(schoolConfig));
+  schoolRenderSummary();schoolRenderSelectedSchool();schoolSetStatus('schoolSearchStatus',`학교를 선택했어요: ${schoolConfig.name}. 학년과 반을 확인하고 설정 저장을 눌러 주세요.`,'success');
+}
+function schoolExtractRows(data,table){
+  const sections=data&&data[table];if(!Array.isArray(sections)){
+    const all=Object.values(data||{}).flat().filter(x=>x&&Array.isArray(x.row));if(all.length)return all.flatMap(x=>x.row||[]);
+    const msg=Object.values(data||{}).flatMap(x=>Array.isArray(x?.head)?x.head:[]).map(x=>x?.RESULT?.MESSAGE).filter(Boolean)[0];
+    throw new Error(msg||'나이스 응답 형식이 예상과 달라요. 인증키와 조회 조건을 확인해 주세요.');
+  }
+  const result=sections.flatMap(section=>Array.isArray(section?.head)?section.head:[]).map(x=>x?.RESULT).find(Boolean);
+  if(result&&result.CODE!=='INFO-000'&&result.CODE!=='INFO-200')throw new Error(`${result.CODE}: ${result.MESSAGE||'나이스 API 오류'}`);
+  return sections.flatMap(section=>Array.isArray(section?.row)?section.row:[]);
+}
+async function schoolNeisRequest(table,params){
+  const key=(localStorage.getItem(SCHOOL_STORAGE_KEYS.api)||'').trim();if(!key)throw new Error('먼저 학교 설정에서 나이스 Open API 인증키를 저장해 주세요.');
+  const q=new URLSearchParams({KEY:key,Type:'json',pIndex:'1',pSize:'100',...params});
+  const response=await fetch('https://open.neis.go.kr/hub/'+table+'?'+q.toString(),{method:'GET',cache:'no-store'});
+  if(!response.ok)throw new Error(`나이스 서버 응답 오류 (${response.status})`);
+  return response.json();
+}
+async function schoolSearch(){
+  schoolSaveApiKey();const key=(localStorage.getItem(SCHOOL_STORAGE_KEYS.api)||'').trim();const name=(document.getElementById('schoolNameSearch')?.value||'').trim();const region=document.getElementById('schoolRegion')?.value||'E10';const kind=document.getElementById('schoolKind')?.value||'middle';
+  const results=document.getElementById('schoolSearchResults');if(results)results.innerHTML='';
+  if(!key){schoolSetStatus('schoolSearchStatus','나이스 인증키가 필요해요. 오른쪽의 “인증키 신청”에서 발급받은 뒤 저장해 주세요.');return;}
+  if(name.length<2){schoolSetStatus('schoolSearchStatus','학교명을 두 글자 이상 입력해 주세요.');return;}
+  schoolSetStatus('schoolSearchStatus','학교를 검색하고 있어요…');
+  try{
+    const data=await schoolNeisRequest('schoolInfo',{ATPT_OFCDC_SC_CODE:region,SCHUL_NM:name});
+    let rows=schoolExtractRows(data,'schoolInfo');const kindName=SCHOOL_KINDS[kind];
+    rows=rows.filter(r=>!r.SCHUL_KND_SC_NM||String(r.SCHUL_KND_SC_NM).includes(kindName));
+    schoolSearchResults=rows;
+    if(!rows.length){schoolSetStatus('schoolSearchStatus','일치하는 학교가 없어요. 시·도, 학교급, 학교명을 확인해 주세요.');return;}
+    results.innerHTML=rows.slice(0,30).map((r,i)=>`<button type="button" class="school-result" onclick="schoolSetFound(${i})"><span><span class="school-result-name">${escapeHTML(r.SCHUL_NM||'이름 없는 학교')}</span><span class="school-result-meta" style="display:block">${escapeHTML(r.SCHUL_KND_SC_NM||kindName)} · ${escapeHTML(r.ORG_RDNMA||r.ORG_RDNDA||'주소 정보 없음')}</span></span><span aria-hidden="true">›</span></button>`).join('');
+    schoolSetStatus('schoolSearchStatus',`학교 ${rows.length}곳을 찾았어요. 정확한 학교를 선택해 주세요.`,'success');
+  }catch(e){console.error('[오늘의 학교] school search',e);schoolSetStatus('schoolSearchStatus','학교 검색 실패: '+(e?.message||e));}
+}
+function schoolFormatDateForNeis(date){return String(date||schoolTodayISO()).replaceAll('-','');}
+function schoolGetBell(period){return schoolGetBellTimes().find(x=>Number(x.period)===Number(period));}
+function schoolRenderBellRows(){
+  const box=document.getElementById('schoolBellRows');if(!box)return;const bells=schoolGetBellTimes();
+  box.innerHTML=bells.map(b=>`<div class="school-bell-row"><span>${b.period}교시</span><input aria-label="${b.period}교시 시작 시간" type="time" data-school-bell-period="${b.period}" data-school-bell-part="start" value="${escapeHTML(b.start||'')}"><input aria-label="${b.period}교시 종료 시간" type="time" data-school-bell-period="${b.period}" data-school-bell-part="end" value="${escapeHTML(b.end||'')}"></div>`).join('');
+}
+function schoolSaveBellTimes(){
+  const rows=Array.from(document.querySelectorAll('[data-school-bell-period]'));const map=new Map();
+  rows.forEach(el=>{const n=Number(el.dataset.schoolBellPeriod);if(!map.has(n))map.set(n,{period:n,start:'',end:''});map.get(n)[el.dataset.schoolBellPart]=el.value;});
+  const bells=Array.from(map.values()).sort((a,b)=>a.period-b.period);localStorage.setItem(SCHOOL_STORAGE_KEYS.bells,JSON.stringify(bells));schoolRenderBellRows();schoolSetStatus('schoolSearchStatus','교시 시간을 저장했어요. 시간표 카드에 반영됩니다.','success');
+}
+async function schoolLoadTimetable(){
+  schoolEnsureDate();const c=schoolGetConfig();const dateEl=document.getElementById('schoolDate');const date=dateEl?.value||schoolTodayISO();const box=document.getElementById('schoolTimetableList');
+  if(!c.schoolCode||!c.name){schoolSetStatus('schoolTimetableStatus','먼저 학교 설정에서 학교를 검색하고 선택해 주세요.');if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>학교 설정이 필요해요</strong>학교 설정 탭에서 학교를 선택하면 시간표를 조회할 수 있어요.<br><button type="button" class="school-action" style="margin-top:12px" onclick="schoolSetTab(\'settings\')">학교 설정하기</button></div>';return;}
+  if(!localStorage.getItem(SCHOOL_STORAGE_KEYS.api)){schoolSetStatus('schoolTimetableStatus','나이스 인증키를 저장해야 시간표를 가져올 수 있어요.');schoolSetTab('settings',document.querySelector('[data-school-tab="settings"]'));return;}
+  if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>시간표를 불러오는 중…</strong>나이스 공개 데이터를 확인하고 있어요.</div>';
+  schoolSetStatus('schoolTimetableStatus',`${date} 시간표를 조회하고 있어요…`);
+  try{
+    const kind=c.kind||'middle';const endpoint=SCHOOL_TIMETABLE_ENDPOINTS[kind]||'misTimetable';const month=Number(date.slice(5,7));const semester=month<=7?1:2;
+    const params={ATPT_OFCDC_SC_CODE:c.region,SD_SCHUL_CODE:c.schoolCode,AY:String(c.academicYear||date.slice(0,4)),SEM:String(semester),ALL_TI_YMD:schoolFormatDateForNeis(date),GRADE:String(c.grade||'1'),CLASS_NM:String(c.schoolClass||'1')};
+    const data=await schoolNeisRequest(endpoint,params);const rows=schoolExtractRows(data,endpoint).sort((a,b)=>Number(a.PERIO||0)-Number(b.PERIO||0));
+    if(!rows.length){if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>이 날짜의 시간표가 없어요</strong>휴일이거나 학교에서 시간표를 공개하지 않았을 수 있어요. 날짜 또는 학급 설정을 확인해 주세요.</div>';schoolSetStatus('schoolTimetableStatus',`${c.name} · ${date} · 시간표 데이터가 없어요.`);return;}
+    if(box)box.innerHTML=rows.map(row=>{const period=Number(row.PERIO)||0;const bell=schoolGetBell(period);const time=bell&&bell.start&&bell.end?`${bell.start}–${bell.end}`:'시간 미설정';const subject=row.ITRT_CNTNT||row.SUBJECT||'과목 미입력';const room=row.CLRM_NM?`${row.CLRM_NM} 교실`:'';const teacher=row.TEACHER_NM?` · ${row.TEACHER_NM}`:'';return `<article class="school-period-card"><div class="school-period-top"><span class="school-period-num">${period?period+'교시':'수업'}</span><span class="school-period-time">${escapeHTML(time)}</span></div><div class="school-period-subject">${escapeHTML(subject)}</div><div class="school-period-room">${escapeHTML(room+teacher)}</div></article>`;}).join('');
+    schoolSetStatus('schoolTimetableStatus',`${c.name} · ${date} · ${c.grade}학년 ${c.schoolClass}반 · ${rows.length}개 교시를 불러왔어요.`,'success');
+  }catch(e){console.error('[오늘의 학교] timetable',e);if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>시간표를 불러오지 못했어요</strong>인증키, 학교 설정, 나이스에 등록된 시간표를 확인해 주세요.</div>';schoolSetStatus('schoolTimetableStatus','시간표 조회 실패: '+(e?.message||e),'error');}
+}
+function schoolRenderBooks(){
+  const box=document.getElementById('schoolBookList');if(!box)return;const books=schoolGetBooks();
+  if(!books.length){box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>등록된 교과서가 없어요</strong>과목과 교과서 이름을 입력해 추가해 주세요.</div>';return;}
+  box.innerHTML=books.map((b,i)=>`<article class="school-book-card"><div class="school-book-subject">${escapeHTML(b.subject||'과목')}</div><div class="school-book-title">${escapeHTML(b.title||'교과서 이름 없음')}</div><div class="school-book-publisher">${escapeHTML(b.publisher||'출판사 미입력')}</div><div class="school-book-actions"><button type="button" onclick="schoolEditBook(${i})">수정</button><button type="button" onclick="schoolDeleteBook(${i})">삭제</button></div></article>`).join('');
+}
+function schoolAddBook(){
+  const subject=(document.getElementById('schoolBookSubject')?.value||'').trim();const title=(document.getElementById('schoolBookTitle')?.value||'').trim();const publisher=(document.getElementById('schoolBookPublisher')?.value||'').trim();
+  if(!subject||!title){uiAlert('과목과 교과서 이름을 입력해 주세요.');return;}
+  const books=schoolGetBooks();books.push({subject,title,publisher,updatedAt:new Date().toISOString()});localStorage.setItem(SCHOOL_STORAGE_KEYS.books,JSON.stringify(books));
+  ['schoolBookSubject','schoolBookTitle','schoolBookPublisher'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});schoolRenderBooks();
+}
+function schoolEditBook(index){
+  const books=schoolGetBooks();const book=books[index];if(!book)return;
+  const subject=prompt('과목',book.subject||'');if(subject===null)return;const title=prompt('교과서 이름',book.title||'');if(title===null)return;const publisher=prompt('출판사 (선택)',book.publisher||'');if(publisher===null)return;
+  if(!subject.trim()||!title.trim()){uiAlert('과목과 교과서 이름은 비워둘 수 없어요.');return;}books[index]={...book,subject:subject.trim(),title:title.trim(),publisher:publisher.trim(),updatedAt:new Date().toISOString()};localStorage.setItem(SCHOOL_STORAGE_KEYS.books,JSON.stringify(books));schoolRenderBooks();
+}
+function schoolDeleteBook(index){const books=schoolGetBooks();if(!books[index])return;const book=books[index];if(!confirm(`'${book.subject} · ${book.title}' 교과서를 삭제할까요?`))return;books.splice(index,1);localStorage.setItem(SCHOOL_STORAGE_KEYS.books,JSON.stringify(books));schoolRenderBooks();}
+
+</script>
 </body>
     </html>
