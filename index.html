@@ -11818,7 +11818,11 @@ async function schoolNeisRequest(table,params){
   if(error){
     let detail='';
     try{if(error.context&&typeof error.context.json==='function'){const body=await error.context.json();detail=body?.error||body?.message||'';}}catch(e){}
-    throw new Error(detail||error.message||'공용 나이스 연결에 실패했어요.');
+    const rawMessage=String(error.message||'');
+    if(!detail&&/Failed to send a request to the Edge Function|Failed to fetch|NetworkError/i.test(rawMessage)){
+      throw new Error('공용 나이스 서버에 연결하지 못했어요. Supabase에서 neis-proxy 함수가 배포됐는지와 CORS 설정을 확인해 주세요. 함수 미배포·주소/네트워크·CORS 문제일 수 있어요.');
+    }
+    throw new Error(detail||rawMessage||'공용 나이스 연결에 실패했어요.');
   }
   if(data&&data.error)throw new Error(data.error);
   const status=document.getElementById('schoolNeisConnectionStatus');
