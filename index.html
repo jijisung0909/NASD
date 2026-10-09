@@ -11624,7 +11624,7 @@ spotifyInit();
           <button type="button" class="school-action" onclick="schoolLoadTimetable()">시간표 불러오기</button>
         </div>
       </div>
-      <div class="school-status" id="schoolTimetableStatus" role="status" aria-live="polite">학교 설정에서 NEIS 인증키와 학교 정보를 등록해 주세요.</div>
+      <div class="school-status" id="schoolTimetableStatus" role="status" aria-live="polite">학교 설정에서 학교를 선택한 다음 시간표를 조회해 주세요.</div>
       <div id="schoolTimetableList" class="school-periods">
         <div class="school-empty" style="grid-column:1/-1"><strong>아직 시간표가 없어요</strong>학교를 설정하면 해당 날짜의 공개 시간표를 불러옵니다.</div>
       </div>
@@ -11691,10 +11691,9 @@ spotifyInit();
 
         <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
           <div class="school-box">
-            <div class="school-box-title">🔑 나이스 API 인증키</div>
-            <div class="school-field"><label for="schoolApiKey">인증키</label><input id="schoolApiKey" type="password" autocomplete="off" placeholder="나이스 Open API 인증키 붙여넣기"></div>
-            <div class="school-settings-actions"><button type="button" class="school-action secondary" onclick="schoolSaveApiKey()">인증키 저장</button><button type="button" class="school-action secondary" onclick="window.open('https://open.neis.go.kr/portal/guide/actKeyPage.do','_blank','noopener')">인증키 신청</button></div>
-            <div class="school-note">시간표 자동 조회에는 인증키가 필요해요. 키는 이 기기의 브라우저에만 저장돼요. 공유 컴퓨터라면 저장하지 마세요.</div>
+            <div class="school-box-title">🔐 공용 나이스 연결</div>
+            <div class="school-note" style="margin:0 0 10px">나이스 인증키는 엔쓰넷 서버에서 비공개로 관리합니다. 사용자는 인증키를 발급받거나 입력하지 않아도 학교 검색과 시간표 조회를 이용할 수 있어요.</div>
+            <div class="school-status" id="schoolNeisConnectionStatus" role="status" aria-live="polite">공용 연결을 사용합니다. 학교 검색을 실행하면 연결 상태를 확인할 수 있어요.</div>
           </div>
           <div class="school-box">
             <div class="school-box-title">⏰ 교시별 시간 설정</div>
@@ -11717,13 +11716,13 @@ spotifyInit();
    Spotify 코드와 별도로 동작합니다.
 ============================================ */
 const SCHOOL_STORAGE_KEYS={
-  api:'Nthnet_school_neis_key',
   config:'Nthnet_school_config_v1',
   books:'Nthnet_school_books_v1',
   bells:'Nthnet_school_bells_v1'
 };
 let schoolSearchResults=[];
 let schoolConfig={region:'E10',kind:'middle',name:'',schoolCode:'',schoolKindName:'',grade:'1',schoolClass:'1',academicYear:String(new Date().getFullYear()),semester:String(new Date().getMonth()+1<=7?1:2)};
+try{localStorage.removeItem('Nthnet_school_neis_key');}catch(e){}
 const SCHOOL_TIMETABLE_ENDPOINTS={elementary:'elsTimetable',middle:'misTimetable',high:'hisTimetable',special:'spsTimetable'};
 const SCHOOL_KINDS={elementary:'초등학교',middle:'중학교',high:'고등학교',special:'특수학교'};
 const SCHOOL_BELL_DEFAULTS=[
@@ -11759,7 +11758,6 @@ function schoolSetTab(name,button){
 }
 function schoolInitializeForm(){
   const c=schoolGetConfig();schoolConfig=c;
-  const keyEl=document.getElementById('schoolApiKey');if(keyEl&& !keyEl.value)keyEl.value=localStorage.getItem(SCHOOL_STORAGE_KEYS.api)||'';
   const region=document.getElementById('schoolRegion');if(region)region.value=c.region||'E10';
   const kind=document.getElementById('schoolKind');if(kind)kind.value=c.kind||'middle';
   schoolUpdateGradeOptions(false);
@@ -11777,14 +11775,13 @@ function schoolUpdateGradeOptions(reset=true){
   grade.innerHTML=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1}학년</option>`).join('');
   grade.value=!reset&&Number(old)<=max?old:(Number(schoolGetConfig().grade)<=max?String(schoolGetConfig().grade):'1');
 }
-function schoolSaveApiKey(){const value=(document.getElementById('schoolApiKey')?.value||'').trim();if(value)localStorage.setItem(SCHOOL_STORAGE_KEYS.api,value);else localStorage.removeItem(SCHOOL_STORAGE_KEYS.api);schoolSetStatus('schoolSearchStatus',value?'NEIS 인증키를 이 기기에 저장했어요.':'인증키 입력란이 비어 있어 저장된 키를 삭제했어요.',value?'success':'');}
 function schoolSaveSettings(){
   const prior=schoolGetConfig();const region=document.getElementById('schoolRegion')?.value||'E10';const kind=document.getElementById('schoolKind')?.value||'middle';
   schoolConfig={...prior,region,kind,grade:String(document.getElementById('schoolGrade')?.value||'1'),schoolClass:String(Math.max(1,Number(document.getElementById('schoolClass')?.value||1))),academicYear:String(document.getElementById('schoolAcademicYear')?.value||new Date().getFullYear()),semester:String((Number((document.getElementById('schoolDate')?.value||schoolTodayISO()).slice(5,7))<=7)?1:2)};
   const name=(document.getElementById('schoolNameSearch')?.value||'').trim();
   if(name)schoolConfig.name=name;
   localStorage.setItem(SCHOOL_STORAGE_KEYS.config,JSON.stringify(schoolConfig));
-  schoolSaveApiKey();schoolRenderSummary();schoolRenderSelectedSchool();schoolSetStatus('schoolSearchStatus','학교 설정을 저장했어요. 시간표 탭에서 불러오세요.','success');
+  schoolRenderSummary();schoolRenderSelectedSchool();schoolSetStatus('schoolSearchStatus','학교 설정을 저장했어요. 시간표 탭에서 불러오세요.','success');
 }
 function schoolRenderSummary(){
   const c=schoolGetConfig();const nameEl=document.getElementById('schoolCurrentName');const metaEl=document.getElementById('schoolCurrentMeta');
@@ -11815,16 +11812,22 @@ function schoolExtractRows(data,table){
   return sections.flatMap(section=>Array.isArray(section?.row)?section.row:[]);
 }
 async function schoolNeisRequest(table,params){
-  const key=(localStorage.getItem(SCHOOL_STORAGE_KEYS.api)||'').trim();if(!key)throw new Error('먼저 학교 설정에서 나이스 Open API 인증키를 저장해 주세요.');
-  const q=new URLSearchParams({KEY:key,Type:'json',pIndex:'1',pSize:'100',...params});
-  const response=await fetch('https://open.neis.go.kr/hub/'+table+'?'+q.toString(),{method:'GET',cache:'no-store'});
-  if(!response.ok)throw new Error(`나이스 서버 응답 오류 (${response.status})`);
-  return response.json();
+  const allowedTables=new Set(['schoolInfo','elsTimetable','misTimetable','hisTimetable','spsTimetable']);
+  if(!allowedTables.has(table))throw new Error('허용되지 않은 나이스 조회입니다.');
+  const {data,error}=await db.functions.invoke('neis-proxy',{body:{table,params:params||{}}});
+  if(error){
+    let detail='';
+    try{if(error.context&&typeof error.context.json==='function'){const body=await error.context.json();detail=body?.error||body?.message||'';}}catch(e){}
+    throw new Error(detail||error.message||'공용 나이스 연결에 실패했어요.');
+  }
+  if(data&&data.error)throw new Error(data.error);
+  const status=document.getElementById('schoolNeisConnectionStatus');
+  if(status){status.className='school-status success';status.textContent='공용 나이스 연결이 정상적으로 응답했어요.';}
+  return data;
 }
 async function schoolSearch(){
-  schoolSaveApiKey();const key=(localStorage.getItem(SCHOOL_STORAGE_KEYS.api)||'').trim();const name=(document.getElementById('schoolNameSearch')?.value||'').trim();const region=document.getElementById('schoolRegion')?.value||'E10';const kind=document.getElementById('schoolKind')?.value||'middle';
+  const name=(document.getElementById('schoolNameSearch')?.value||'').trim();const region=document.getElementById('schoolRegion')?.value||'E10';const kind=document.getElementById('schoolKind')?.value||'middle';
   const results=document.getElementById('schoolSearchResults');if(results)results.innerHTML='';
-  if(!key){schoolSetStatus('schoolSearchStatus','나이스 인증키가 필요해요. 오른쪽의 “인증키 신청”에서 발급받은 뒤 저장해 주세요.');return;}
   if(name.length<2){schoolSetStatus('schoolSearchStatus','학교명을 두 글자 이상 입력해 주세요.');return;}
   schoolSetStatus('schoolSearchStatus','학교를 검색하고 있어요…');
   try{
@@ -11851,7 +11854,6 @@ function schoolSaveBellTimes(){
 async function schoolLoadTimetable(){
   schoolEnsureDate();const c=schoolGetConfig();const dateEl=document.getElementById('schoolDate');const date=dateEl?.value||schoolTodayISO();const box=document.getElementById('schoolTimetableList');
   if(!c.schoolCode||!c.name){schoolSetStatus('schoolTimetableStatus','먼저 학교 설정에서 학교를 검색하고 선택해 주세요.');if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>학교 설정이 필요해요</strong>학교 설정 탭에서 학교를 선택하면 시간표를 조회할 수 있어요.<br><button type="button" class="school-action" style="margin-top:12px" onclick="schoolSetTab(\'settings\')">학교 설정하기</button></div>';return;}
-  if(!localStorage.getItem(SCHOOL_STORAGE_KEYS.api)){schoolSetStatus('schoolTimetableStatus','나이스 인증키를 저장해야 시간표를 가져올 수 있어요.');schoolSetTab('settings',document.querySelector('[data-school-tab="settings"]'));return;}
   if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>시간표를 불러오는 중…</strong>나이스 공개 데이터를 확인하고 있어요.</div>';
   schoolSetStatus('schoolTimetableStatus',`${date} 시간표를 조회하고 있어요…`);
   try{
@@ -11861,7 +11863,7 @@ async function schoolLoadTimetable(){
     if(!rows.length){if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>이 날짜의 시간표가 없어요</strong>휴일이거나 학교에서 시간표를 공개하지 않았을 수 있어요. 날짜 또는 학급 설정을 확인해 주세요.</div>';schoolSetStatus('schoolTimetableStatus',`${c.name} · ${date} · 시간표 데이터가 없어요.`);return;}
     if(box)box.innerHTML=rows.map(row=>{const period=Number(row.PERIO)||0;const bell=schoolGetBell(period);const time=bell&&bell.start&&bell.end?`${bell.start}–${bell.end}`:'시간 미설정';const subject=row.ITRT_CNTNT||row.SUBJECT||'과목 미입력';const room=row.CLRM_NM?`${row.CLRM_NM} 교실`:'';const teacher=row.TEACHER_NM?` · ${row.TEACHER_NM}`:'';return `<article class="school-period-card"><div class="school-period-top"><span class="school-period-num">${period?period+'교시':'수업'}</span><span class="school-period-time">${escapeHTML(time)}</span></div><div class="school-period-subject">${escapeHTML(subject)}</div><div class="school-period-room">${escapeHTML(room+teacher)}</div></article>`;}).join('');
     schoolSetStatus('schoolTimetableStatus',`${c.name} · ${date} · ${c.grade}학년 ${c.schoolClass}반 · ${rows.length}개 교시를 불러왔어요.`,'success');
-  }catch(e){console.error('[오늘의 학교] timetable',e);if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>시간표를 불러오지 못했어요</strong>인증키, 학교 설정, 나이스에 등록된 시간표를 확인해 주세요.</div>';schoolSetStatus('schoolTimetableStatus','시간표 조회 실패: '+(e?.message||e),'error');}
+  }catch(e){console.error('[오늘의 학교] timetable',e);if(box)box.innerHTML='<div class="school-empty" style="grid-column:1/-1"><strong>시간표를 불러오지 못했어요</strong>공용 나이스 연결 설정과 학교 설정, 나이스에 등록된 시간표를 확인해 주세요.</div>';schoolSetStatus('schoolTimetableStatus','시간표 조회 실패: '+(e?.message||e),'error');}
 }
 function schoolRenderBooks(){
   const box=document.getElementById('schoolBookList');if(!box)return;const books=schoolGetBooks();
